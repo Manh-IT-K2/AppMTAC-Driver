@@ -102,13 +102,13 @@ flutter:
   fonts:
     - family: Raleway
       fonts:
-        - asset: assets/fonts/Raleway-Thin.ttf
+        - asset: assets/font/Raleway-Thin.ttf
           weight: 100
-        - asset: assets/fonts/Raleway-Light.ttf
+        - asset: assets/font/Raleway-Light.ttf
           weight: 300
-        - asset: assets/fonts/Raleway-Medium.ttf
+        - asset: assets/font/Raleway-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Raleway-Bold.ttf
+        - asset: assets/font/Raleway-Bold.ttf
           weight: 700
   #
   # For details regarding fonts from package dependencies,

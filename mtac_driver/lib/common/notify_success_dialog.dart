@@ -40,7 +40,7 @@ class NotifySuccessDialog {
                               borderRadius: BorderRadius.circular(30.w),
                             ),
                             child: Image.asset(
-                              "assets/images/icon_congratulation.png",
+                              "assets/image/icon_congratulation.png",
                               width: 15.w,
                               height: 15.w,
                             ),
