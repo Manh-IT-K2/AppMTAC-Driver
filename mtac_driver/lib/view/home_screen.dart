@@ -24,14 +24,18 @@ class HomeScreen extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            GestureDetector(
-              onTap: () {
-                Get.back();
-              },
-              child: Icon(
-                Icons.arrow_back_ios,
-                color: const Color(0xFF0A4564),
-                size: 5.w,
+           Text.rich(
+              TextSpan(
+                text: txtHelloD,
+                style: PrimaryFont.bodyTextMedium()
+                    .copyWith(color: Colors.grey, height: 1.5),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: "Phạm Huỳnh Tín",
+                    style:
+                        PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
+                  ),
+                ],
               ),
             ),
             Container(
@@ -230,23 +234,6 @@ class _HeaderDriverScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text.rich(
-          TextSpan(
-            text: txtHelloD,
-            style: PrimaryFont.bodyTextMedium()
-                .copyWith(color: Colors.grey, height: 1.5),
-            children: <TextSpan>[
-              TextSpan(
-                text: "Phạm Huỳnh Tín",
-                style:
-                    PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 5.w,
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

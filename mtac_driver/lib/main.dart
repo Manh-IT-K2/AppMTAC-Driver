@@ -10,6 +10,11 @@ import 'package:sizer/sizer.dart';
 void main() {
   // only portrait
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  statusBarColor: Colors.white, // Màu thanh trạng thái
+  statusBarIconBrightness: Brightness.dark, // Biểu tượng màu tối
+));
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then((_) {
@@ -36,10 +41,12 @@ class MyApp extends StatelessWidget {
             // builder: DevicePreview.appBuilder,
 
             debugShowCheckedModeBanner: false,
-            theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+            theme: ThemeData(
+                
+                scaffoldBackgroundColor: Colors.white),
             initialRoute: AppRoutes.MAIN,
             getPages: AppPages.routes);
-    },
+      },
     );
   }
 }
