@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:mtac_driver/route/app_page.dart';
+import 'package:mtac_driver/route/app_route.dart';
 import 'package:sizer/sizer.dart';
 
 void main() {
@@ -35,9 +37,9 @@ class MyApp extends StatelessWidget {
 
             debugShowCheckedModeBanner: false,
             theme: ThemeData(scaffoldBackgroundColor: Colors.white),
-            // initialRoute: AppRoutes.MAIN,
-            // getPages: AppPages.routes);
-    );},
+            initialRoute: AppRoutes.MAIN,
+            getPages: AppPages.routes);
+    },
     );
   }
 }
