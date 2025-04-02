@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:mtac_driver/controller/map_controller.dart';
 import 'package:mtac_driver/data/map_screen/item_destination.dart';
 import 'package:mtac_driver/route/app_route.dart';
@@ -14,9 +15,10 @@ class MapDriverScreen extends StatelessWidget {
   MapDriverScreen({super.key});
 
   final MMapController controller = Get.put(MMapController());
+
   @override
   Widget build(BuildContext context) {
-    double screenHeight = 100.h;
+    //double screenHeight = 100.h;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -24,45 +26,113 @@ class MapDriverScreen extends StatelessWidget {
           Center(
             child: GetBuilder<MMapController>(
               builder: (controller) {
+                // Tạo bounds từ tất cả các điểm nếu có
+                final bounds = controller.routePoints.isNotEmpty
+                    ? LatLngBounds.fromPoints([
+                        controller.startLocation,
+                        ...controller.routePoints,
+                        controller.endLocation
+                      ])
+                    : LatLngBounds(
+                        controller.startLocation, controller.endLocation);
+
                 return FlutterMap(
                   options: MapOptions(
-                    initialCenter: controller.startLocation,
-                    initialZoom: 13.0,
+                    initialCenter: bounds.center,
+                    initialZoom: 12.0,
+                    minZoom: 5,
+                    maxZoom: 18,
+                    onMapReady: () {
+                      if (controller.routePoints.isNotEmpty) {
+                        final mapController = Get.find<MapController>();
+                        mapController.move(
+                          bounds.center,
+                          mapController.camera
+                              .zoom, // Giữ nguyên zoom level hoặc tính toán phù hợp
+                        );
+
+                        // Hoặc sử dụng fitCamera nếu phiên bản flutter_map hỗ trợ
+                        mapController.fitCamera(
+                          CameraFit.bounds(
+                            bounds: bounds,
+                            padding: EdgeInsets.all(50),
+                          ),
+                        );
+                      }
+                    },
                   ),
                   children: [
                     TileLayer(
                       urlTemplate:
-                          "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                      subdomains: ['a', 'b', 'c'],
+                          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      // Bỏ subdomains để tránh cảnh báo
+                      userAgentPackageName: 'com.example.app',
                     ),
                     PolylineLayer(
                       polylines: [
-                        Polyline(
-                          points: controller.routePoints,
-                          strokeWidth: 5.0,
-                          color: Colors.blue,
-                        ),
+                        if (controller.routePoints.isNotEmpty)
+                          Polyline(
+                            points: [
+                              controller.startLocation,
+                              ...controller.routePoints,
+                              controller.endLocation
+                            ],
+                            strokeWidth: 5.0, // Tăng độ dày
+                            color: Colors.blueAccent
+                                .withOpacity(0.8), // Màu nổi bật
+                          ),
                       ],
                     ),
                     MarkerLayer(
                       markers: [
+                        // Điểm bắt đầu
                         Marker(
                           point: controller.startLocation,
-                          child: Icon(Icons.location_on,
-                              color: Colors.red, size: 50.0),
+                          width: 50,
+                          height: 50,
+                          child: Icon(
+                            Icons.location_pin,
+                            color: Colors.red,
+                            size: 50.0,
+                          ),
                         ),
+                        // Điểm kết thúc
                         Marker(
                           point: controller.endLocation,
-                          child: Icon(Icons.location_on,
-                              color: Colors.green, size: 50.0),
+                          width: 50,
+                          height: 50,
+                          child: Icon(
+                            Icons.location_pin,
+                            color: Colors.green,
+                            size: 50.0,
+                          ),
                         ),
+                        // Các điểm trung gian (chỉ hiển thị 1 số điểm quan trọng)
+                        ...controller.routePoints
+                            .asMap()
+                            .entries
+                            .where((entry) =>
+                                entry.key % 50 ==
+                                0) // Lấy mỗi 50 điểm để tránh quá nhiều marker
+                            .map((entry) => Marker(
+                                  point: entry.value,
+                                  width: 30,
+                                  height: 30,
+                                  child: Icon(
+                                    Icons.location_pin,
+                                    color: Colors.orange,
+                                    size: 50.0,
+                                  ),
+                                ))
+                            .toList(),
                       ],
                     ),
                   ],
                 );
               },
             ),
-          ),
+          )
+
           // Positioned(
           //   top: 15.w,
           //   left: 5.w,
