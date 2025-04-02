@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:mtac_driver/controller/driver_controller.dart';
+import 'package:mtac_driver/controller/schedule_controller.dart';
 import 'package:mtac_driver/data/driver_screen/item_note_important.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
@@ -12,8 +12,8 @@ import 'package:sizer/sizer.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  // initial DriverController
-  final DriverController _driverController = Get.put(DriverController());
+  // initial ScheduleController
+  final ScheduleController _driverController = Get.put(ScheduleController());
 
   @override
   Widget build(BuildContext context) {
@@ -138,10 +138,10 @@ class _BottomDriverScreen extends StatelessWidget {
 class _BodyDriverScreen extends StatelessWidget {
   const _BodyDriverScreen({
     super.key,
-    required DriverController driverController,
+    required ScheduleController driverController,
   }) : _driverController = driverController;
 
-  final DriverController _driverController;
+  final ScheduleController _driverController;
 
   @override
   Widget build(BuildContext context) {
@@ -258,7 +258,7 @@ class _HeaderDriverScreen extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () {
-               Get.toNamed(AppRoutes.SCHEDULEDRIVER);
+               Get.toNamed(AppRoutes.schedule);
               },
               child: _UtilDriver(
                 color: Colors.purple.withOpacity(0.2),

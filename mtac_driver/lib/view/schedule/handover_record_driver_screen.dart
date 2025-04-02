@@ -230,7 +230,7 @@ class _BottomHandoverRecordSceen extends StatelessWidget {
                 NotifySuccessDialog().showNotifyPopup("Gửi biên bản thành công",
                   () {
                 Navigator.pop(context);
-                Get.offAllNamed(AppRoutes.MAIN);
+                Get.offAllNamed(AppRoutes.main);
               });
               }
             },

@@ -3,6 +3,7 @@ import 'package:mtac_driver/view/account_screen.dart';
 import 'package:mtac_driver/view/home_screen.dart';
 import 'package:mtac_driver/view/mailbox_screen.dart';
 import 'package:mtac_driver/view/payment_screen.dart';
+import 'package:mtac_driver/view/schedule_screen.dart';
 import 'package:mtac_driver/widgets/bottom_nav_bar.dart';
 
 
@@ -15,19 +16,24 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
-  final PageController _pageController = PageController();
+  int _selectedIndex = 2;
+final PageController _pageController = PageController(initialPage: 2);
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+
+ void _onItemTapped(int index) {
+  setState(() {
+    _selectedIndex = index;
+  });
+
+  if (_pageController.hasClients) {
     _pageController.animateToPage(
       index,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +47,9 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
         children: [
-          HomeScreen(),
+          ScheduleScreen(),
           PaymentScreen(),
+          HomeScreen(),
           MailboxScreen(),
           AccountScreen(),
         ],

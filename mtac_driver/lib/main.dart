@@ -10,11 +10,6 @@ import 'package:sizer/sizer.dart';
 void main() {
   // only portrait
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-  statusBarColor: Colors.white, // Màu thanh trạng thái
-  statusBarIconBrightness: Brightness.dark, // Biểu tượng màu tối
-));
-
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then((_) {
@@ -44,7 +39,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
                 
                 scaffoldBackgroundColor: Colors.white),
-            initialRoute: AppRoutes.MAIN,
+            initialRoute: AppRoutes.main,
             getPages: AppPages.routes);
       },
     );

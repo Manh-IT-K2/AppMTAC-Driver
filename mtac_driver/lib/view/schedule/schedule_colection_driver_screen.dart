@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mtac_driver/controller/driver_controller.dart';
+import 'package:mtac_driver/controller/schedule_controller.dart';
 import 'package:mtac_driver/data/schedule_screen/item_trip_work.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
@@ -11,7 +11,7 @@ import 'package:sizer/sizer.dart';
 class ScheduleColectionDriverScreen extends StatelessWidget {
   ScheduleColectionDriverScreen({super.key});
 
-  final DriverController controller = Get.put(DriverController());
+  final ScheduleController controller = Get.put(ScheduleController());
 
   @override
   Widget build(BuildContext context) {
@@ -244,7 +244,7 @@ class _ItemTripWork extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Get.toNamed(AppRoutes.MAPDRIVER);
+              Get.toNamed(AppRoutes.map);
             },
             child: Container(
               height: double.infinity,
@@ -288,7 +288,7 @@ class _ItemTripWork extends StatelessWidget {
 
 class _ItemListTrip extends StatelessWidget {
   final String title;
-  final DriverController controller = Get.find<DriverController>();
+  final ScheduleController controller = Get.find<ScheduleController>();
 
   _ItemListTrip({super.key, required this.title});
 

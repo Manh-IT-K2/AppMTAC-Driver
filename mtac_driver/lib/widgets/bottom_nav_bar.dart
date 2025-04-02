@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/theme_text.dart';
 import 'package:sizer/sizer.dart';
@@ -30,10 +31,11 @@ class BottomNavBar extends StatelessWidget {
           backgroundColor: kBackgroundColor,
           type: BottomNavigationBarType.fixed,
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: "Trang chủ"),
-            BottomNavigationBarItem(icon: Icon(Icons.payment), label: "Thanh toán"),
-            BottomNavigationBarItem(icon: Icon(Icons.mail_outline), label: "Hộp thư"),
-            BottomNavigationBarItem(icon: Icon(Icons.supervised_user_circle_outlined), label: "Tài khoản"),
+            BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedCalendar04), label: "Lên lịch"),
+            BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedClock01), label: "Thanh toán"),
+            BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedHome11), label: "Trang chủ"),
+            BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedNotification03), label: "Hộp thư"),
+            BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedUser), label: "Tài khoản"),
           ],
           currentIndex: selectedIndex,
           onTap: onItemTapped,

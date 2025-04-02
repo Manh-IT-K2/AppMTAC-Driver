@@ -9,19 +9,19 @@ import 'package:mtac_driver/view/schedule/schedule_colection_driver_screen.dart'
 class AppPages {
   static final routes = [
     GetPage(
-      name: AppRoutes.MAIN,
+      name: AppRoutes.main,
       page: () => const MainScreen(),
     ),
     GetPage(
-      name: AppRoutes.HANDOVERRECORDDRIVER,
+      name: AppRoutes.handoverRecord,
       page: () => HandoverRecordDriverScreen(),
     ),
     GetPage(
-      name: AppRoutes.SCHEDULEDRIVER,
+      name: AppRoutes.schedule,
       page: () => ScheduleColectionDriverScreen(),
     ),
     GetPage(
-      name: AppRoutes.MAPDRIVER,
+      name: AppRoutes.map,
       page: () => MapDriverScreen(),
     ),
   ];
