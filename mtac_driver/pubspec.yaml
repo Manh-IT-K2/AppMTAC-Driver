@@ -55,7 +55,7 @@ dependencies:
   # Convert LatLng coordinates to specific address
   # geocoding: ^3.0.0
   # Get current location
-  # geolocator: ^13.0.2
+  geolocator: ^13.0.2
 
   # icon
   hugeicons: ^0.0.10

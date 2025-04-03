@@ -14,7 +14,7 @@ import 'package:sizer/sizer.dart';
 class MapDriverScreen extends StatelessWidget {
   MapDriverScreen({super.key});
 
-  final MMapController controller = Get.put(MMapController());
+  final MapDriverController controller = Get.put(MapDriverController());
 
   @override
   Widget build(BuildContext context) {
@@ -24,113 +24,222 @@ class MapDriverScreen extends StatelessWidget {
       body: Stack(
         children: [
           Center(
-            child: GetBuilder<MMapController>(
-              builder: (controller) {
-                // Tạo bounds từ tất cả các điểm nếu có
-                final bounds = controller.routePoints.isNotEmpty
-                    ? LatLngBounds.fromPoints([
-                        controller.startLocation,
-                        ...controller.routePoints,
-                        controller.endLocation
-                      ])
-                    : LatLngBounds(
-                        controller.startLocation, controller.endLocation);
-
-                return FlutterMap(
-                  options: MapOptions(
-                    initialCenter: bounds.center,
-                    initialZoom: 12.0,
-                    minZoom: 5,
-                    maxZoom: 18,
-                    onMapReady: () {
-                      if (controller.routePoints.isNotEmpty) {
-                        final mapController = Get.find<MapController>();
-                        mapController.move(
-                          bounds.center,
-                          mapController.camera
-                              .zoom, // Giữ nguyên zoom level hoặc tính toán phù hợp
-                        );
-
-                        // Hoặc sử dụng fitCamera nếu phiên bản flutter_map hỗ trợ
-                        mapController.fitCamera(
-                          CameraFit.bounds(
-                            bounds: bounds,
-                            padding: EdgeInsets.all(50),
-                          ),
-                        );
-                      }
-                    },
-                  ),
+            child: Obx(() {
+              if (controller.currentLocation.value == null) {
+                return const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TileLayer(
-                      urlTemplate:
-                          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                      // Bỏ subdomains để tránh cảnh báo
-                      userAgentPackageName: 'com.example.app',
-                    ),
-                    PolylineLayer(
-                      polylines: [
-                        if (controller.routePoints.isNotEmpty)
-                          Polyline(
-                            points: [
-                              controller.startLocation,
-                              ...controller.routePoints,
-                              controller.endLocation
-                            ],
-                            strokeWidth: 5.0, // Tăng độ dày
-                            color: Colors.blueAccent
-                                .withOpacity(0.8), // Màu nổi bật
-                          ),
-                      ],
-                    ),
-                    MarkerLayer(
-                      markers: [
-                        // Điểm bắt đầu
-                        Marker(
-                          point: controller.startLocation,
-                          width: 50,
-                          height: 50,
-                          child: Icon(
-                            Icons.location_pin,
-                            color: Colors.red,
-                            size: 50.0,
-                          ),
-                        ),
-                        // Điểm kết thúc
-                        Marker(
-                          point: controller.endLocation,
-                          width: 50,
-                          height: 50,
-                          child: Icon(
-                            Icons.location_pin,
-                            color: Colors.green,
-                            size: 50.0,
-                          ),
-                        ),
-                        // Các điểm trung gian (chỉ hiển thị 1 số điểm quan trọng)
-                        ...controller.routePoints
-                            .asMap()
-                            .entries
-                            .where((entry) =>
-                                entry.key % 50 ==
-                                0) // Lấy mỗi 50 điểm để tránh quá nhiều marker
-                            .map((entry) => Marker(
-                                  point: entry.value,
-                                  width: 30,
-                                  height: 30,
-                                  child: Icon(
-                                    Icons.location_pin,
-                                    color: Colors.orange,
-                                    size: 50.0,
-                                  ),
-                                ))
-                            .toList(),
-                      ],
-                    ),
+                    CircularProgressIndicator(),
+                    SizedBox(height: 16),
+                    Text("Đang xác định vị trí hiện tại..."),
                   ],
                 );
-              },
-            ),
+              }
+
+              return Stack(
+                children: [
+                  FlutterMap(
+                    mapController: controller.mapController,
+                    options: MapOptions(
+                      initialCenter: controller.currentLocation.value ??
+                          LatLng(10.8231, 106.6297), // Tọa độ mặc định (HCM)
+                      initialZoom: 12.0,
+                      minZoom: 5,
+                      maxZoom: 18,
+                      onMapReady: () {
+                        // Khi map ready, hiển thị toàn bộ điểm nếu có
+                        if (controller.optimizedRoute.isNotEmpty ||
+                            controller.currentLocation.value != null) {
+                          controller.fitAllPoints();
+                        } else {
+                          controller.moveToCurrentLocation();
+                        }
+                      },
+                    ),
+                    children: [
+                      TileLayer(
+                        urlTemplate:
+                            "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                        userAgentPackageName: 'com.example.app',
+                      ),
+                      PolylineLayer(
+                        polylines: [
+                          if (controller.routePoints.isNotEmpty)
+                            Polyline(
+                              points: controller.routePoints,
+                              strokeWidth: 5.0,
+                              color: Colors.blueAccent.withOpacity(0.8),
+                            ),
+                        ],
+                      ),
+                      MarkerLayer(
+                        markers: [
+                          // Current location
+                          Marker(
+                            point: controller.currentLocation.value!,
+                            width: 60,
+                            height: 60,
+                            child: const Icon(
+                              Icons.my_location,
+                              color: Colors.blue,
+                              size: 30.0,
+                            ),
+                          ),
+
+                          // Optimized route points with numbers
+                          ...controller.optimizedRoute
+                              .asMap()
+                              .entries
+                              .map((entry) {
+                            int idx = entry.key;
+                            LatLng point = entry.value;
+                            return Marker(
+                              point: point,
+                              width: 80,
+                              height: 80,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Text(
+                                      (idx + 1).toString(),
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.location_pin,
+                                    color: Colors.red,
+                                    size: 30.0,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Positioned(
+                    top: 50,
+                    left: 20,
+                    right: 20,
+                    child: Card(
+                      elevation: 8,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (controller.optimizedRoute.isNotEmpty)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    "TUYẾN ĐƯỜNG TỐI ƯU",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  // Hiển thị từng chặng
+                                  ...List.generate(
+                                      controller.optimizedRoute.length - 1,
+                                      (index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 24,
+                                            height: 24,
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              color: Colors.blue,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Text(
+                                              '${index + 1}',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Chặng ${index + 1}',
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                if (controller
+                                                        .distances.length >
+                                                    index)
+                                                  Text(
+                                                    '${controller.formatDistance(controller.distances[index])} - ${controller.formatDuration(controller.durations[index])}',
+                                                    style: TextStyle(
+                                                        color:
+                                                            Colors.grey[600]),
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                                  const Divider(),
+                                  // Tổng cộng
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        "TỔNG CỘNG:",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        "${controller.formatDistance(controller.totalDistance.value)} - ${controller.formatDuration(controller.totalDuration.value)}",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )
+                            else
+                              const Text("Nhấn nút để tối ưu tuyến đường"),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 20,
+                    left: 20,
+                    child: FloatingActionButton(
+                      onPressed: () => controller.fitAllPoints(),
+                      child: const Icon(Icons.zoom_out_map),
+                      mini: true,
+                    ),
+                  ),
+                ],
+              );
+            }),
           )
 
           // Positioned(
