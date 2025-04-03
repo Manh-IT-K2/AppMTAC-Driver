@@ -102,7 +102,7 @@ class MapDriverScreen extends StatelessWidget {
                                 children: [
                                   Container(
                                     padding: const EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       color: Colors.red,
                                       shape: BoxShape.circle,
                                     ),
@@ -111,7 +111,7 @@ class MapDriverScreen extends StatelessWidget {
                                       style: TextStyle(color: Colors.white),
                                     ),
                                   ),
-                                  Icon(
+                                  const Icon(
                                     Icons.location_pin,
                                     color: Colors.red,
                                     size: 30.0,

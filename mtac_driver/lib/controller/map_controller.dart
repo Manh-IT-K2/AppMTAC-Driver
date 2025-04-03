@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
@@ -7,82 +8,93 @@ import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 
 class MapDriverController extends GetxController {
+
+  // inital variable Map
   var startLocation = Rx<LatLng>(const LatLng(0, 0));
   var endLocation = Rx<LatLng>(const LatLng(0, 0));
-  var currentLocation = Rx<LatLng?>(const LatLng(10.840788160923305, 106.67717449490108)); // Add current location
+  var currentLocation = Rx<LatLng?>(const LatLng(9.91613239469001, 105.87755169181108));
   final RxList<LatLng> routePoints = <LatLng>[].obs;
   final RxList<LatLng> mainPoints = <LatLng>[].obs;
   final RxList<LatLng> optimizedRoute = <LatLng>[].obs;
-
-  // Thêm các RxList mới cho khoảng cách và thời gian
   final RxList<double> distances = <double>[].obs;
   final RxList<double> durations = <double>[].obs;
   final RxDouble totalDistance = 0.0.obs;
   final RxDouble totalDuration = 0.0.obs;
-
+  // initial flutter map
+  final MapController mapController = MapController();
+  // list route
   final List<String> routeAddresses = [
-    "404 Đ. Tân Sơn Nhì, Tân Sơn Nhì, Tân Phú, Hồ Chí Minh, Việt Nam",
-    "180 Đ. Nguyễn Thị Minh Khai, Phường 6, Quận 3, Hồ Chí Minh 70000, Việt Nam",
-    "42 Điện Biên Phủ, Phường 17, Bình Thạnh, Hồ Chí Minh, Việt Nam",
-    "234 Phan Xích Long, Phường 7, Phú Nhuận, Hồ Chí Minh, Việt Nam",
+    "Xuân Hòa, Kế Sách, Sóc Trăng, Việt Nam",
+    "Nam Sông Hậu, Kế Sách, Sóc Trăng, Việt Nam",
+    "Phụng Hiệp, Hậu Giang, Việt Nam",
+    "Phú Tân, Châu Thành, Hậu Giang, Việt Nam",
   ];
 
+  // function initial
   @override
   void onInit() {
     super.onInit();
-    //getCurrentLocation(); // Get current location first
+    //getCurrentLocation();
     //getRoute();
     getOptimizedRoute();
   }
 
-// Thêm MapController
-  final MapController mapController = MapController();
-
-  // Hàm di chuyển camera đến vị trí
+  // move camera to currentLocation
   void moveToCurrentLocation() {
     if (currentLocation.value != null) {
-      mapController.move(currentLocation.value!, 15.0); // 15 là zoom level
-      print("📌 Đã di chuyển camera đến vị trí hiện tại");
+      mapController.move(currentLocation.value!, 15.0);
+      if (kDebugMode) {
+        print("📌 Đã di chuyển camera đến vị trí hiện tại");
+      }
     }
   }
 
+  // get currentLocation
   Future<void> getCurrentLocation() async {
-    print("📍 Getting current location...");
+    if (kDebugMode) {
+      print("📍 Getting current location...");
+    }
     try {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        print("⚠️ Location services are disabled");
+        if (kDebugMode) {
+          print("⚠️ Location services are disabled");
+        }
         return;
       }
-
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          print("⚠️ Location permissions are denied");
+          if (kDebugMode) {
+            print("⚠️ Location permissions are denied");
+          }
           return;
         }
       }
-
       if (permission == LocationPermission.deniedForever) {
-        print("⚠️ Location permissions are permanently denied");
+        if (kDebugMode) {
+          print("⚠️ Location permissions are permanently denied");
+        }
         return;
       }
-
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best,
       );
-
       currentLocation.value = LatLng(position.latitude, position.longitude);
-      print("✅ Current location: ${currentLocation.value}");
-
-      // Tự động di chuyển camera khi có vị trí mới
+      if (kDebugMode) {
+        print("✅ Current location: ${currentLocation.value}");
+      }
+      // auto move camera new location
       moveToCurrentLocation();
     } catch (e) {
-      print("⚠️ Error getting current location: $e");
+      if (kDebugMode) {
+        print("⚠️ Error getting current location: $e");
+      }
     }
   }
 
+  // Convert address to coordinates
   Future<List<LatLng>> getCoordinates() async {
     mainPoints.clear();
     List<LatLng> results = [];
@@ -90,6 +102,7 @@ class MapDriverController extends GetxController {
       final url = Uri.parse(
           "https://nominatim.openstreetmap.org/search?q=${Uri.encodeComponent(address)}&format=json&addressdetails=1&limit=1");
       try {
+        // Send a request to the Nominatim API to convert the address to GPS coordinates.
         final response = await http.get(url,
             headers: {"User-Agent": "YourAppName/1.0 (your@email.com)"});
         if (response.statusCode == 200) {
@@ -99,126 +112,181 @@ class MapDriverController extends GetxController {
             final lon = double.tryParse(data[0]["lon"]) ?? 0;
             if (lat != 0 && lon != 0) {
               LatLng point = LatLng(lat, lon);
+              // save
               results.add(point);
+              //save for mainpoints
               mainPoints.add(point);
-              print("✅ Đã lấy tọa độ chính xác cho '$address': $lat, $lon");
+              if (kDebugMode) {
+                print("✅ Đã lấy tọa độ chính xác cho '$address': $lat, $lon");
+              }
               continue;
             }
           }
         }
-        print("⚠️ Không lấy được tọa độ cho '$address'");
+        if (kDebugMode) {
+          print("⚠️ Không lấy được tọa độ cho '$address'");
+        }
       } catch (e) {
-        print("⚠️ Lỗi khi lấy tọa độ cho '$address': $e");
+        if (kDebugMode) {
+          print("⚠️ Lỗi khi lấy tọa độ cho '$address': $e");
+        }
       }
     }
     return results;
   }
 
-  // Hàm tính khoảng cách giữa 2 điểm (đơn giản bằng Euclidean distance)
-  double calculateDistance(LatLng point1, LatLng point2) {
-    const Distance distance = Distance();
-    return distance(point1, point2) / 1000; // Trả về km
-  }
+  // Use OSRM to calculate the actual distance between two points
+  Future<double> calculateRoadDistance(LatLng point1, LatLng point2) async {
+    final url = Uri.parse(
+        "https://router.project-osrm.org/route/v1/driving/${point1.longitude},${point1.latitude};${point2.longitude},${point2.latitude}?overview=false");
 
-  // Thuật toán tham lam để tối ưu tuyến đường
-  List<LatLng> greedyTSP(LatLng start, List<LatLng> points, LatLng end) {
-    List<LatLng> result = [];
-    List<LatLng> unvisited = List.from(points);
-
-    // Bắt đầu từ vị trí hiện tại
-    LatLng current = start;
-    result.add(current);
-
-    while (unvisited.isNotEmpty) {
-      // Tìm điểm gần nhất trong các điểm chưa thăm
-      int nearestIndex = 0;
-      double nearestDistance = calculateDistance(current, unvisited[0]);
-
-      for (int i = 1; i < unvisited.length; i++) {
-        double dist = calculateDistance(current, unvisited[i]);
-        if (dist < nearestDistance) {
-          nearestDistance = dist;
-          nearestIndex = i;
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['code'] == 'Ok' && data['routes'].isNotEmpty) {
+          return data['routes'][0]['distance'].toDouble(); //m
         }
       }
-
-      // Di chuyển đến điểm gần nhất
-      current = unvisited[nearestIndex];
-      result.add(current);
-      unvisited.removeAt(nearestIndex);
+      return 0.0;
+    } catch (e) {
+      if (kDebugMode) {
+        print("⚠️ Lỗi tính khoảng cách đường bộ: $e");
+      }
+      return 0.0;
     }
+  }
 
-    // Thêm điểm cuối cùng
+  // Use greedy algorithm to find shortest route
+  Future<List<LatLng>> greedyTSPWithTraffic(LatLng start, List<LatLng> points, LatLng end) async {
+    List<LatLng> result = [start];
+    List<LatLng> unvisited = List.from(points);
+    LatLng current = start;
+
+    // average speed by road type km/h
+    final roadSpeeds = {
+      'motorway': 80.0, 
+      'trunk': 60.0,
+      'primary': 50.0,
+      'secondary': 40.0,
+      'tertiary': 30.0,
+      'unclassified': 20.0,
+      'residential': 20.0,
+    };
+    while (unvisited.isNotEmpty) {
+      // Find nearest point based on actual travel time
+      int bestIndex = 0;
+      double bestTime = double.infinity;
+      for (int i = 0; i < unvisited.length; i++) {
+        // distance
+        final distance = await calculateRoadDistance(current, unvisited[i]);
+        // speed
+        final speed = await estimateRoadSpeed(current, unvisited[i], roadSpeeds);
+        final time = distance / (speed * 1000 / 3600); // s
+        if (time < bestTime) {
+          bestTime = time;
+          bestIndex = i;
+        }
+      }
+      current = unvisited[bestIndex];
+      result.add(current);
+      unvisited.removeAt(bestIndex);
+    }
     result.add(end);
-
     return result;
   }
 
-  Future<void> getOptimizedRoute() async {
-    print("🔄 Đang tối ưu hóa tuyến đường...");
+  // Speed ​​estimation function based on road type
+  Future<double> estimateRoadSpeed(
+      LatLng p1, LatLng p2, Map<String, double> roadSpeeds) async {
+    final url = Uri.parse(
+        "https://router.project-osrm.org/route/v1/driving/${p1.longitude},${p1.latitude};${p2.longitude},${p2.latitude}?overview=full&steps=true");
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        if (data['code'] == 'Ok' && data['routes'].isNotEmpty) {
+          double totalWeightedSpeed = 0.0;
+          double totalDistance = 0.0;
 
-    // Lấy tọa độ từ địa chỉ
+          // Analyze each road segment
+          for (var leg in data['routes'][0]['legs']) {
+            for (var step in leg['steps']) {
+              final distance = step['distance'].toDouble();
+              final roadType = step['name'] ?? 'unclassified';
+              final speed = roadSpeeds[roadType.toLowerCase()] ?? 30.0;
+
+              totalWeightedSpeed += speed * distance;
+              totalDistance += distance;
+            }
+          }
+          return totalDistance > 0 ? totalWeightedSpeed / totalDistance : 30.0;
+        }
+      }
+      // Default value if data cannot
+      return 30.0;
+    } catch (e) {
+      if (kDebugMode) {
+        print("⚠️ Lỗi ước tính tốc độ đường bộ: $e");
+      }
+      return 30.0;
+    }
+  }
+
+  // route optimization with traffic factor
+  Future<void> getOptimizedRoute() async {
+    if (kDebugMode) {
+      print("🔄 Đang tối ưu hóa tuyến đường với yếu tố giao thông...");
+    }
     List<LatLng> waypoints = await getCoordinates();
     if (waypoints.isEmpty) {
-      print("⚠️ Không lấy được tọa độ từ địa chỉ!");
+      if (kDebugMode) {
+        print("⚠️ Không lấy được tọa độ từ địa chỉ!");
+      }
       return;
     }
-
-    // Xác định điểm bắt đầu và kết thúc
     startLocation.value = currentLocation.value ?? waypoints.first;
     endLocation.value = waypoints.last;
-
-    // Các điểm trung gian (loại bỏ điểm cuối cùng)
     List<LatLng> intermediatePoints =
         waypoints.sublist(0, waypoints.length - 1);
 
-    // Áp dụng thuật toán tham lam
-    List<LatLng> optimizedOrder =
-        greedyTSP(startLocation.value, intermediatePoints, endLocation.value);
+    // Using greedy algorithm
+    List<LatLng> optimizedOrder = await greedyTSPWithTraffic(
+        startLocation.value, intermediatePoints, endLocation.value);
 
-    print(
-        "🔀 Thứ tự tối ưu: ${optimizedOrder.map((p) => "${p.latitude},${p.longitude}").join(" → ")}");
-
-    // Lấy tuyến đường từ OSRM
+    if (kDebugMode) {
+      print("🔀 Thứ tự tối ưu với giao thông: ${optimizedOrder.map((p) => "${p.latitude},${p.longitude}").join(" → ")}");
+    }
     await fetchRouteFromOSRM(optimizedOrder);
   }
 
-// Thêm hàm fitAllPoints vào MMapController
+  // move camera preview all point
   void fitAllPoints() {
     if (optimizedRoute.isEmpty && currentLocation.value == null) return;
-
-    // Tạo danh sách tất cả các điểm cần hiển thị
+    // create all list need preview
     List<LatLng> allPoints = [];
-
     if (currentLocation.value != null) {
       allPoints.add(currentLocation.value!);
     }
-
     allPoints.addAll(optimizedRoute);
     allPoints.addAll(routePoints);
-
     if (allPoints.isEmpty) return;
-
-    // Tính toán bounds bao phủ tất cả điểm
     final bounds = LatLngBounds.fromPoints(allPoints);
-
-    // Thêm padding để các điểm không nằm sát mép màn hình
-
-    // Điều chỉnh camera để hiển thụ toàn bộ
+    // preview all point
     mapController.fitCamera(CameraFit.bounds(
         bounds: bounds, padding: const EdgeInsets.all(50), maxZoom: 16.0));
-
-    print("🗺️ Đã điều chỉnh bản đồ hiển thụ toàn bộ ${allPoints.length} điểm");
+    if (kDebugMode) {
+      print("🗺️ Đã điều chỉnh bản đồ hiển thụ toàn bộ ${allPoints.length} điểm");
+    }
   }
 
+  // Get route from OSRM
   Future<void> fetchRouteFromOSRM(List<LatLng> points) async {
     String waypointsString = points
         .map((latLng) => "${latLng.longitude},${latLng.latitude}")
         .join(";");
-
     final url = Uri.parse(
         "https://router.project-osrm.org/route/v1/driving/$waypointsString?overview=full&geometries=geojson");
-
     try {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -227,26 +295,28 @@ class MapDriverController extends GetxController {
           final route = data['routes'][0];
           final coordinates = route['geometry']['coordinates'];
 
-          // Cập nhật tuyến đường
+          // update route
           routePoints.clear();
           for (var coord in coordinates) {
             routePoints.add(LatLng(coord[1], coord[0]));
           }
-
-          // Lấy thông tin khoảng cách và thời gian
+          // get distance and time
           extractDistanceAndDuration(route['legs'], points);
-
-          // Lưu lại thứ tự các điểm đã tối ưu
+          // Save optimized points
           optimizedRoute.assignAll(points);
-
-          print("✅ Đã cập nhật tuyến đường tối ưu");
+          if (kDebugMode) {
+            print("✅ Đã cập nhật tuyến đường tối ưu");
+          }
           moveToCurrentLocation();
         }
-        await Future.delayed(Duration(milliseconds: 300)); // Đợi map render
+        // await map render
+        await Future.delayed(const Duration(milliseconds: 300));
         fitAllPoints();
       }
     } catch (e) {
-      print("⚠️ Lỗi khi lấy tuyến đường: $e");
+      if (kDebugMode) {
+        print("⚠️ Lỗi khi lấy tuyến đường: $e");
+      }
     }
   }
 
@@ -257,24 +327,26 @@ class MapDriverController extends GetxController {
     totalDuration.value = 0;
 
     for (var leg in legs) {
-      double distance = (leg['distance'] as num).toDouble(); // mét
-      double duration = (leg['duration'] as num).toDouble(); // giây
-
+      double distance = (leg['distance'] as num).toDouble(); // m
+      double duration = (leg['duration'] as num).toDouble(); // s
       distances.add(distance);
       durations.add(duration);
-
       totalDistance.value += distance;
       totalDuration.value += duration;
     }
 
-    print(
-        "📊 Khoảng cách các chặng: ${distances.map((d) => (d / 1000).toStringAsFixed(2) + 'km')}");
-    print(
-        "⏱️ Thời gian các chặng: ${durations.map((d) => (d / 60).toStringAsFixed(2) + ' phút')}");
-    print(
-        "📏 Tổng khoảng cách: ${(totalDistance.value / 1000).toStringAsFixed(2)} km");
-    print(
-        "⏳ Tổng thời gian: ${(totalDuration.value / 60).toStringAsFixed(2)} phút");
+    if (kDebugMode) {
+      print("📊 Khoảng cách các chặng: ${distances.map((d) => (d / 1000).toStringAsFixed(2) + 'km')}");
+    }
+    if (kDebugMode) {
+      print("⏱️ Thời gian các chặng: ${durations.map((d) => (d / 60).toStringAsFixed(2) + ' phút')}");
+    }
+    if (kDebugMode) {
+      print("📏 Tổng khoảng cách: ${(totalDistance.value / 1000).toStringAsFixed(2)} km");
+    }
+    if (kDebugMode) {
+      print("⏳ Tổng thời gian: ${(totalDuration.value / 60).toStringAsFixed(2)} phút");
+    }
   }
 
   // Hàm định dạng thời gian
@@ -288,6 +360,7 @@ class MapDriverController extends GetxController {
       return '${hours}h${remainingMinutes}p';
     }
   }
+
   // Hàm định dạng khoảng cách
   String formatDistance(double meters) {
     if (meters < 1000) {
