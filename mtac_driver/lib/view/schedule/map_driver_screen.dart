@@ -36,6 +36,8 @@ class MapDriverScreen extends StatelessWidget {
                 );
               }
 
+              
+
               return Stack(
                 children: [
                   FlutterMap(
@@ -91,6 +93,9 @@ class MapDriverScreen extends StatelessWidget {
                           ...controller.optimizedRoute
                               .asMap()
                               .entries
+                              .where((entry) =>
+                                  entry.value !=
+                                  controller.currentLocation.value)
                               .map((entry) {
                             int idx = entry.key;
                             LatLng point = entry.value;
@@ -108,8 +113,9 @@ class MapDriverScreen extends StatelessWidget {
                                       shape: BoxShape.circle,
                                     ),
                                     child: Text(
-                                      (idx + 1).toString(),
-                                      style: TextStyle(color: Colors.white),
+                                      (idx).toString(),
+                                      style:
+                                          const TextStyle(color: Colors.white),
                                     ),
                                   ),
                                   const Icon(
