@@ -18,7 +18,7 @@ class MapDriverScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //double screenHeight = 100.h;
+    double screenHeight = 100.h;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -35,253 +35,238 @@ class MapDriverScreen extends StatelessWidget {
                   ],
                 );
               }
-
-              
-
-              return Stack(
+              return FlutterMap(
+                mapController: controller.mapController,
+                options: MapOptions(
+                  initialCenter: controller.currentLocation.value ??
+                      LatLng(10.8231, 106.6297), // Tọa độ mặc định (HCM)
+                  initialZoom: 12.0,
+                  minZoom: 5,
+                  maxZoom: 18,
+                  onMapReady: () {
+                    // Khi map ready, hiển thị toàn bộ điểm nếu có
+                    if (controller.optimizedRoute.isNotEmpty ||
+                        controller.currentLocation.value != null) {
+                      controller.fitAllPoints();
+                    } else {
+                      controller.moveToCurrentLocation();
+                    }
+                  },
+                ),
                 children: [
-                  FlutterMap(
-                    mapController: controller.mapController,
-                    options: MapOptions(
-                      initialCenter: controller.currentLocation.value ??
-                          LatLng(10.8231, 106.6297), // Tọa độ mặc định (HCM)
-                      initialZoom: 12.0,
-                      minZoom: 5,
-                      maxZoom: 18,
-                      onMapReady: () {
-                        // Khi map ready, hiển thị toàn bộ điểm nếu có
-                        if (controller.optimizedRoute.isNotEmpty ||
-                            controller.currentLocation.value != null) {
-                          controller.fitAllPoints();
-                        } else {
-                          controller.moveToCurrentLocation();
-                        }
-                      },
-                    ),
-                    children: [
-                      TileLayer(
-                        urlTemplate:
-                            "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                        userAgentPackageName: 'com.example.app',
-                        subdomains: const ['a', 'b', 'c'],
-                      ),
-                      PolylineLayer(
-                        polylines: [
-                          if (controller.routePoints.isNotEmpty)
-                            Polyline(
-                              points: controller.routePoints,
-                              strokeWidth: 5.0,
-                              color: Colors.blueAccent.withOpacity(0.8),
-                            ),
-                        ],
-                      ),
-                      MarkerLayer(
-                        markers: [
-                          // Current location
-                          Marker(
-                            point: controller.currentLocation.value!,
-                            width: 60,
-                            height: 60,
-                            child: const Icon(
-                              Icons.my_location,
-                              color: Colors.blue,
-                              size: 30.0,
-                            ),
-                          ),
-
-                          // Optimized route points with numbers
-                          ...controller.optimizedRoute
-                              .asMap()
-                              .entries
-                              .where((entry) =>
-                                  entry.value !=
-                                  controller.currentLocation.value)
-                              .map((entry) {
-                            int idx = entry.key;
-                            LatLng point = entry.value;
-                            return Marker(
-                              point: point,
-                              width: 80,
-                              height: 80,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(6),
-                                    decoration: const BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Text(
-                                      (idx).toString(),
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  ),
-                                  const Icon(
-                                    Icons.location_pin,
-                                    color: Colors.red,
-                                    size: 30.0,
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                        ],
-                      ),
+                  TileLayer(
+                    urlTemplate:
+                        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                    userAgentPackageName: 'com.example.app',
+                    subdomains: const ['a', 'b', 'c'],
+                  ),
+                  PolylineLayer(
+                    polylines: [
+                      if (controller.routePoints.isNotEmpty)
+                        Polyline(
+                          points: controller.routePoints,
+                          strokeWidth: 5.0,
+                          color: Colors.blueAccent.withOpacity(0.8),
+                        ),
                     ],
                   ),
-                  Positioned(
-                    top: 50,
-                    left: 20,
-                    right: 20,
-                    child: Card(
-                      elevation: 8,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (controller.optimizedRoute.isNotEmpty)
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "TUYẾN ĐƯỜNG TỐI ƯU",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // Hiển thị từng chặng
-                                  ...List.generate(
-                                      controller.optimizedRoute.length - 1,
-                                      (index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 4),
-                                      child: Row(
-                                        children: [
-                                          Container(
-                                            width: 24,
-                                            height: 24,
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              color: Colors.blue,
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Text(
-                                              '${index + 1}',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Chặng ${index + 1}',
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                if (controller
-                                                        .distances.length >
-                                                    index)
-                                                  Text(
-                                                    '${controller.formatDistance(controller.distances[index])} - ${controller.formatDuration(controller.durations[index])}',
-                                                    style: TextStyle(
-                                                        color:
-                                                            Colors.grey[600]),
-                                                  ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }),
-                                  const Divider(),
-                                  // Tổng cộng
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text(
-                                        "TỔNG CỘNG:",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        "${controller.formatDistance(controller.totalDistance.value)} - ${controller.formatDuration(controller.totalDuration.value)}",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.blue,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            else
-                              const Text("Nhấn nút để tối ưu tuyến đường"),
-                          ],
+                  MarkerLayer(
+                    markers: [
+                      // Current location
+                      Marker(
+                        point: controller.currentLocation.value!,
+                        width: 60,
+                        height: 60,
+                        child: const Icon(
+                          Icons.my_location,
+                          color: Colors.blue,
+                          size: 30.0,
                         ),
                       ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 20,
-                    left: 20,
-                    child: FloatingActionButton(
-                      onPressed: () => controller.fitAllPoints(),
-                      child: const Icon(Icons.zoom_out_map),
-                      mini: true,
-                    ),
+
+                      // Optimized route points with numbers
+                      ...controller.optimizedRoute
+                          .asMap()
+                          .entries
+                          .where((entry) =>
+                              entry.value != controller.currentLocation.value)
+                          .map((entry) {
+                        int idx = entry.key;
+                        LatLng point = entry.value;
+                        return Marker(
+                          point: point,
+                          width: 80,
+                          height: 80,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Text(
+                                  (idx).toString(),
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ),
+                              const Icon(
+                                Icons.location_pin,
+                                color: Colors.red,
+                                size: 30.0,
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ],
                   ),
                 ],
               );
             }),
-          )
+          ),
+          Obx(
+            () => Positioned(
+              top: 50,
+              left: 20,
+              right: 20,
+              child: Card(
+                elevation: 8,
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (controller.optimizedRoute.isNotEmpty)
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "TUYẾN ĐƯỜNG TỐI ƯU",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            // Hiển thị từng chặng
+                            ...List.generate(controller.optimizedRoute.length - 1,
+                                (index) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 4),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      width: 24,
+                                      height: 24,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color: Colors.blue,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Text(
+                                        '${index + 1}',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Chặng ${index + 1}',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          if (controller.distances.length > index)
+                                            Text(
+                                              '${controller.formatDistance(controller.distances[index])} - ${controller.formatDuration(controller.durations[index])}',
+                                              style: TextStyle(
+                                                  color: Colors.grey[600]),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+                            const Divider(),
+                            // Tổng cộng
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "TỔNG CỘNG:",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  "${controller.formatDistance(controller.totalDistance.value)} - ${controller.formatDuration(controller.totalDuration.value)}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      else
+                        const Text("Nhấn nút để tối ưu tuyến đường"),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            left: 20,
+            child: FloatingActionButton(
+              onPressed: () => controller.fitAllPoints(),
+              child: const Icon(Icons.zoom_out_map),
+              mini: true,
+            ),
+          ),
 
-          // Positioned(
-          //   top: 15.w,
-          //   left: 5.w,
-          //   child: GestureDetector(
-          //     onTap: () => Get.back(),
-          //     child: Container(
-          //       width: 10.w,
-          //       height: 10.w,
-          //       decoration: BoxDecoration(
-          //           color: Colors.white,
-          //           shape: BoxShape.circle,
-          //           boxShadow: [
-          //             BoxShadow(
-          //                 color: Colors.black.withOpacity(0.1),
-          //                 spreadRadius: 4,
-          //                 blurRadius: 4,
-          //                 offset: const Offset(1, 1))
-          //           ]),
-          //       child: Transform.translate(
-          //         offset: const Offset(4, 0),
-          //         child: Icon(
-          //           Icons.arrow_back_ios,
-          //           size: 5.w,
-          //           color: kPrimaryColor,
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
+          Positioned(
+            top: 15.w,
+            left: 5.w,
+            child: GestureDetector(
+              onTap: () => Get.back(),
+              child: Container(
+                width: 10.w,
+                height: 10.w,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          spreadRadius: 4,
+                          blurRadius: 4,
+                          offset: const Offset(1, 1))
+                    ]),
+                child: Transform.translate(
+                  offset: const Offset(4, 0),
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    size: 5.w,
+                    color: kPrimaryColor,
+                  ),
+                ),
+              ),
+            ),
+          ),
           // Obx(() {
           //   if (1 == 1
-          //     //controller.isRouteSelected.value
-          //     ) {
+          //       //controller.isRouteSelected.value
+          //       ) {
           //     return Positioned(
           //       bottom: 80,
           //       left: 20,
@@ -315,12 +300,12 @@ class MapDriverScreen extends StatelessWidget {
           //               ),
           //             ),
           //             Text(
-          //               'controller.selectedAddress.value',
+          //               controller.selectedAddress.value,
           //               style: const TextStyle(fontWeight: FontWeight.bold),
           //             ),
           //             const SizedBox(height: 10),
           //             ElevatedButton(
-          //               onPressed: (){},
+          //               onPressed: () {},
           //               //controller.openGoogleMaps,
           //               style: ElevatedButton.styleFrom(
           //                 backgroundColor: kPrimaryColor.withOpacity(0.6),
@@ -345,150 +330,150 @@ class MapDriverScreen extends StatelessWidget {
           //   return const SizedBox.shrink();
           // }),
 
-          // // Draggable Bottom Sheet
-          // Obx(
-          //   () => Positioned(
-          //     bottom: 0,
-          //     left: 0,
-          //     right: 0,
-          //     child: GestureDetector(
-          //       onVerticalDragUpdate: (details) {
-          //         controller.updateHeight(details.primaryDelta!, screenHeight);
-          //       },
-          //       child: Container(
-          //         height: screenHeight * controller.sheetHeight.value,
-          //         decoration: const BoxDecoration(
-          //           color: Colors.white,
-          //           borderRadius:
-          //               BorderRadius.vertical(top: Radius.circular(20)),
-          //           boxShadow: [
-          //             BoxShadow(
-          //               color: Colors.black26,
-          //               blurRadius: 10,
-          //             ),
-          //           ],
-          //         ),
-          //         child: Column(
-          //           children: [
-          //             Container(
-          //               width: 35.w,
-          //               height: 1.w,
-          //               margin: const EdgeInsets.symmetric(vertical: 10),
-          //               decoration: BoxDecoration(
-          //                 color: Colors.black,
-          //                 borderRadius: BorderRadius.circular(10),
-          //               ),
-          //             ),
-          //             Expanded(
-          //               child: SingleChildScrollView(
-          //                 physics: const BouncingScrollPhysics(),
-          //                 child: Column(
-          //                   children: [
-          //                     Text(
-          //                       txtTitleBottomM,
-          //                       style: PrimaryFont.headerTextBold().copyWith(
-          //                         color: const Color(0xFF233751),
-          //                       ),
-          //                     ),
-          //                     Row(
-          //                       crossAxisAlignment: CrossAxisAlignment.start,
-          //                       children: [
-          //                         SizedBox(
-          //                           width: 5.w,
-          //                         ),
-          //                         Column(
-          //                           children: [
-          //                             SizedBox(
-          //                               height: 8.h,
-          //                             ),
-          //                             Container(
-          //                               width: 3.w,
-          //                               height: 3.w,
-          //                               decoration: BoxDecoration(
-          //                                 color: kPrimaryColor,
-          //                                 borderRadius:
-          //                                     BorderRadius.circular(3.w),
-          //                               ),
-          //                             ),
-          //                             Container(
-          //                               width: 0.5.w,
-          //                               height: 50.w,
-          //                               color: kPrimaryColor,
-          //                             ),
-          //                             Container(
-          //                               width: 3.w,
-          //                               height: 3.w,
-          //                               decoration: BoxDecoration(
-          //                                 color: Colors.grey.withOpacity(0.5),
-          //                                 borderRadius:
-          //                                     BorderRadius.circular(3.w),
-          //                               ),
-          //                             ),
-          //                             Container(
-          //                               width: 0.5.w,
-          //                               height: 50.w,
-          //                               color: Colors.grey,
-          //                             ),
-          //                             Container(
-          //                               width: 3.w,
-          //                               height: 3.w,
-          //                               decoration: BoxDecoration(
-          //                                 color: Colors.grey.withOpacity(0.5),
-          //                                 borderRadius:
-          //                                     BorderRadius.circular(3.w),
-          //                               ),
-          //                             ),
-          //                           ],
-          //                         ),
-          //                         SizedBox(width: 5.w),
-          //                         Expanded(
-          //                           child: ListView.builder(
-          //                             shrinkWrap: true,
-          //                             physics:
-          //                                 const NeverScrollableScrollPhysics(),
-          //                             scrollDirection: Axis.vertical,
-          //                             itemCount: itemDestinationData.length,
-          //                             itemBuilder: (context, index) {
-          //                               final destination =
-          //                                   itemDestinationData[index];
-          //                               return _ItemDestination(
-          //                                 addressBusiness:
-          //                                     destination.addressBusiness,
-          //                                 numberBD: destination.numberBD,
-          //                                 status: destination.status,
-          //                                 totalWeight: destination.totalWeight,
-          //                                 phonePartner:
-          //                                     destination.phonePartner,
-          //                                 namePartner: destination.namePartner,
-          //                                 note: destination.note,
-          //                                 isLastItem: index ==
-          //                                     itemDestinationData.length - 1,
-          //                                 onTap: () {
-          //                                   // controller.makePhoneCall(
-          //                                   //     destination.phonePartner);
-          //                                   // if (kDebugMode) {
-          //                                   //   print("Call with me!");
-          //                                   // }
-          //                                 },
-          //                               );
-          //                             },
-          //                           ),
-          //                         ),
-          //                         SizedBox(
-          //                           width: 10.w,
-          //                         ),
-          //                       ],
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
+          // Draggable Bottom Sheet
+          Obx(
+            () => Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: GestureDetector(
+                onVerticalDragUpdate: (details) {
+                  controller.updateHeight(details.primaryDelta!, screenHeight);
+                },
+                child: Container(
+                  height: screenHeight * controller.sheetHeight.value,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(20)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 10,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 35.w,
+                        height: 1.w,
+                        margin: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          child: Column(
+                            children: [
+                              Text(
+                                txtTitleBottomM,
+                                style: PrimaryFont.headerTextBold().copyWith(
+                                  color: const Color(0xFF233751),
+                                ),
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 5.w,
+                                  ),
+                                  Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 8.h,
+                                      ),
+                                      Container(
+                                        width: 3.w,
+                                        height: 3.w,
+                                        decoration: BoxDecoration(
+                                          color: kPrimaryColor,
+                                          borderRadius:
+                                              BorderRadius.circular(3.w),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 0.5.w,
+                                        height: 50.w,
+                                        color: kPrimaryColor,
+                                      ),
+                                      Container(
+                                        width: 3.w,
+                                        height: 3.w,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          borderRadius:
+                                              BorderRadius.circular(3.w),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 0.5.w,
+                                        height: 50.w,
+                                        color: Colors.grey,
+                                      ),
+                                      Container(
+                                        width: 3.w,
+                                        height: 3.w,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.withOpacity(0.5),
+                                          borderRadius:
+                                              BorderRadius.circular(3.w),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(width: 5.w),
+                                  Expanded(
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: itemDestinationData.length,
+                                      itemBuilder: (context, index) {
+                                        final destination =
+                                            itemDestinationData[index];
+                                        return _ItemDestination(
+                                          addressBusiness:
+                                              destination.addressBusiness,
+                                          numberBD: destination.numberBD,
+                                          status: destination.status,
+                                          totalWeight: destination.totalWeight,
+                                          phonePartner:
+                                              destination.phonePartner,
+                                          namePartner: destination.namePartner,
+                                          note: destination.note,
+                                          isLastItem: index ==
+                                              itemDestinationData.length - 1,
+                                          onTap: () {
+                                            // controller.makePhoneCall(
+                                            //     destination.phonePartner);
+                                            // if (kDebugMode) {
+                                            //   print("Call with me!");
+                                            // }
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10.w,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
