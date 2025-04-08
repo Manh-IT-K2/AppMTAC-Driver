@@ -1,4 +1,5 @@
 class DestinationModel {
+  final String nameBusiness;
   final String addressBusiness;
   final String numberBD;
   final String status;
@@ -6,8 +7,11 @@ class DestinationModel {
   final String phonePartner;
   final String note;
   final String namePartner;
+  double latitude;
+  double longitude;
 
   DestinationModel({
+    required this.nameBusiness,
     required this.addressBusiness,
     required this.numberBD,
     required this.status,
@@ -15,23 +19,30 @@ class DestinationModel {
     required this.phonePartner,
     required this.note,
     required this.namePartner,
+    required this.latitude,
+    required this.longitude,
   });
 
   // convert Map to DestinationModel
   factory DestinationModel.fromMap(Map<String, dynamic> map) {
     return DestinationModel(
+        nameBusiness: map['nameBusiness'],
         addressBusiness: map['addressBusiness'] ?? '',
         numberBD: map['numberBD'],
         status: map['status'] ?? '',
         totalWeight: map['totalWeight'] ?? '',
         phonePartner: map['phonePartner'] ?? '',
         namePartner: map['namePartner'],
-        note: map['note'] ?? ' ');
+        note: map['note'] ?? ' ',
+         latitude: map['latitude'] ?? ' ',
+          longitude: map['longitude'] ?? ' ',
+        );
   }
 
   // convert DestinationModel to Map
   Map<String, dynamic> toMap() {
     return {
+      'nameBusiness': nameBusiness,
       'addressBusiness': addressBusiness,
       'numberBD': numberBD,
       'status': status,
@@ -39,6 +50,9 @@ class DestinationModel {
       'phonePartner': phonePartner,
       'namePartner': namePartner,
       'note': note,
+      'latitude': latitude,
+      'longitude': longitude,
+
     };
   }
 }

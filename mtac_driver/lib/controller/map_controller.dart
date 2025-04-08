@@ -7,13 +7,24 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mtac_driver/data/map_screen/item_destination.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MapDriverController extends GetxController {
+  var statusInputWeight = false.obs;
+  // Thêm vào controller
+  final RxMap<LatLng, String> weightMarkers = <LatLng, String>{}.obs;
+
+  // Hàm cập nhật khối lượng
+  void updateWeight(LatLng position, String weight) {
+    weightMarkers[position] = weight;
+  }
+
   //
-  var sheetHeight = 0.07.obs;
+  var sheetHeight = 0.7.obs;
   void updateHeight(double delta, double screenHeight) {
     sheetHeight.value -= delta / screenHeight;
-    sheetHeight.value = sheetHeight.value.clamp(0.07, 0.7);
+    sheetHeight.value = sheetHeight.value.clamp(0.08, 0.7);
   }
 
   // Thêm access token Mapbox của bạn
@@ -24,7 +35,7 @@ class MapDriverController extends GetxController {
   var startLocation = Rx<LatLng>(const LatLng(0, 0));
   var endLocation = Rx<LatLng>(const LatLng(0, 0));
   var currentLocation =
-      Rx<LatLng?>(const LatLng(9.91613239469001, 105.87755169181108));
+      Rx<LatLng?>(const LatLng(10.841626348121663, 106.67731436791038));
   final RxList<LatLng> routePoints = <LatLng>[].obs;
   final RxList<LatLng> mainPoints = <LatLng>[].obs;
   final RxList<LatLng> optimizedRoute = <LatLng>[].obs;
@@ -35,12 +46,8 @@ class MapDriverController extends GetxController {
   // initial flutter map
   final MapController mapController = MapController();
   // list route
-  final List<String> routeAddresses = [
-    "Xuân Hòa, Kế Sách, Sóc Trăng, Việt Nam",
-    "Nam Sông Hậu, Kế Sách, Sóc Trăng, Việt Nam",
-    "Phụng Hiệp, Hậu Giang, Việt Nam",
-    "Phú Tân, Châu Thành, Hậu Giang, Việt Nam",
-  ];
+  final List<String> routeAddresses =
+      itemDestinationData.map((e) => e.addressBusiness).toList();
   // Thêm các thông số xe tải
   final RxDouble truckMaxHeight = 4.0.obs; // Chiều cao tối đa (m)
   final RxDouble truckMaxWeight = 16.0.obs; // Trọng tải tối đa (tấn)
@@ -52,7 +59,6 @@ class MapDriverController extends GetxController {
   void onInit() {
     super.onInit();
     //getCurrentLocation();
-    //getRoute();
     getOptimizedRoute();
     formatTruckInfo();
   }
@@ -138,7 +144,7 @@ class MapDriverController extends GetxController {
         print("✅ Current location: ${currentLocation.value}");
       }
       // auto move camera new location
-      moveToCurrentLocation();
+      //moveToCurrentLocation();
     } catch (e) {
       if (kDebugMode) {
         print("⚠️ Error getting current location: $e");
@@ -150,13 +156,16 @@ class MapDriverController extends GetxController {
   Future<List<LatLng>> getCoordinates() async {
     mainPoints.clear();
     List<LatLng> results = [];
-    for (var address in routeAddresses) {
+
+    for (int i = 0; i < routeAddresses.length; i++) {
+      String address = routeAddresses[i];
+
       final url = Uri.parse(
           "https://nominatim.openstreetmap.org/search?q=${Uri.encodeComponent(address)}&format=json&addressdetails=1&limit=1");
       try {
-        // Send a request to the Nominatim API to convert the address to GPS coordinates.
         final response = await http.get(url,
             headers: {"User-Agent": "YourAppName/1.0 (your@email.com)"});
+
         if (response.statusCode == 200) {
           final List data = json.decode(response.body);
           if (data.isNotEmpty) {
@@ -164,10 +173,17 @@ class MapDriverController extends GetxController {
             final lon = double.tryParse(data[0]["lon"]) ?? 0;
             if (lat != 0 && lon != 0) {
               LatLng point = LatLng(lat, lon);
-              // save
               results.add(point);
-              //save for mainpoints
               mainPoints.add(point);
+
+              // ✅ Gán tọa độ vào itemDestinationData tương ứng
+              if (i < itemDestinationData.length) {
+                itemDestinationData[i].latitude = lat;
+                itemDestinationData[i].longitude = lon;
+                // print("📍 Tọa độ mới cho '${itemDestinationData[i].nameBusiness}': "
+                //       "${itemDestinationData[i].latitude}, ${itemDestinationData[i].longitude}");
+              }
+
               if (kDebugMode) {
                 print("✅ Đã lấy tọa độ chính xác cho '$address': $lat, $lon");
               }
@@ -175,6 +191,7 @@ class MapDriverController extends GetxController {
             }
           }
         }
+
         if (kDebugMode) {
           print("⚠️ Không lấy được tọa độ cho '$address'");
         }
@@ -184,6 +201,7 @@ class MapDriverController extends GetxController {
         }
       }
     }
+
     return results;
   }
 
@@ -206,10 +224,11 @@ class MapDriverController extends GetxController {
           "&geometries=geojson"
           "&steps=true"
           "&annotations=distance,duration"
-          "&vehicle_width=${params['vehicle_width']}"
-          "&vehicle_height=${params['vehicle_height']}"
-          "&vehicle_weight=${params['vehicle_weight']}"
-          "&hazardous_materials=${params['hazardous_goods']}");
+          // "&vehicle_width=${params['vehicle_width']}"
+          // "&vehicle_height=${params['vehicle_height']}"
+          // "&vehicle_weight=${params['vehicle_weight']}"
+          // "&hazardous_materials=${params['hazardous_goods']}"
+          );
 
       try {
         final response =
@@ -254,10 +273,11 @@ class MapDriverController extends GetxController {
             "?access_token=$mapboxAccessToken"
             "&geometries=geojson"
             "&annotations=distance"
-            "&vehicle_width=${params['vehicle_width']}"
-            "&vehicle_height=${params['vehicle_height']}"
-            "&vehicle_weight=${params['vehicle_weight']}"
-            "&hazardous_materials=${params['hazardous_goods']}");
+            // "&vehicle_width=${params['vehicle_width']}"
+            // "&vehicle_height=${params['vehicle_height']}"
+            // "&vehicle_weight=${params['vehicle_weight']}"
+            // "&hazardous_materials=${params['hazardous_goods']}"
+            );
 
     try {
       final response = await http.get(url).timeout(const Duration(seconds: 10));
@@ -490,8 +510,7 @@ class MapDriverController extends GetxController {
     }
   }
 
-  // Get route from OSRM
-  // Thay thế hàm fetchRouteFromOSRM bằng hàm sử dụng Mapbox
+  // Get route from Mapbox
   Future<void> fetchRouteFromMapbox(List<LatLng> points) async {
     if (points.length < 2) {
       if (kDebugMode) print("⚠️ Cần ít nhất 2 điểm để tạo tuyến đường");
@@ -726,5 +745,21 @@ class MapDriverController extends GetxController {
   - Chiều rộng: ${truckWidth.value}m
   ${truckHazardousMaterials.value ? '⚠️ Vận chuyển hàng nguy hiểm' : ''}
   ''';
+  }
+
+  Future<void> makePhoneCall(String phoneNumber) async {
+    final Uri uri = Uri(scheme: 'tel', path: phoneNumber);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Không thể mở app gọi điện với số: $phoneNumber';
+    }
+  }
+
+  bool isSameLocation(LatLng point1, LatLng point2) {
+    const epsilon = 0.00001; // Sai số cho phép
+    return (point1.latitude - point2.latitude).abs() < epsilon &&
+        (point1.longitude - point2.longitude).abs() < epsilon;
   }
 }
