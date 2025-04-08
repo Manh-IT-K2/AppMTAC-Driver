@@ -17,6 +17,7 @@ import 'package:sizer/sizer.dart';
 class MapDriverScreen extends StatelessWidget {
   MapDriverScreen({super.key});
 
+  // initial MapDriverController
   final MapDriverController controller = Get.put(MapDriverController());
 
   @override
@@ -27,100 +28,107 @@ class MapDriverScreen extends StatelessWidget {
       body: Stack(
         children: [
           Center(
-            child: Obx(() {
-              if (controller.optimizedRoute.isEmpty) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+            child: Obx(
+              () {
+                if (controller.optimizedRoute.isEmpty) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 15.h,
+                      ),
+                      Image.asset(
+                        "assets/image/loadingTruck.gif",
+                        width: 40,
+                        height: 50,
+                        fit: BoxFit.fill,
+                      ),
+                      const SizedBox(height: 16),
+                      const Text("Đang tối ưu tuyến đường...."),
+                    ],
+                  );
+                }
+                return FlutterMap(
+                  mapController: controller.mapController,
+                  options: MapOptions(
+                    initialCenter: controller.currentLocation.value ??
+                        const LatLng(
+                            10.8231, 106.6297), // Tọa độ mặc định (HCM)
+                    initialZoom: 12.0,
+                    minZoom: 5,
+                    maxZoom: 18,
+                    onMapReady: () {
+                      // Khi map ready, hiển thị toàn bộ điểm nếu có
+                      if (controller.optimizedRoute.isNotEmpty ||
+                          controller.currentLocation.value != null) {
+                        controller.fitAllPoints();
+                      } else {
+                        controller.moveToCurrentLocation();
+                      }
+                    },
+                  ),
                   children: [
-                    SizedBox(
-                      height: 15.h,
+                    TileLayer(
+                      urlTemplate:
+                          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                      userAgentPackageName: 'com.example.app',
+                      subdomains: const ['a', 'b', 'c'],
                     ),
-                    Image.asset(
-                      "assets/image/loadingTruck.gif",
-                      width: 40,
-                      height: 50,
-                      fit: BoxFit.fill,
+                    PolylineLayer(
+                      polylines: [
+                        if (controller.routePoints.isNotEmpty)
+                          Polyline(
+                            points: controller.routePoints,
+                            strokeWidth: 5.0,
+                            color: Colors.blueAccent.withOpacity(0.8),
+                          ),
+                      ],
                     ),
-                    const SizedBox(height: 16),
-                    const Text("Đang tối ưu tuyến đường...."),
+                    MarkerLayer(
+                      markers: [
+                        // Current location marker
+                        Marker(
+                          point: controller.currentLocation.value!,
+                          width: 60,
+                          height: 60,
+                          child: const Icon(
+                            HugeIcons.strokeRoundedGps01,
+                            color: kPrimaryColor,
+                            size: 30.0,
+                          ),
+                        ),
+
+                        // Optimized route points
+                        ...controller.optimizedRoute
+                            .asMap()
+                            .entries
+                            .where((entry) {
+                          final current = controller.currentLocation.value;
+                          return current == null ||
+                              current.latitude != entry.value.latitude ||
+                              current.longitude != entry.value.longitude;
+                        }).map((entry) {
+                          int idx = entry.key;
+                          LatLng point = entry.value;
+                          bool isLast =
+                              idx == controller.optimizedRoute.length - 1;
+                          return Marker(
+                            point: point,
+                            width: 60,
+                            height: 80,
+                            child:
+                                _buildCustomMarker(idx, point, isLast: isLast),
+                          );
+                        }),
+                      ],
+                    ),
                   ],
                 );
-              }
-              return FlutterMap(
-                mapController: controller.mapController,
-                options: MapOptions(
-                  initialCenter: controller.currentLocation.value ??
-                      const LatLng(10.8231, 106.6297), // Tọa độ mặc định (HCM)
-                  initialZoom: 12.0,
-                  minZoom: 5,
-                  maxZoom: 18,
-                  onMapReady: () {
-                    // Khi map ready, hiển thị toàn bộ điểm nếu có
-                    if (controller.optimizedRoute.isNotEmpty ||
-                        controller.currentLocation.value != null) {
-                      controller.fitAllPoints();
-                    } else {
-                      controller.moveToCurrentLocation();
-                    }
-                  },
-                ),
-                children: [
-                  TileLayer(
-                    urlTemplate:
-                        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                    userAgentPackageName: 'com.example.app',
-                    subdomains: const ['a', 'b', 'c'],
-                  ),
-                  PolylineLayer(
-                    polylines: [
-                      if (controller.routePoints.isNotEmpty)
-                        Polyline(
-                          points: controller.routePoints,
-                          strokeWidth: 5.0,
-                          color: Colors.blueAccent.withOpacity(0.8),
-                        ),
-                    ],
-                  ),
-                  MarkerLayer(
-                    markers: [
-                      // Current location marker
-                      Marker(
-                        point: controller.currentLocation.value!,
-                        width: 60,
-                        height: 60,
-                        child: const Icon(
-                          Icons.my_location,
-                          color: Colors.blue,
-                          size: 30.0,
-                        ),
-                      ),
-
-                      // Optimized route points
-                      ...controller.optimizedRoute
-                          .asMap()
-                          .entries
-                          .where((entry) {
-                        final current = controller.currentLocation.value;
-                        return current == null ||
-                            current.latitude != entry.value.latitude ||
-                            current.longitude != entry.value.longitude;
-                      }).map((entry) {
-                        int idx = entry.key;
-                        LatLng point = entry.value;
-                        return Marker(
-                          point: point,
-                          width: 60,
-                          height: 80,
-                          child: _buildCustomMarker(idx, point),
-                        );
-                      }).toList(),
-                    ],
-                  )
-                ],
-              );
-            }),
+              },
+            ),
           ),
 
+          //
           Positioned(
             top: 15.w,
             right: 5.w,
@@ -148,6 +156,7 @@ class MapDriverScreen extends StatelessWidget {
             ),
           ),
 
+          //
           Positioned(
             top: 15.w,
             left: 5.w,
@@ -225,12 +234,15 @@ class MapDriverScreen extends StatelessWidget {
                                   color: const Color(0xFF233751),
                                 ),
                               ),
-                              controller.optimizedRoute.isNotEmpty ? Text(
-                                "${controller.formatDistance(controller.totalDistance.value)} - ${controller.formatDuration(controller.totalDuration.value)}",
-                                style: PrimaryFont.titleTextMedium().copyWith(
-                                  color: Colors.red,
-                                ),
-                              ) : const SizedBox(),
+                              controller.optimizedRoute.isNotEmpty
+                                  ? Text(
+                                      "${controller.formatDistance(controller.totalDistance.value)} - ${controller.formatDuration(controller.totalDuration.value)}",
+                                      style: PrimaryFont.titleTextMedium()
+                                          .copyWith(
+                                        color: Colors.red,
+                                      ),
+                                    )
+                                  : const SizedBox(),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -269,13 +281,14 @@ class MapDriverScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCustomMarker(int index, LatLng point) {
+  // initial widget
+  Widget _buildCustomMarker(int index, LatLng point, {bool isLast = false}) {
     return GestureDetector(
       onTap: () => _showWeightInputDialog(Get.context!, point),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Khối lượng
+          // Hiển thị khối lượng nếu có
           if (controller.weightMarkers[point] != null)
             Container(
               padding: const EdgeInsets.all(4),
@@ -300,14 +313,16 @@ class MapDriverScreen extends StatelessWidget {
                 ),
               ),
             ),
-          // Marker chính
+          // Marker
           Stack(
             alignment: Alignment.center,
             children: [
-              const Icon(
+              Icon(
                 Icons.location_pin,
-                color: Colors.red,
-                size: 40,
+                color: isLast
+                    ? Colors.purple
+                    : Colors.red, // đổi màu nếu là điểm cuối
+                size: 40, // to hơn nếu là cuối
               ),
               Positioned(
                 top: 4,
@@ -319,14 +334,20 @@ class MapDriverScreen extends StatelessWidget {
                     color: Colors.white,
                     shape: BoxShape.circle,
                   ),
-                  child: Text(
-                    '$index',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red,
-                    ),
-                  ),
+                  child: isLast
+                      ? Icon(
+                          HugeIcons.strokeRoundedPackage03,
+                          size: 5.w,
+                          color: kPrimaryColor,
+                        )
+                      : Text(
+                          '$index',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.red,
+                          ),
+                        ),
                 ),
               ),
             ],
@@ -336,6 +357,7 @@ class MapDriverScreen extends StatelessWidget {
     );
   }
 
+  //
   Widget _buildDestinationList() {
     // Sắp xếp lại danh sách theo thứ tự tối ưu
     if (controller.optimizedRoute.isNotEmpty) {
@@ -380,6 +402,7 @@ class MapDriverScreen extends StatelessWidget {
     );
   }
 
+  //
   void _showWeightInputDialog(BuildContext context, LatLng position) {
     final TextEditingController weightController = TextEditingController();
     String errText = "";
@@ -601,7 +624,7 @@ class MapDriverScreen extends StatelessWidget {
               ),
             ],
           )
-        : SizedBox();
+        : const SizedBox();
   }
 }
 
