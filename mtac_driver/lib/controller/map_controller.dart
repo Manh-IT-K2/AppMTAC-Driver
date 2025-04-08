@@ -44,7 +44,7 @@ class MapDriverController extends GetxController {
   final RxDouble totalDistance = 0.0.obs;
   final RxDouble totalDuration = 0.0.obs;
   // initial flutter map
-  final MapController mapController = MapController();
+  MapController mapController = MapController();
   // list route
   final List<String> routeAddresses =
       itemDestinationData.map((e) => e.addressBusiness).toList();

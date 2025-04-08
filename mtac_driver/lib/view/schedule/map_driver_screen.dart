@@ -5,7 +5,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:mtac_driver/common/notify_success_dialog.dart';
 import 'package:mtac_driver/controller/map_controller.dart';
 import 'package:mtac_driver/data/map_screen/item_destination.dart';
 import 'package:mtac_driver/model/destination_model.dart';
@@ -29,13 +28,21 @@ class MapDriverScreen extends StatelessWidget {
         children: [
           Center(
             child: Obx(() {
-              if (controller.currentLocation.value == null) {
-                return const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              if (controller.optimizedRoute.isEmpty) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 16),
-                    Text("Đang xác định vị trí hiện tại..."),
+                    SizedBox(
+                      height: 15.h,
+                    ),
+                    Image.asset(
+                      "assets/image/loadingTruck.gif",
+                      width: 40,
+                      height: 50,
+                      fit: BoxFit.fill,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text("Đang tối ưu tuyến đường...."),
                   ],
                 );
               }
@@ -218,12 +225,12 @@ class MapDriverScreen extends StatelessWidget {
                                   color: const Color(0xFF233751),
                                 ),
                               ),
-                              Text(
+                              controller.optimizedRoute.isNotEmpty ? Text(
                                 "${controller.formatDistance(controller.totalDistance.value)} - ${controller.formatDuration(controller.totalDuration.value)}",
                                 style: PrimaryFont.titleTextMedium().copyWith(
                                   color: Colors.red,
                                 ),
-                              ),
+                              ) : const SizedBox(),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -360,7 +367,17 @@ class MapDriverScreen extends StatelessWidget {
         },
       );
     }
-    return const SizedBox();
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.only(top: 20.h),
+        child: Image.asset(
+          "assets/image/loadingDot.gif",
+          width: 70,
+          height: 70,
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
   }
 
   void _showWeightInputDialog(BuildContext context, LatLng position) {
@@ -536,54 +553,56 @@ class MapDriverScreen extends StatelessWidget {
     print(
         "✅ Đã sắp xếp lại itemDestinationData theo optimizedRoute: ${itemDestinationData.length}");
   }
-}
 
-Widget _buildRouteDots() {
-  return Column(
-    children: [
-      Container(
-        width: 3.w,
-        height: 3.w,
-        decoration: BoxDecoration(
-          color: kPrimaryColor,
-          borderRadius: BorderRadius.circular(3.w),
-        ),
-      ),
-      Container(
-        width: 0.5.w,
-        height: 50.w,
-        color: kPrimaryColor,
-      ),
-      ...List.generate(
-        itemDestinationData.length - 2,
-        (index) => Column(
-          children: [
-            Container(
-              width: 3.w,
-              height: 3.w,
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(3.w),
+  Widget _buildRouteDots() {
+    return controller.optimizedRoute.isNotEmpty
+        ? Column(
+            children: [
+              Container(
+                width: 3.w,
+                height: 3.w,
+                decoration: BoxDecoration(
+                  color: kPrimaryColor,
+                  borderRadius: BorderRadius.circular(3.w),
+                ),
               ),
-            ),
-            Container(
-              width: 0.5.w,
-              height: 50.w,
-              color: Colors.grey,
-            ),
-          ],
-        ),
-      ),
-      Container(
-        width: 3.w,
-        height: 3.w,
-        decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(3.w),
-        ),
-      ),
-    ],
-  );
+              Container(
+                width: 0.5.w,
+                height: 50.w,
+                color: kPrimaryColor,
+              ),
+              ...List.generate(
+                itemDestinationData.length - 2,
+                (index) => Column(
+                  children: [
+                    Container(
+                      width: 3.w,
+                      height: 3.w,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(3.w),
+                      ),
+                    ),
+                    Container(
+                      width: 0.5.w,
+                      height: 50.w,
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                width: 3.w,
+                height: 3.w,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(3.w),
+                ),
+              ),
+            ],
+          )
+        : SizedBox();
+  }
 }
 
 class _ItemDestination extends StatelessWidget {
