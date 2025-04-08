@@ -11,26 +11,27 @@ import 'package:mtac_driver/data/map_screen/item_destination.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapDriverController extends GetxController {
+  // status err input weight
   var statusInputWeight = false.obs;
-  // Thêm vào controller
-  final RxMap<LatLng, String> weightMarkers = <LatLng, String>{}.obs;
 
-  // Hàm cập nhật khối lượng
+  // list weight on point
+  final RxMap<LatLng, String> weightMarkers = <LatLng, String>{}.obs;
   void updateWeight(LatLng position, String weight) {
     weightMarkers[position] = weight;
   }
 
-  //
+  // height of bottom sheet map
   var sheetHeight = 0.7.obs;
   void updateHeight(double delta, double screenHeight) {
     sheetHeight.value -= delta / screenHeight;
     sheetHeight.value = sheetHeight.value.clamp(0.08, 0.7);
   }
 
-  // Thêm access token Mapbox của bạn
+  // Token Mapbox Direction API
   final String mapboxAccessToken =
       'pk.eyJ1IjoicW1hbmgiLCJhIjoiY205NWNzcmlhMHZoajJycjBibnR5dW9rbiJ9.VEIUO9PSzCRKncGhIscUMw';
   final String mapboxStyleUrl = 'mapbox://styles/mapbox/streets-v11';
+
   // inital variable Map
   var startLocation = Rx<LatLng>(const LatLng(0, 0));
   var endLocation = Rx<LatLng>(const LatLng(0, 0));
@@ -43,27 +44,19 @@ class MapDriverController extends GetxController {
   final RxList<double> durations = <double>[].obs;
   final RxDouble totalDistance = 0.0.obs;
   final RxDouble totalDuration = 0.0.obs;
+
   // initial flutter map
   MapController mapController = MapController();
+
   // list route
   final List<String> routeAddresses =
       itemDestinationData.map((e) => e.addressBusiness).toList();
-  // Thêm các thông số xe tải
-  final RxDouble truckMaxHeight = 4.0.obs; // Chiều cao tối đa (m)
-  final RxDouble truckMaxWeight = 16.0.obs; // Trọng tải tối đa (tấn)
-  final RxDouble truckWidth = 2.5.obs; // Chiều rộng (m)
-  final RxBool truckHazardousMaterials = false.obs; // Hàng nguy hiểm
 
-  // function initial
-  @override
-  void onInit() {
-    super.onInit();
-    //getCurrentLocation();
-    getOptimizedRoute();
-    formatTruckInfo();
-  }
-
-  // Hàm cập nhật thông số xe tải
+  // initial variable truck parameters
+  final RxDouble truckMaxHeight = 4.0.obs;
+  final RxDouble truckMaxWeight = 16.0.obs;
+  final RxDouble truckWidth = 2.5.obs;
+  final RxBool truckHazardousMaterials = false.obs;
   void updateTruckSpecs({
     double? maxHeight,
     double? maxWeight,
@@ -73,8 +66,9 @@ class MapDriverController extends GetxController {
     if (maxHeight != null) truckMaxHeight.value = maxHeight;
     if (maxWeight != null) truckMaxWeight.value = maxWeight;
     if (width != null) truckWidth.value = width;
-    if (hazardousMaterials != null)
+    if (hazardousMaterials != null) {
       truckHazardousMaterials.value = hazardousMaterials;
+    }
 
     if (kDebugMode) {
       print('''
@@ -87,7 +81,7 @@ class MapDriverController extends GetxController {
     }
   }
 
-  // Hàm lấy thông số dạng Map để gửi API
+  // function get map parameter to send API
   Map<String, dynamic> getTruckParams() {
     return {
       'vehicle_width': truckWidth.value,
@@ -97,6 +91,26 @@ class MapDriverController extends GetxController {
     };
   }
 
+  // funtion format truck infor
+  String formatTruckInfo() {
+    return '''
+  🚛 Thông số xe:
+  - Chiều cao: ${truckMaxHeight.value}m
+  - Trọng tải: ${truckMaxWeight.value}tấn
+  - Chiều rộng: ${truckWidth.value}m
+  ${truckHazardousMaterials.value ? '⚠️ Vận chuyển hàng nguy hiểm' : ''}
+  ''';
+  }
+
+  // function initial
+  @override
+  void onInit() {
+    super.onInit();
+    //getCurrentLocation();
+    getOptimizedRoute();
+    formatTruckInfo();
+  }
+
   // move camera to currentLocation
   void moveToCurrentLocation() {
     if (currentLocation.value != null) {
@@ -104,6 +118,27 @@ class MapDriverController extends GetxController {
       if (kDebugMode) {
         print("📌 Đã di chuyển camera đến vị trí hiện tại");
       }
+    }
+  }
+
+  // move camera preview all point
+  void fitAllPoints() {
+    if (optimizedRoute.isEmpty && currentLocation.value == null) return;
+    // create all list need preview
+    List<LatLng> allPoints = [];
+    if (currentLocation.value != null) {
+      allPoints.add(currentLocation.value!);
+    }
+    allPoints.addAll(optimizedRoute);
+    allPoints.addAll(routePoints);
+    if (allPoints.isEmpty) return;
+    final bounds = LatLngBounds.fromPoints(allPoints);
+    // preview all point
+    mapController.fitCamera(CameraFit.bounds(
+        bounds: bounds, padding: const EdgeInsets.all(50), maxZoom: 16.0));
+    if (kDebugMode) {
+      print(
+          "🗺️ Đã điều chỉnh bản đồ hiển thụ toàn bộ ${allPoints.length} điểm");
     }
   }
 
@@ -176,14 +211,13 @@ class MapDriverController extends GetxController {
               results.add(point);
               mainPoints.add(point);
 
-              // ✅ Gán tọa độ vào itemDestinationData tương ứng
+              // assign coordinates to itemDestinationData
               if (i < itemDestinationData.length) {
                 itemDestinationData[i].latitude = lat;
                 itemDestinationData[i].longitude = lon;
                 // print("📍 Tọa độ mới cho '${itemDestinationData[i].nameBusiness}': "
                 //       "${itemDestinationData[i].latitude}, ${itemDestinationData[i].longitude}");
               }
-
               if (kDebugMode) {
                 print("✅ Đã lấy tọa độ chính xác cho '$address': $lat, $lon");
               }
@@ -191,7 +225,6 @@ class MapDriverController extends GetxController {
             }
           }
         }
-
         if (kDebugMode) {
           print("⚠️ Không lấy được tọa độ cho '$address'");
         }
@@ -201,11 +234,10 @@ class MapDriverController extends GetxController {
         }
       }
     }
-
     return results;
   }
 
-  // Thay thế hàm checkTruckRestrictions bằng phiên bản Mapbox
+  // function checkTruckRestrictions with Mapbox
   Future<void> checkTruckRestrictions(List<LatLng> route) async {
     if (route.length < 2) return;
 
@@ -215,7 +247,7 @@ class MapDriverController extends GetxController {
       final start = route[i];
       final end = route[i + 1];
 
-      final params = getTruckParams();
+      //final params = getTruckParams();
       final url = Uri.parse(
           "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/"
           "${start.longitude},${start.latitude};"
@@ -238,17 +270,19 @@ class MapDriverController extends GetxController {
           if (data['code'] == 'Ok' && data['routes'].isNotEmpty) {
             final routeInfo = data['routes'][0];
 
-            // Kiểm tra các cảnh báo trong từng bước
+            // Check warnings in each step
             for (final leg in routeInfo['legs']) {
               for (final step in leg['steps']) {
                 if (step['maneuver']['type'] == 'avoidance') {
-                  if (kDebugMode)
+                  if (kDebugMode) {
                     print(
                         "⚠️ Cảnh báo tránh: ${step['maneuver']['instruction']}");
+                  }
                 }
                 if (step['mode'] == 'ferry') {
-                  if (kDebugMode)
+                  if (kDebugMode) {
                     print("⛴️ Phà: Cần kiểm tra hạn chế cho xe tải");
+                  }
                 }
                 if (step['name']?.toLowerCase().contains('tunnel') == true) {
                   if (kDebugMode) print("🚇 Đường hầm: Kiểm tra chiều cao");
@@ -263,9 +297,9 @@ class MapDriverController extends GetxController {
     }
   }
 
-  // Use OSRM to calculate the actual distance between two points
+  // Use mapbox to calculate the actual distance between two points
   Future<double> calculateRoadDistance(LatLng point1, LatLng point2) async {
-    final params = getTruckParams();
+    //final params = getTruckParams();
     final url =
         Uri.parse("https://api.mapbox.com/directions/v5/mapbox/driving-traffic/"
             "${point1.longitude},${point1.latitude};"
@@ -292,47 +326,6 @@ class MapDriverController extends GetxController {
       if (kDebugMode) print("⚠️ Lỗi tính khoảng cách: $e");
       return 0.0;
     }
-  }
-
-  // Use greedy algorithm to find shortest route
-  Future<List<LatLng>> greedyTSPWithTraffic(
-      LatLng start, List<LatLng> points, LatLng end) async {
-    List<LatLng> result = [start];
-    List<LatLng> unvisited = List.from(points);
-    LatLng current = start;
-
-    // average speed by road type km/h
-    final roadSpeeds = {
-      'motorway': 80.0,
-      'trunk': 60.0,
-      'primary': 50.0,
-      'secondary': 40.0,
-      'tertiary': 30.0,
-      'unclassified': 20.0,
-      'residential': 20.0,
-    };
-    while (unvisited.isNotEmpty) {
-      // Find nearest point based on actual travel time
-      int bestIndex = 0;
-      double bestTime = double.infinity;
-      for (int i = 0; i < unvisited.length; i++) {
-        // distance
-        final distance = await calculateRoadDistance(current, unvisited[i]);
-        // speed
-        final speed =
-            await estimateRoadSpeed(current, unvisited[i], roadSpeeds);
-        final time = distance / (speed * 1000 / 3600); // s
-        if (time < bestTime) {
-          bestTime = time;
-          bestIndex = i;
-        }
-      }
-      current = unvisited[bestIndex];
-      result.add(current);
-      unvisited.removeAt(bestIndex);
-    }
-    result.add(end);
-    return result;
   }
 
   // Speed ​​estimation function based on road type
@@ -378,7 +371,150 @@ class MapDriverController extends GetxController {
     }
   }
 
-// Hàm phân loại loại đường từ step của Mapbox
+  // Use greedy algorithm to find shortest route
+  // Cache for storing calculated distances and speeds
+  final _distanceCache = <String, double>{};
+  final _speedCache = <String, double>{};
+
+  Future<List<LatLng>> greedyTSPWithTraffic(
+      LatLng start, List<LatLng> points, LatLng end) async {
+    if (kDebugMode) {
+      print("🚀 Bắt đầu thuật toán tham lam với ${points.length} điểm");
+    }
+
+    // Validate input
+    if (points.isEmpty) return [start, end];
+
+    List<LatLng> result = [];
+    List<LatLng> unvisited = List.from(points);
+    LatLng current = start;
+
+    // Road speed profiles (km/h)
+    final roadSpeeds = {
+      'motorway': 80.0,
+      'trunk': 60.0,
+      'primary': 50.0,
+      'secondary': 40.0,
+      'tertiary': 30.0,
+      'unclassified': 20.0,
+      'residential': 20.0,
+    };
+
+    // Retry configuration
+    const maxRetries = 2;
+    const retryDelay = Duration(milliseconds: 500);
+
+    while (unvisited.isNotEmpty) {
+      int bestIndex = 0;
+      double bestTime = double.infinity;
+      List<bool> failedPoints = List.filled(unvisited.length, false);
+
+      // Parallel processing for better performance
+      await Future.wait(unvisited.asMap().entries.map((entry) async {
+        final i = entry.key;
+        final point = entry.value;
+
+        // Generate cache key
+        final cacheKey = '${current.latitude},${current.longitude}_'
+            '${point.latitude},${point.longitude}';
+
+        try {
+          // Check cache first
+          double distance = 0.0;
+          double speed = 30.0;
+
+          if (_distanceCache.containsKey(cacheKey)) {
+            distance = _distanceCache[cacheKey]!;
+            speed = _speedCache[cacheKey]!;
+            if (kDebugMode) {
+              print("💾 Sử dụng khoảng cách từ cache cho điểm $i");
+            }
+          } else {
+            // Retry mechanism for distance calculation
+            int retryCount = 0;
+            bool success = false;
+
+            while (retryCount < maxRetries && !success) {
+              try {
+                distance = await calculateRoadDistance(current, point);
+                speed = await estimateRoadSpeed(current, point, roadSpeeds);
+                success = true;
+
+                // Update cache
+                _distanceCache[cacheKey] = distance;
+                _speedCache[cacheKey] = speed;
+              } catch (e) {
+                retryCount++;
+                if (retryCount >= maxRetries) {
+                  if (kDebugMode) {
+                    print(
+                        "⚠️ Không thể tính khoảng cách sau $maxRetries lần thử: $e");
+                  }
+                  failedPoints[i] = true;
+                  return;
+                }
+                await Future.delayed(retryDelay);
+              }
+            }
+          }
+
+          final time = distance / (speed * 1000 / 3600); // Convert to seconds
+
+          // Update best time if found better
+          if (time < bestTime) {
+            bestTime = time;
+            bestIndex = i;
+          }
+        } catch (e) {
+          if (kDebugMode) {
+            print("⚠️ Lỗi khi xử lý điểm $i: $e");
+          }
+          failedPoints[i] = true;
+        }
+      }));
+
+      // Handle failed points
+      if (failedPoints.every((failed) => failed)) {
+        if (kDebugMode) {
+          print(
+              "🔴 Tất cả các điểm đều không thể tính toán. Sử dụng thứ tự ban đầu");
+        }
+        result.addAll(unvisited);
+        break;
+      }
+
+      // Skip failed points
+      if (failedPoints[bestIndex]) {
+        if (kDebugMode) {
+          print("⏭️ Bỏ qua điểm không thể tính toán: ${unvisited[bestIndex]}");
+        }
+        unvisited.removeAt(bestIndex);
+        continue;
+      }
+
+      // Add the best point to route
+      current = unvisited[bestIndex];
+      result.add(current);
+      unvisited.removeAt(bestIndex);
+
+      if (kDebugMode) {
+        print(
+            "✅ Đã thêm điểm ${current.latitude},${current.longitude} vào tuyến đường");
+        print("📌 Số điểm còn lại: ${unvisited.length}");
+      }
+    }
+
+    result.add(end);
+
+    if (kDebugMode) {
+      print("🎉 Hoàn thành thuật toán tham lam");
+      print("📍 Tổng số điểm trong tuyến đường: ${result.length}");
+    }
+
+    return result;
+  }
+
+  // function classification route type
   String _classifyRoadType(Map<String, dynamic> step) {
     // Mapbox có thể cung cấp thông tin loại đường trong step['mode'] hoặc các trường khác
     final String? mode = step['mode'];
@@ -391,6 +527,7 @@ class MapDriverController extends GetxController {
     return 'unclassified';
   }
 
+  // finction check internet
   Future<bool> checkInternetConnection() async {
     try {
       final result = await InternetAddress.lookup('google.com');
@@ -422,25 +559,24 @@ class MapDriverController extends GetxController {
       startLocation.value = currentLocation.value ?? waypoints.first;
       endLocation.value = waypoints.last;
 
-      final intermediatePoints = await _sortPointsByRoadDistance(
-          startLocation.value, waypoints.sublist(0, waypoints.length - 1));
+      final intermediatePoints = await greedyTSPWithTraffic(startLocation.value,
+          waypoints.sublist(0, waypoints.length - 1), endLocation.value);
 
       if (kDebugMode) {
         print("📍 Thứ tự các điểm dừng đã tối ưu:");
         intermediatePoints.asMap().forEach((i, point) {
-          print("${i + 1}. ${point.latitude}, ${point.longitude}");
+          if (kDebugMode) {
+            print("${i + 1}. ${point.latitude}, ${point.longitude}");
+          }
         });
       }
 
       final fullRoute = [
         startLocation.value,
         ...intermediatePoints,
-        endLocation.value
       ];
 
-      // Sử dụng Mapbox thay vì OSRM
       await fetchRouteFromMapbox(fullRoute);
-
       await checkTruckRestrictions(optimizedRoute);
 
       if (kDebugMode) print("✅ Hoàn thành tối ưu hóa tuyến đường");
@@ -449,7 +585,7 @@ class MapDriverController extends GetxController {
     }
   }
 
-// Sắp xếp các điểm theo khoảng cách đường bộ thực tế
+  // Sắp xếp các điểm theo khoảng cách đường bộ thực tế
   Future<List<LatLng>> _sortPointsByRoadDistance(
       LatLng start, List<LatLng> points) async {
     final distanceMap = <LatLng, double>{};
@@ -472,42 +608,6 @@ class MapDriverController extends GetxController {
     points.sort((a, b) => (distanceMap[a] ?? 0).compareTo(distanceMap[b] ?? 0));
 
     return points;
-  }
-
-  Future<List<LatLng>> sortPointsByDistance(
-      LatLng start, List<LatLng> points) async {
-    // Tạo map lưu khoảng cách từ start đến từng điểm
-    final distanceMap = <LatLng, double>{};
-
-    for (var point in points) {
-      distanceMap[point] = await calculateRoadDistance(start, point);
-    }
-
-    // Sắp xếp theo khoảng cách tăng dần
-    points.sort((a, b) => distanceMap[a]!.compareTo(distanceMap[b]!));
-
-    return points;
-  }
-
-  // move camera preview all point
-  void fitAllPoints() {
-    if (optimizedRoute.isEmpty && currentLocation.value == null) return;
-    // create all list need preview
-    List<LatLng> allPoints = [];
-    if (currentLocation.value != null) {
-      allPoints.add(currentLocation.value!);
-    }
-    allPoints.addAll(optimizedRoute);
-    allPoints.addAll(routePoints);
-    if (allPoints.isEmpty) return;
-    final bounds = LatLngBounds.fromPoints(allPoints);
-    // preview all point
-    mapController.fitCamera(CameraFit.bounds(
-        bounds: bounds, padding: const EdgeInsets.all(50), maxZoom: 16.0));
-    if (kDebugMode) {
-      print(
-          "🗺️ Đã điều chỉnh bản đồ hiển thụ toàn bộ ${allPoints.length} điểm");
-    }
   }
 
   // Get route from Mapbox
@@ -568,8 +668,9 @@ class MapDriverController extends GetxController {
             fitAllPoints();
           });
         } else {
-          if (kDebugMode)
+          if (kDebugMode) {
             print("🔴 Lỗi từ Mapbox: ${data['message'] ?? 'Unknown error'}");
+          }
         }
       } else {
         if (kDebugMode) print("🔴 Lỗi HTTP: ${response.statusCode}");
@@ -583,39 +684,11 @@ class MapDriverController extends GetxController {
     }
   }
 
-  // Hàm trích xuất thông tin từ Mapbox response
-  void extractMapboxDistanceAndDuration(
-      List<dynamic> legs, List<LatLng> points) {
-    distances.clear();
-    durations.clear();
-    totalDistance.value = 0;
-    totalDuration.value = 0;
-
-    for (var leg in legs) {
-      double distance = (leg['distance'] as num).toDouble(); // meters
-      double duration = (leg['duration'] as num).toDouble(); // seconds
-      distances.add(distance);
-      durations.add(duration);
-      totalDistance.value += distance;
-      totalDuration.value += duration;
-    }
-
-    if (kDebugMode) {
-      print(
-          "📊 Khoảng cách các chặng: ${distances.map((d) => (d / 1000).toStringAsFixed(2) + 'km')}");
-      print(
-          "⏱️ Thời gian các chặng: ${durations.map((d) => (d / 60).toStringAsFixed(2) + ' phút')}");
-      print(
-          "📏 Tổng khoảng cách: ${(totalDistance.value / 1000).toStringAsFixed(2)} km");
-      print(
-          "⏳ Tổng thời gian: ${(totalDuration.value / 60).toStringAsFixed(2)} phút");
-    }
-  }
-
-// Fallback khi truck profile không hoạt động
+  // Fallback when truck profile is not active
   Future<void> fetchDrivingRouteFallback(List<LatLng> points) async {
-    if (kDebugMode)
+    if (kDebugMode) {
       print("🔄 Đang thử sử dụng driving profile thông thường...");
+    }
 
     final waypointsString =
         points.map((p) => "${p.longitude},${p.latitude}").join(";");
@@ -645,16 +718,17 @@ class MapDriverController extends GetxController {
     }
   }
 
-  //
-  void extractDistanceAndDuration(List<dynamic> legs, List<LatLng> points) {
+  // extract infor from Mapbox response
+  void extractMapboxDistanceAndDuration(
+      List<dynamic> legs, List<LatLng> points) {
     distances.clear();
     durations.clear();
     totalDistance.value = 0;
     totalDuration.value = 0;
 
     for (var leg in legs) {
-      double distance = (leg['distance'] as num).toDouble(); // m
-      double duration = (leg['duration'] as num).toDouble(); // s
+      double distance = (leg['distance'] as num).toDouble(); // meters
+      double duration = (leg['duration'] as num).toDouble(); // seconds
       distances.add(distance);
       durations.add(duration);
       totalDistance.value += distance;
@@ -664,37 +738,16 @@ class MapDriverController extends GetxController {
     if (kDebugMode) {
       print(
           "📊 Khoảng cách các chặng: ${distances.map((d) => (d / 1000).toStringAsFixed(2) + 'km')}");
-    }
-    if (kDebugMode) {
       print(
           "⏱️ Thời gian các chặng: ${durations.map((d) => (d / 60).toStringAsFixed(2) + ' phút')}");
-    }
-    if (kDebugMode) {
       print(
           "📏 Tổng khoảng cách: ${(totalDistance.value / 1000).toStringAsFixed(2)} km");
-    }
-    if (kDebugMode) {
       print(
           "⏳ Tổng thời gian: ${(totalDuration.value / 60).toStringAsFixed(2)} phút");
     }
-
-    // Kiểm tra các cảnh báo đặc biệt cho xe tải
-    for (var leg in legs) {
-      for (var step in leg['steps']) {
-        if (step['truck_restrictions'] != null) {
-          print("⚠️ Cảnh báo xe tải: ${step['truck_restrictions']}");
-        }
-        if (step['has_tunnel'] == true) {
-          print("🚇 Đoạn đường hầm - Kiểm tra chiều cao");
-        }
-        if (step['has_bridge'] == true) {
-          print("🌉 Đoạn cầu - Kiểm tra tải trọng");
-        }
-      }
-    }
   }
 
-  // Hàm định dạng thời gian
+  // function format time
   String formatDuration(double seconds) {
     int minutes = (seconds / 60).round();
     if (minutes < 60) {
@@ -706,7 +759,7 @@ class MapDriverController extends GetxController {
     }
   }
 
-  // Hàm định dạng khoảng cách
+  // function format distance
   String formatDistance(double meters) {
     if (meters < 1000) {
       return '${meters.round()} m';
@@ -715,38 +768,7 @@ class MapDriverController extends GetxController {
     }
   }
 
-  //
-  Future<List<LatLng>> findTruckParking(LatLng location) async {
-    final url = Uri.parse("https://overpass-api.de/api/interpreter?"
-        "[out:json];"
-        "nwr[amenity=truck_parking]"
-        "around:5000,${location.latitude},${location.longitude};"
-        "out center;");
-
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      return data['elements'].map<LatLng>((element) {
-        return LatLng(
-          element['lat'] ?? element['center']['lat'],
-          element['lon'] ?? element['center']['lon'],
-        );
-      }).toList();
-    }
-    return [];
-  }
-
-  //
-  String formatTruckInfo() {
-    return '''
-  🚛 Thông số xe:
-  - Chiều cao: ${truckMaxHeight.value}m
-  - Trọng tải: ${truckMaxWeight.value}tấn
-  - Chiều rộng: ${truckWidth.value}m
-  ${truckHazardousMaterials.value ? '⚠️ Vận chuyển hàng nguy hiểm' : ''}
-  ''';
-  }
-
+  // function transfer to phone app
   Future<void> makePhoneCall(String phoneNumber) async {
     final Uri uri = Uri(scheme: 'tel', path: phoneNumber);
 
@@ -757,9 +779,78 @@ class MapDriverController extends GetxController {
     }
   }
 
-  bool isSameLocation(LatLng point1, LatLng point2) {
-    const epsilon = 0.00001; // Sai số cho phép
-    return (point1.latitude - point2.latitude).abs() < epsilon &&
-        (point1.longitude - point2.longitude).abs() < epsilon;
-  }
+  // function find truck parking
+  // Future<List<LatLng>> findTruckParking(LatLng location) async {
+  //   final url = Uri.parse("https://overpass-api.de/api/interpreter?"
+  //       "[out:json];"
+  //       "nwr[amenity=truck_parking]"
+  //       "around:5000,${location.latitude},${location.longitude};"
+  //       "out center;");
+
+  //   final response = await http.get(url);
+  //   if (response.statusCode == 200) {
+  //     final data = json.decode(response.body);
+  //     return data['elements'].map<LatLng>((element) {
+  //       return LatLng(
+  //         element['lat'] ?? element['center']['lat'],
+  //         element['lon'] ?? element['center']['lon'],
+  //       );
+  //     }).toList();
+  //   }
+  //   return [];
+  // }
+
+  // bool isSameLocation(LatLng point1, LatLng point2) {
+  //   const epsilon = 0.00001; // Sai số cho phép
+  //   return (point1.latitude - point2.latitude).abs() < epsilon &&
+  //       (point1.longitude - point2.longitude).abs() < epsilon;
+  // }
+  // //
+  // void extractDistanceAndDuration(List<dynamic> legs, List<LatLng> points) {
+  //   distances.clear();
+  //   durations.clear();
+  //   totalDistance.value = 0;
+  //   totalDuration.value = 0;
+
+  //   for (var leg in legs) {
+  //     double distance = (leg['distance'] as num).toDouble(); // m
+  //     double duration = (leg['duration'] as num).toDouble(); // s
+  //     distances.add(distance);
+  //     durations.add(duration);
+  //     totalDistance.value += distance;
+  //     totalDuration.value += duration;
+  //   }
+
+  //   if (kDebugMode) {
+  //     print(
+  //         "📊 Khoảng cách các chặng: ${distances.map((d) => (d / 1000).toStringAsFixed(2) + 'km')}");
+  //   }
+  //   if (kDebugMode) {
+  //     print(
+  //         "⏱️ Thời gian các chặng: ${durations.map((d) => (d / 60).toStringAsFixed(2) + ' phút')}");
+  //   }
+  //   if (kDebugMode) {
+  //     print(
+  //         "📏 Tổng khoảng cách: ${(totalDistance.value / 1000).toStringAsFixed(2)} km");
+  //   }
+  //   if (kDebugMode) {
+  //     print(
+  //         "⏳ Tổng thời gian: ${(totalDuration.value / 60).toStringAsFixed(2)} phút");
+  //   }
+
+  //   // Kiểm tra các cảnh báo đặc biệt cho xe tải
+  //   for (var leg in legs) {
+  //     for (var step in leg['steps']) {
+  //       if (step['truck_restrictions'] != null) {
+  //         print("⚠️ Cảnh báo xe tải: ${step['truck_restrictions']}");
+  //       }
+  //       if (step['has_tunnel'] == true) {
+  //         print("🚇 Đoạn đường hầm - Kiểm tra chiều cao");
+  //       }
+  //       if (step['has_bridge'] == true) {
+  //         print("🌉 Đoạn cầu - Kiểm tra tải trọng");
+  //       }
+  //     }
+  //   }
+  // }
 }

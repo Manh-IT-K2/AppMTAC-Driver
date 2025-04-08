@@ -53,7 +53,7 @@ class MapDriverScreen extends StatelessWidget {
                   options: MapOptions(
                     initialCenter: controller.currentLocation.value ??
                         const LatLng(
-                            10.8231, 106.6297), // Tọa độ mặc định (HCM)
+                            10.8231, 106.6297), // HCM
                     initialZoom: 12.0,
                     minZoom: 5,
                     maxZoom: 18,
@@ -317,12 +317,10 @@ class MapDriverScreen extends StatelessWidget {
           Stack(
             alignment: Alignment.center,
             children: [
-              Icon(
+              const Icon(
                 Icons.location_pin,
-                color: isLast
-                    ? Colors.purple
-                    : Colors.red, // đổi màu nếu là điểm cuối
-                size: 40, // to hơn nếu là cuối
+                color: Colors.red, 
+                size: 40,
               ),
               Positioned(
                 top: 4,
