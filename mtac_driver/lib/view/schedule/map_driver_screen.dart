@@ -52,8 +52,7 @@ class MapDriverScreen extends StatelessWidget {
                   mapController: controller.mapController,
                   options: MapOptions(
                     initialCenter: controller.currentLocation.value ??
-                        const LatLng(
-                            10.8231, 106.6297), // HCM
+                        const LatLng(10.8231, 106.6297), // HCM
                     initialZoom: 12.0,
                     minZoom: 5,
                     maxZoom: 18,
@@ -319,7 +318,7 @@ class MapDriverScreen extends StatelessWidget {
             children: [
               const Icon(
                 Icons.location_pin,
-                color: Colors.red, 
+                color: Colors.red,
                 size: 40,
               ),
               Positioned(
@@ -336,7 +335,7 @@ class MapDriverScreen extends StatelessWidget {
                       ? Icon(
                           HugeIcons.strokeRoundedPackage03,
                           size: 5.w,
-                          color: kPrimaryColor,
+                          color: Colors.red,
                         )
                       : Text(
                           '$index',
@@ -357,36 +356,46 @@ class MapDriverScreen extends StatelessWidget {
 
   //
   Widget _buildDestinationList() {
-    // Sắp xếp lại danh sách theo thứ tự tối ưu
     if (controller.optimizedRoute.isNotEmpty) {
       sortItemDestinationDataByOptimizedRoute();
-      return ListView.builder(
+
+      return CustomScrollView(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: itemDestinationData.length,
-        itemBuilder: (context, index) {
-          final destination = itemDestinationData[index];
-          final distanceTime = index < controller.distances.length
-              ? '${controller.formatDistance(controller.distances[index])} - ${controller.formatDuration(controller.durations[index])}'
-              : '';
+        slivers: [
+          SliverPadding(
+            padding: EdgeInsets.only(top: 5.w),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final destination = itemDestinationData[index];
+                  final distanceTime = index < controller.distances.length
+                      ? '${controller.formatDistance(controller.distances[index])} - ${controller.formatDuration(controller.durations[index])}'
+                      : '';
 
-          return _ItemDestination(
-            distanceTime: distanceTime,
-            nameBusiness: destination.nameBusiness,
-            numberBD: destination.numberBD,
-            status: destination.status,
-            totalWeight: destination.totalWeight,
-            phonePartner: destination.phonePartner,
-            namePartner: destination.namePartner,
-            note: destination.note,
-            isLastItem: index == itemDestinationData.length - 1,
-            onTap: () {
-              controller.makePhoneCall(destination.phonePartner);
-            },
-          );
-        },
+                  return _ItemDestination(
+                    distanceTime: distanceTime,
+                    nameBusiness: destination.nameBusiness,
+                    numberBD: destination.numberBD,
+                    status: destination.status,
+                    totalWeight: destination.totalWeight,
+                    phonePartner: destination.phonePartner,
+                    namePartner: destination.namePartner,
+                    note: destination.note,
+                    isLastItem: index == itemDestinationData.length - 1,
+                    onTap: () {
+                      controller.makePhoneCall(destination.phonePartner);
+                    },
+                  );
+                },
+                childCount: itemDestinationData.length,
+              ),
+            ),
+          ),
+        ],
       );
     }
+
     return Center(
       child: Padding(
         padding: EdgeInsets.only(top: 20.h),
@@ -403,7 +412,7 @@ class MapDriverScreen extends StatelessWidget {
   //
   void _showWeightInputDialog(BuildContext context, LatLng position) {
     final TextEditingController weightController = TextEditingController();
-    String errText = "";
+    var errText = "".obs;
     showDialog(
       context: Get.context!,
       barrierDismissible: false,
@@ -496,7 +505,7 @@ class MapDriverScreen extends StatelessWidget {
                       Obx(
                         () => controller.statusInputWeight.value
                             ? Text(
-                                errText,
+                                errText.value,
                                 style: PrimaryFont.bodyTextMedium()
                                     .copyWith(color: Colors.red),
                               )
@@ -517,12 +526,12 @@ class MapDriverScreen extends StatelessWidget {
                                   Navigator.pop(context);
                                 } else {
                                   controller.statusInputWeight.value = true;
-                                  errText =
+                                  errText.value =
                                       "Khối lượng không lớn hơn 50.000 kg";
                                 }
                               } else {
                                 controller.statusInputWeight.value = true;
-                                errText = "Chưa nhập khối lượng";
+                                errText.value = "Chưa nhập khối lượng";
                               }
                             },
                             style: ElevatedButton.styleFrom(
@@ -571,8 +580,10 @@ class MapDriverScreen extends StatelessWidget {
       ..clear()
       ..addAll(sorted);
 
-    print(
+    if (kDebugMode) {
+      print(
         "✅ Đã sắp xếp lại itemDestinationData theo optimizedRoute: ${itemDestinationData.length}");
+    }
   }
 
   Widget _buildRouteDots() {
@@ -657,7 +668,7 @@ class _ItemDestination extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //SizedBox(height: 3.w),
+        SizedBox(height: 3.w),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,

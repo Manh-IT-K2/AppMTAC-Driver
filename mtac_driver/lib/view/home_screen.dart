@@ -18,57 +18,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-           Text.rich(
-              TextSpan(
-                text: txtHelloD,
-                style: PrimaryFont.bodyTextMedium()
-                    .copyWith(color: Colors.grey, height: 1.5),
-                children: <TextSpan>[
-                  TextSpan(
-                    text: "Phạm Huỳnh Tín",
-                    style:
-                        PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: 10.w,
-              height: 10.w,
-              decoration: BoxDecoration(
-                  color: kPrimaryColor.withOpacity(0.2),
-                  shape: BoxShape.circle),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Icon(
-                      Icons.notifications_none_outlined,
-                      size: 6.w,
-                      color: kPrimaryColor,
-                    ),
-                  ),
-                  Positioned(
-                    top: 3.w,
-                    right: 3.5.w,
-                    child: Container(
-                      width: 1.5.w,
-                      height: 1.5.w,
-                      decoration: const BoxDecoration(
-                          color: Colors.red, shape: BoxShape.circle),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
         child: SingleChildScrollView(
@@ -118,16 +67,22 @@ class _BottomDriverScreen extends StatelessWidget {
         ),
         SizedBox(
           height: 30.h,
-          child: ListView.builder(
-            itemCount: noteImportantData.length,
-            itemBuilder: (context, index) {
-              final note = noteImportantData[index];
-              return _ItemNoteImportant(
-                title: note.nameNote,
-                subTitle: note.contentNote,
-                hour: note.hourNote,
-              );
-            },
+          child: CustomScrollView(
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final note = noteImportantData[index];
+                    return _ItemNoteImportant(
+                      title: note.nameNote,
+                      subTitle: note.contentNote,
+                      hour: note.hourNote,
+                    );
+                  },
+                  childCount: noteImportantData.length,
+                ),
+              )
+            ],
           ),
         ),
       ],
@@ -158,32 +113,44 @@ class _BodyDriverScreen extends StatelessWidget {
         SizedBox(
           height: 20.w,
           child: Obx(
-            () => ListView.builder(
+            () => CustomScrollView(
               controller: _driverController.scrollController,
               scrollDirection: Axis.horizontal,
-              itemCount: _driverController.daysInMonth.length,
-              itemBuilder: (context, index) {
-                DateTime day = _driverController.daysInMonth[index];
-                bool isToday = day.day ==
-                        _driverController.currentDate.value.day &&
-                    day.month == _driverController.currentDate.value.month &&
-                    day.year == _driverController.currentDate.value.year;
-                List<int> highlightedDays = [
-                  6,
-                  10,
-                  _driverController.currentDate.value.day,
-                  22,
-                  26,
-                  29
-                ];
-                bool isHighlight = highlightedDays.contains(day.day);
-                return _ItemDayOfWeek(
-                  day: day.day.toString(),
-                  weekdays: _driverController.getWeekdayShortName(day),
-                  statusToday: isToday,
-                  statusScheduleHighlight: isHighlight,
-                );
-              },
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Row(
+                    children: List.generate(
+                      _driverController.daysInMonth.length,
+                      (index) {
+                        DateTime day = _driverController.daysInMonth[index];
+                        bool isToday = day.day ==
+                                _driverController.currentDate.value.day &&
+                            day.month ==
+                                _driverController.currentDate.value.month &&
+                            day.year ==
+                                _driverController.currentDate.value.year;
+
+                        List<int> highlightedDays = [
+                          6,
+                          10,
+                          _driverController.currentDate.value.day,
+                          22,
+                          26,
+                          29
+                        ];
+                        bool isHighlight = highlightedDays.contains(day.day);
+
+                        return _ItemDayOfWeek(
+                          day: day.day.toString(),
+                          weekdays: _driverController.getWeekdayShortName(day),
+                          statusToday: isToday,
+                          statusScheduleHighlight: isHighlight,
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -200,22 +167,26 @@ class _BodyDriverScreen extends StatelessWidget {
               ),
               SizedBox(height: 5.w),
               SizedBox(
-                height: 42.w,
-                child: ListView.builder(
-                  //shrinkWrap: true,
-                  itemCount: _driverController.tripTimes.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: 5.w),
-                      child: _ItemTripToday(
-                        hour: _driverController.tripTimes[index],
-                        addressBusiness:
-                            'Bệnh viện Nhi Đồng 1 Bệnh viện Nhi Đồng 1 Bệnh viện Nhi Đồng 1 Bệnh viện Nhi Đồng 1',
-                      ),
-                    );
-                  },
-                ),
-              ),
+                  height: 42.w,
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.only(bottom: 5.w),
+                              child: _ItemTripToday(
+                                hour: _driverController.tripTimes[index],
+                                addressBusiness:
+                                    'Bệnh viện Nhi Đồng 1 Bệnh viện Nhi Đồng 1 Bệnh viện Nhi Đồng 1 Bệnh viện Nhi Đồng 1',
+                              ),
+                            );
+                          },
+                          childCount: _driverController.tripTimes.length,
+                        ),
+                      )
+                    ],
+                  )),
             ],
           ),
         ),
@@ -234,6 +205,54 @@ class _HeaderDriverScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        SizedBox(height: 5.h,),  
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text.rich(
+              TextSpan(
+                text: txtHelloD,
+                style: PrimaryFont.bodyTextMedium()
+                    .copyWith(color: Colors.grey, height: 1.5),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: "Phạm Huỳnh Tín",
+                    style: PrimaryFont.titleTextMedium()
+                        .copyWith(color: Colors.black),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: 10.w,
+              height: 10.w,
+              decoration: BoxDecoration(
+                  color: kPrimaryColor.withOpacity(0.2),
+                  shape: BoxShape.circle),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Icon(
+                      Icons.notifications_none_outlined,
+                      size: 6.w,
+                      color: kPrimaryColor,
+                    ),
+                  ),
+                  Positioned(
+                    top: 3.w,
+                    right: 3.5.w,
+                    child: Container(
+                      width: 1.5.w,
+                      height: 1.5.w,
+                      decoration: const BoxDecoration(
+                          color: Colors.red, shape: BoxShape.circle),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -258,7 +277,7 @@ class _HeaderDriverScreen extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: () {
-               Get.toNamed(AppRoutes.schedule);
+                Get.toNamed(AppRoutes.schedule);
               },
               child: _UtilDriver(
                 color: Colors.purple.withOpacity(0.2),

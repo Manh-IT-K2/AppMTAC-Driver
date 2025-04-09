@@ -226,12 +226,12 @@ class _BottomHandoverRecordSceen extends StatelessWidget {
         Center(
           child: ElevatedButton(
             onPressed: () {
-              if(imageController.selectedImages.isNotEmpty){
+              if (imageController.selectedImages.isNotEmpty) {
                 NotifySuccessDialog().showNotifyPopup("Gửi biên bản thành công",
-                  () {
-                Navigator.pop(context);
-                Get.offAllNamed(AppRoutes.main);
-              });
+                    () {
+                  Navigator.pop(context);
+                  Get.offAllNamed(AppRoutes.main);
+                });
               }
             },
             style: ElevatedButton.styleFrom(
@@ -299,110 +299,107 @@ class _BodyHandoverRecordScreen extends StatelessWidget {
             ),
           ],
         ),
+        SizedBox(height: 3.w,),
         SizedBox(
           height: sHeightBody,
-          child: ListView.builder(
-              itemCount: infoWasteData.length,
-              itemBuilder: (context, index) {
-                final item = infoWasteData[index];
-                return Container(
-                  height: sHeightItem,
-                  margin: const EdgeInsets.only(
-                    top: 12,
-                  ),
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: kPrimaryColor,
-                        width: 1,
-                      ),
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Row(
-                    children: [
-                      SizedBox(
-                        width: sWidthSizeBox,
-                      ),
-                      SizedBox(
-                        width: sWidthNameWaste,
-                        child: Text(
-                          item.name,
-                          style: PrimaryFont.bodyTextLight()
-                              .copyWith(color: Colors.black),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      SizedBox(
-                        width: sWidthCodeWaste,
-                        child: Text(
-                          item.code,
-                          style: PrimaryFont.bodyTextLight()
-                              .copyWith(color: Colors.black),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      SizedBox(
-                        width: sWidthStatusWaste,
-                        child: Obx(
-                          () => DropdownButton<String>(
-                            isExpanded: true,
-                            value: controller.wasteControllers[index].value,
-                            icon: const Icon(Icons.keyboard_arrow_down),
-                            style: PrimaryFont.bodyTextBold().copyWith(
-                              color: Colors.green,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            onChanged: (String? newValue) {
-                              controller.wasteControllers[index].value =
-                                  newValue!;
-                            },
-                            items: controller.statusItems
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: const TextStyle(
-                                      overflow: TextOverflow.ellipsis),
-                                ),
-                              );
-                            }).toList(),
+          child: CustomScrollView(
+            slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final item = infoWasteData[index];
+                      return Container(
+                        height: sHeightItem,
+                        margin: const EdgeInsets.only(
+                            bottom: 12), 
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: kPrimaryColor,
+                            width: 1,
                           ),
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => controller.showInputPopup(index),
-                          child: Obx(
-                            () => Text(
-                              controller.numbers[index].value.isEmpty
-                                  ? "0 (kg)"
-                                  : "${controller.numbers[index].value} (kg)",
-                              style: PrimaryFont.bodyTextLight()
-                                  .copyWith(color: Colors.black),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                        child: Row(
+                          children: [
+                            SizedBox(width: sWidthSizeBox),
+                            SizedBox(
+                              width: sWidthNameWaste,
+                              child: Text(
+                                item.name,
+                                style: PrimaryFont.bodyTextLight()
+                                    .copyWith(color: Colors.black),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
-                          ),
+                            const SizedBox(width: 12),
+                            SizedBox(
+                              width: sWidthCodeWaste,
+                              child: Text(
+                                item.code,
+                                style: PrimaryFont.bodyTextLight()
+                                    .copyWith(color: Colors.black),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            SizedBox(
+                              width: sWidthStatusWaste,
+                              child: Obx(() => DropdownButton<String>(
+                                    isExpanded: true,
+                                    value: controller
+                                        .wasteControllers[index].value,
+                                    icon: const Icon(Icons.keyboard_arrow_down),
+                                    style: PrimaryFont.bodyTextBold().copyWith(
+                                      color: Colors.green,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    onChanged: (String? newValue) {
+                                      controller.wasteControllers[index].value =
+                                          newValue!;
+                                    },
+                                    items: controller.statusItems
+                                        .map<DropdownMenuItem<String>>(
+                                            (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(
+                                          value,
+                                          style: const TextStyle(
+                                              overflow: TextOverflow.ellipsis),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  )),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () => controller.showInputPopup(index),
+                                child: Obx(() => Text(
+                                      controller.numbers[index].value.isEmpty
+                                          ? "0 (kg)"
+                                          : "${controller.numbers[index].value} (kg)",
+                                      style: PrimaryFont.bodyTextLight()
+                                          .copyWith(color: Colors.black),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    )),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                          ],
                         ),
-                      ),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                    ],
+                      );
+                    },
+                    childCount: infoWasteData.length,
                   ),
-                );
-              }),
-        ),
+                ),
+              
+            ],
+          ),
+        )
       ],
     );
   }

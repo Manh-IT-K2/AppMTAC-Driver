@@ -47,11 +47,11 @@ final PageController _pageController = PageController(initialPage: 2);
           });
         },
         children: [
-          ScheduleScreen(),
-          PaymentScreen(),
+          const ScheduleScreen(),
+          const PaymentScreen(),
           HomeScreen(),
-          MailboxScreen(),
-          AccountScreen(),
+          const MailboxScreen(),
+          const AccountScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavBar(

@@ -15,7 +15,6 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     // Get day ToDay
     DateTime now = DateTime.now();
     String day = now.day.toString().padLeft(2, '0');
@@ -130,17 +129,24 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
                 onPageChanged: controller.onPageChanged,
                 children: controller.items.map(
                   (title) {
-                    return ListView.builder(
-                      itemCount: tripWorkData.length,
-                      itemBuilder: (context, index) {
-                        final data = tripWorkData[index];
-                        return _ItemTripWork(
-                            title: data.title,
-                            nameWaste: data.nameWaste,
-                            addressBusiness: data.addressBusiness,
-                            day: data.day,
-                            status: data.status);
-                      },
+                    return CustomScrollView(
+                      slivers: [
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final data = tripWorkData[index];
+                              return _ItemTripWork(
+                                title: data.title,
+                                nameWaste: data.nameWaste,
+                                addressBusiness: data.addressBusiness,
+                                day: data.day,
+                                status: data.status,
+                              );
+                            },
+                            childCount: tripWorkData.length,
+                          ),
+                        ),
+                      ],
                     );
                   },
                 ).toList(),
