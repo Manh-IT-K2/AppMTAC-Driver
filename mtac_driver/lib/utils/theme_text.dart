@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 class PrimaryFont {
-  static String fontfamily = 'Raleway';
+  static String fontfamily = 'Manrope';
 
   // text header
   static TextStyle headerTextThin() {

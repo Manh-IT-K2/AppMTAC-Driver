@@ -105,15 +105,13 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Raleway
+    - family: Manrope
       fonts:
-        - asset: assets/font/Raleway-Thin.ttf
-          weight: 100
-        - asset: assets/font/Raleway-Light.ttf
+        - asset: assets/font/Manrope-Light.ttf
           weight: 300
-        - asset: assets/font/Raleway-Medium.ttf
+        - asset: assets/font/Manrope-Medium.ttf
           weight: 500
-        - asset: assets/font/Raleway-Bold.ttf
+        - asset: assets/font/Manrope-Bold.ttf
           weight: 700
   #
   # For details regarding fonts from package dependencies,
