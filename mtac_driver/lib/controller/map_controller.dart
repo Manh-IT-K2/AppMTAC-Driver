@@ -1,5 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -8,9 +8,13 @@ import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mtac_driver/data/map_screen/item_destination.dart';
+import 'package:mtac_driver/model/destination_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapDriverController extends GetxController {
+  // id trip
+  late int tripId;
+  late final destinationsData;
   // status err input weight
   var statusInputWeight = false.obs;
 
@@ -38,7 +42,7 @@ class MapDriverController extends GetxController {
   var currentLocation =
       Rx<LatLng?>(const LatLng(10.841626348121663, 106.67731436791038));
   final RxList<LatLng> routePoints = <LatLng>[].obs;
-  final RxList<LatLng> mainPoints = <LatLng>[].obs;
+  //final RxList<LatLng> mainPoints = <LatLng>[].obs;
   final RxList<LatLng> optimizedRoute = <LatLng>[].obs;
   final RxList<double> distances = <double>[].obs;
   final RxList<double> durations = <double>[].obs;
@@ -107,8 +111,17 @@ class MapDriverController extends GetxController {
   void onInit() {
     super.onInit();
     //getCurrentLocation();
+    tripId = Get.arguments as int;
+    destinationsData = getDestinationsByTripId(tripId);
     getOptimizedRoute();
     formatTruckInfo();
+  }
+
+  // get destination data by id
+  List<DestinationModel> getDestinationsByTripId(int tripId) {
+    return itemDestinationData
+        .where((destination) => destination.tripId == tripId)
+        .toList();
   }
 
   // move camera to currentLocation
@@ -132,6 +145,8 @@ class MapDriverController extends GetxController {
     allPoints.addAll(optimizedRoute);
     allPoints.addAll(routePoints);
     if (allPoints.isEmpty) return;
+
+    //Create a range
     final bounds = LatLngBounds.fromPoints(allPoints);
     // preview all point
     mapController.fitCamera(CameraFit.bounds(
@@ -150,11 +165,10 @@ class MapDriverController extends GetxController {
     try {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        if (kDebugMode) {
-          print("⚠️ Location services are disabled");
-        }
+        Get.snackbar("Lỗi", "Vui lòng bật dịch vụ định vị (GPS) để tiếp tục");
         return;
       }
+
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
@@ -171,10 +185,12 @@ class MapDriverController extends GetxController {
         }
         return;
       }
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best,
-      );
-      currentLocation.value = LatLng(position.latitude, position.longitude);
+
+      // track location as user moves
+      Geolocator.getPositionStream().listen((Position position) {
+        currentLocation.value = LatLng(position.latitude, position.longitude);
+      });
+
       if (kDebugMode) {
         print("✅ Current location: ${currentLocation.value}");
       }
@@ -189,11 +205,13 @@ class MapDriverController extends GetxController {
 
   // Convert address to coordinates
   Future<List<LatLng>> getCoordinates() async {
-    mainPoints.clear();
+    //mainPoints.clear();
     List<LatLng> results = [];
+    //final destinations = getDestinationsByTripId(tripId);
+    final routeAddress = destinationsData.map((e) => e.addressBusiness).toList();
 
-    for (int i = 0; i < routeAddresses.length; i++) {
-      String address = routeAddresses[i];
+    for (int i = 0; i < routeAddress.length; i++) {
+      String address = routeAddress[i];
 
       final url = Uri.parse(
           "https://nominatim.openstreetmap.org/search?q=${Uri.encodeComponent(address)}&format=json&addressdetails=1&limit=1");
@@ -209,12 +227,12 @@ class MapDriverController extends GetxController {
             if (lat != 0 && lon != 0) {
               LatLng point = LatLng(lat, lon);
               results.add(point);
-              mainPoints.add(point);
+              //mainPoints.add(point);
 
               // assign coordinates to itemDestinationData
-              if (i < itemDestinationData.length) {
-                itemDestinationData[i].latitude = lat;
-                itemDestinationData[i].longitude = lon;
+              if (i < destinationsData.length) {
+                destinationsData[i].latitude = lat;
+                destinationsData[i].longitude = lon;
                 // print("📍 Tọa độ mới cho '${itemDestinationData[i].nameBusiness}': "
                 //       "${itemDestinationData[i].latitude}, ${itemDestinationData[i].longitude}");
               }
@@ -331,7 +349,7 @@ class MapDriverController extends GetxController {
   // Speed ​​estimation function based on road type
   Future<double> estimateRoadSpeed(
       LatLng p1, LatLng p2, Map<String, double> roadSpeeds) async {
-    // Thay YOUR_MAPBOX_ACCESS_TOKEN bằng token của bạn
+    // url
     final url = Uri.parse(
         "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/${p1.longitude},${p1.latitude};${p2.longitude},${p2.latitude}?steps=true&access_token=$mapboxAccessToken");
 
@@ -343,17 +361,19 @@ class MapDriverController extends GetxController {
           double totalWeightedSpeed = 0.0;
           double totalDistance = 0.0;
 
-          // Phân tích từng đoạn đường
+          // analyze each road segment
           for (var leg in data['routes'][0]['legs']) {
             for (var step in leg['steps']) {
               final distance = step['distance'].toDouble();
-              // Mapbox sử dụng 'ref' hoặc 'name' cho tên đường
+              // Mapbox use 'ref' or 'name' give the street name
               final roadName = step['name'] ?? step['ref'] ?? 'unclassified';
-              final roadType = _classifyRoadType(step); // Phân loại đường
+              // type route
+              final roadType = _classifyRoadType(step);
               final speed = roadSpeeds[roadType.toLowerCase()] ??
                   roadSpeeds[roadName.toLowerCase()] ??
                   30.0;
 
+              // Average speed = (∑ (speed × distance)) / ∑ distance
               totalWeightedSpeed += speed * distance;
               totalDistance += distance;
             }
@@ -361,7 +381,7 @@ class MapDriverController extends GetxController {
           return totalDistance > 0 ? totalWeightedSpeed / totalDistance : 30.0;
         }
       }
-      // Giá trị mặc định nếu không lấy được dữ liệu
+      // default value if data cannot data
       return 30.0;
     } catch (e) {
       if (kDebugMode) {
@@ -371,11 +391,10 @@ class MapDriverController extends GetxController {
     }
   }
 
-  // Use greedy algorithm to find shortest route
   // Cache for storing calculated distances and speeds
   final _distanceCache = <String, double>{};
   final _speedCache = <String, double>{};
-
+  // Use greedy algorithm to find shortest route
   Future<List<LatLng>> greedyTSPWithTraffic(
       LatLng start, List<LatLng> points, LatLng end) async {
     if (kDebugMode) {
@@ -396,8 +415,8 @@ class MapDriverController extends GetxController {
       'primary': 50.0,
       'secondary': 40.0,
       'tertiary': 30.0,
-      'unclassified': 20.0,
       'residential': 20.0,
+      'unclassified': 20.0,
     };
 
     // Retry configuration
@@ -516,7 +535,6 @@ class MapDriverController extends GetxController {
 
   // function classification route type
   String _classifyRoadType(Map<String, dynamic> step) {
-    // Mapbox có thể cung cấp thông tin loại đường trong step['mode'] hoặc các trường khác
     final String? mode = step['mode'];
     final String? roadClass = step['class'];
 
@@ -585,31 +603,6 @@ class MapDriverController extends GetxController {
     }
   }
 
-  // Sắp xếp các điểm theo khoảng cách đường bộ thực tế
-  Future<List<LatLng>> _sortPointsByRoadDistance(
-      LatLng start, List<LatLng> points) async {
-    final distanceMap = <LatLng, double>{};
-
-    // Tính toán khoảng cách đường bộ cho từng điểm
-    for (final point in points) {
-      try {
-        distanceMap[point] = await calculateRoadDistance(start, point);
-        if (kDebugMode) {
-          print("📐 Khoảng cách từ ${start.latitude},${start.longitude} "
-              "đến ${point.latitude},${point.longitude}: ${distanceMap[point]?.toStringAsFixed(0)}m");
-        }
-      } catch (e) {
-        if (kDebugMode) print("⚠️ Lỗi tính khoảng cách: $e");
-        distanceMap[point] = double.infinity;
-      }
-    }
-
-    // Sắp xếp theo khoảng cách tăng dần
-    points.sort((a, b) => (distanceMap[a] ?? 0).compareTo(distanceMap[b] ?? 0));
-
-    return points;
-  }
-
   // Get route from Mapbox
   Future<void> fetchRouteFromMapbox(List<LatLng> points) async {
     if (points.length < 2) {
@@ -617,18 +610,18 @@ class MapDriverController extends GetxController {
       return;
     }
 
-    // Chuyển đổi các điểm thành chuỗi coordinates cho Mapbox
+    // convert points to coordinates for Mapbox
     final waypointsString =
         points.map((p) => "${p.longitude},${p.latitude}").join(";");
 
-    // Tạo URL Mapbox Directions API
+    // URL Mapbox Directions API
     final url = Uri.parse(
         "https://api.mapbox.com/directions/v5/mapbox/driving-traffic/$waypointsString"
         "?geometries=geojson"
         "&access_token=$mapboxAccessToken"
         "&overview=full"
         "&annotations=distance,duration"
-        "&steps=true" // Thêm steps=true để có thông tin chi tiết
+        "&steps=true" // add steps=true for have detail infor
         );
 
     if (kDebugMode) print("🌐 Đang gọi Mapbox API: ${url.toString()}");
@@ -647,12 +640,12 @@ class MapDriverController extends GetxController {
             data['routes'].isNotEmpty) {
           final route = data['routes'][0];
 
-          // Cập nhật các điểm tuyến đường
+          // update points route
           routePoints.assignAll((route['geometry']['coordinates'] as List)
               .map((coord) => LatLng(coord[1], coord[0]))
               .toList());
 
-          // Cập nhật thông tin khoảng cách và thời gian
+          // update infor distance and time
           extractMapboxDistanceAndDuration(route['legs'], points);
           optimizedRoute.assignAll(points);
 
@@ -663,7 +656,7 @@ class MapDriverController extends GetxController {
             print("⏱️ Tổng thời gian: ${formatDuration(totalDuration.value)}");
           }
 
-          // Di chuyển bản đồ để hiển thị toàn bộ tuyến đường
+          // move map for preview full route
           WidgetsBinding.instance.addPostFrameCallback((_) {
             fitAllPoints();
           });
@@ -674,7 +667,7 @@ class MapDriverController extends GetxController {
         }
       } else {
         if (kDebugMode) print("🔴 Lỗi HTTP: ${response.statusCode}");
-        // Thử fallback với profile driving thông thường nếu driving-traffic không hoạt động
+        // fallback with profile driving if driving-traffic no action
         await fetchDrivingRouteFallback(points);
       }
     } catch (e) {
@@ -853,4 +846,29 @@ class MapDriverController extends GetxController {
   //     }
   //   }
   // }
+
+  // Sắp xếp các điểm theo khoảng cách đường bộ thực tế
+//   Future<List<LatLng>> _sortPointsByRoadDistance(
+//       LatLng start, List<LatLng> points) async {
+//     final distanceMap = <LatLng, double>{};
+
+//     // Tính toán khoảng cách đường bộ cho từng điểm
+//     for (final point in points) {
+//       try {
+//         distanceMap[point] = await calculateRoadDistance(start, point);
+//         if (kDebugMode) {
+//           print("📐 Khoảng cách từ ${start.latitude},${start.longitude} "
+//               "đến ${point.latitude},${point.longitude}: ${distanceMap[point]?.toStringAsFixed(0)}m");
+//         }
+//       } catch (e) {
+//         if (kDebugMode) print("⚠️ Lỗi tính khoảng cách: $e");
+//         distanceMap[point] = double.infinity;
+//       }
+//     }
+
+//     // Sắp xếp theo khoảng cách tăng dần
+//     points.sort((a, b) => (distanceMap[a] ?? 0).compareTo(distanceMap[b] ?? 0));
+
+//     return points;
+//   }
 }

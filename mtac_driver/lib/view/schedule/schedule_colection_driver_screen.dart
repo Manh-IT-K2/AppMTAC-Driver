@@ -141,6 +141,7 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
                                 addressBusiness: data.addressBusiness,
                                 day: data.day,
                                 status: data.status,
+                                tripId: data.id,
                               );
                             },
                             childCount: tripWorkData.length,
@@ -167,9 +168,11 @@ class _ItemTripWork extends StatelessWidget {
     required this.addressBusiness,
     required this.day,
     required this.status,
+    required this.tripId,
   });
 
   final String title, nameWaste, addressBusiness, day, status;
+  final int tripId;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -250,7 +253,7 @@ class _ItemTripWork extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              Get.toNamed(AppRoutes.map);
+              Get.toNamed(AppRoutes.map, arguments: tripId);
             },
             child: Container(
               height: double.infinity,

@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mtac_driver/controller/map_controller.dart';
-import 'package:mtac_driver/data/map_screen/item_destination.dart';
 import 'package:mtac_driver/model/destination_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
@@ -20,9 +19,12 @@ class MapDriverScreen extends StatelessWidget {
   // initial MapDriverController
   final MapDriverController controller = Get.put(MapDriverController());
 
+  //final int tripId = Get.arguments as int;
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = 100.h;
+    //final destinationsData = controller.getDestinationsByTripId(controller.tripId);
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -57,7 +59,7 @@ class MapDriverScreen extends StatelessWidget {
                     minZoom: 5,
                     maxZoom: 18,
                     onMapReady: () {
-                      // Khi map ready, hiển thị toàn bộ điểm nếu có
+                      // when map ready display full point if have
                       if (controller.optimizedRoute.isNotEmpty ||
                           controller.currentLocation.value != null) {
                         controller.fitAllPoints();
@@ -254,6 +256,9 @@ class MapDriverScreen extends StatelessWidget {
                                         height: 8.h,
                                       ),
                                       _buildRouteDots(),
+                                      SizedBox(
+                                        height: 8.h,
+                                      ),
                                     ],
                                   ),
                                   SizedBox(width: 5.w),
@@ -357,8 +362,10 @@ class MapDriverScreen extends StatelessWidget {
   //
   Widget _buildDestinationList() {
     if (controller.optimizedRoute.isNotEmpty) {
+      // sort
       sortItemDestinationDataByOptimizedRoute();
-
+      // data by id
+      //final destinationData = controller.getDestinationsByTripId(tripId);
       return CustomScrollView(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -368,7 +375,7 @@ class MapDriverScreen extends StatelessWidget {
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  final destination = itemDestinationData[index];
+                  final destination = controller.destinationsData[index];
                   final distanceTime = index < controller.distances.length
                       ? '${controller.formatDistance(controller.distances[index])} - ${controller.formatDuration(controller.durations[index])}'
                       : '';
@@ -382,13 +389,13 @@ class MapDriverScreen extends StatelessWidget {
                     phonePartner: destination.phonePartner,
                     namePartner: destination.namePartner,
                     note: destination.note,
-                    isLastItem: index == itemDestinationData.length - 1,
+                    isLastItem: index == controller.destinationsData.length - 1,
                     onTap: () {
                       controller.makePhoneCall(destination.phonePartner);
                     },
                   );
                 },
-                childCount: itemDestinationData.length,
+                childCount: controller.destinationsData.length,
               ),
             ),
           ),
@@ -561,9 +568,14 @@ class MapDriverScreen extends StatelessWidget {
     );
   }
 
+  // sort
   void sortItemDestinationDataByOptimizedRoute() {
+    //
     final locationToDestination = <String, DestinationModel>{};
-    for (final dest in itemDestinationData) {
+    //
+    //final destinationData = controller.getDestinationsByTripId(tripId);
+    //
+    for (final dest in controller.destinationsData) {
       final key = "${dest.latitude}_${dest.longitude}";
       locationToDestination[key] = dest;
     }
@@ -574,18 +586,19 @@ class MapDriverScreen extends StatelessWidget {
           return locationToDestination[key];
         })
         .whereType<DestinationModel>()
-        .toList(); // lọc null luôn
+        .toList();
 
-    itemDestinationData
+    controller.destinationsData
       ..clear()
       ..addAll(sorted);
 
     if (kDebugMode) {
       print(
-        "✅ Đã sắp xếp lại itemDestinationData theo optimizedRoute: ${itemDestinationData.length}");
+          "✅ Đã sắp xếp lại itemDestinationData theo optimizedRoute: ${controller.destinationsData.length}");
     }
   }
 
+  //
   Widget _buildRouteDots() {
     return controller.optimizedRoute.isNotEmpty
         ? Column(
@@ -600,11 +613,11 @@ class MapDriverScreen extends StatelessWidget {
               ),
               Container(
                 width: 0.5.w,
-                height: 50.w,
+                height: 45.w,
                 color: kPrimaryColor,
               ),
               ...List.generate(
-                itemDestinationData.length - 2,
+                controller.destinationsData.length - 2,
                 (index) => Column(
                   children: [
                     Container(

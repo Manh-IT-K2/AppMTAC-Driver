@@ -1,4 +1,5 @@
 class ScheduleModel {
+  final int id;
   final String title;
   final String nameWaste;
   final String addressBusiness;
@@ -6,6 +7,7 @@ class ScheduleModel {
   final String status;
 
   ScheduleModel({
+    required this.id,
     required this.title,
     required this.nameWaste,
     required this.addressBusiness,
@@ -16,6 +18,7 @@ class ScheduleModel {
   // convert Map to ScheduleModel
   factory ScheduleModel.fromMap(Map<String, dynamic> map) {
     return ScheduleModel(
+        id: map['id'] ?? '',
         title: map['title'] ?? '',
         nameWaste: map['nameWaste'] ?? '',
         addressBusiness: map['addressBusiness'] ?? '',
@@ -26,6 +29,7 @@ class ScheduleModel {
   // convert ScheduleModel to Map
   Map<String,dynamic> toMap(){
     return {
+      'id' : id,
       'title' : title,
       'nameWaste' : nameWaste,
       'addressBusiness' : addressBusiness,

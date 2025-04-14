@@ -26,11 +26,11 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   final List<Widget> _screens = [
-    ScheduleScreen(), // index 0
-    PaymentScreen(), // index 1
+    const ScheduleScreen(), // index 0
+    const PaymentScreen(), // index 1
     HomeScreen(), // index 2 (Home - FloatingActionButton)
-    MailboxScreen(), // index 3
-    AccountScreen(), // index 4
+    const MailboxScreen(), // index 3
+    const AccountScreen(), // index 4
   ];
 
   void _onItemTapped(int navBarIndex) {
@@ -74,24 +74,27 @@ class _MainScreenState extends State<MainScreen> {
         child: const Icon(HugeIcons.strokeRoundedHome11),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: AnimatedBottomNavigationBar(
-        icons: _icons,
-        activeIndex: _selectedIndex == 2 ? -1 : _getNavBarIndex(_selectedIndex),
-        gapLocation: GapLocation.center,
-
-        leftCornerRadius: 50,
-        rightCornerRadius: 50,
-        onTap: _onItemTapped,
-        activeColor: kPrimaryColor,
-        inactiveColor: Colors.black,
-        iconSize: 24,
-        elevation: 8,
-        blurEffect: true, // Thêm hiệu ứng blur
-        shadow: BoxShadow(
-          offset: const Offset(0, 1),
-          blurRadius: 12,
-          spreadRadius: 0.5,
-          color: Colors.grey.withOpacity(0.3),
+      bottomNavigationBar: SizedBox(
+        height: 75,
+        child: AnimatedBottomNavigationBar(
+          icons: _icons,
+          activeIndex: _selectedIndex == 2 ? -1 : _getNavBarIndex(_selectedIndex),
+          gapLocation: GapLocation.center,
+        
+          leftCornerRadius: 50,
+          rightCornerRadius: 50,
+          onTap: _onItemTapped,
+          activeColor: kPrimaryColor,
+          inactiveColor: Colors.black,
+          iconSize: 24,
+          elevation: 8,
+          blurEffect: true, // Thêm hiệu ứng blur
+          shadow: BoxShadow(
+            offset: const Offset(0, 1),
+            blurRadius: 12,
+            spreadRadius: 0.5,
+            color: Colors.grey.withOpacity(0.3),
+          ),
         ),
       ),
     );

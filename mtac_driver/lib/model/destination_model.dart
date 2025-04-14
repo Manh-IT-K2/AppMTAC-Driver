@@ -1,4 +1,5 @@
 class DestinationModel {
+  final int tripId;
   final String nameBusiness;
   final String addressBusiness;
   final String numberBD;
@@ -11,6 +12,7 @@ class DestinationModel {
   double longitude;
 
   DestinationModel({
+    required this.tripId,
     required this.nameBusiness,
     required this.addressBusiness,
     required this.numberBD,
@@ -26,7 +28,8 @@ class DestinationModel {
   // convert Map to DestinationModel
   factory DestinationModel.fromMap(Map<String, dynamic> map) {
     return DestinationModel(
-        nameBusiness: map['nameBusiness'],
+      tripId: map['tripId'] ?? '',
+        nameBusiness: map['nameBusiness'] ?? '',
         addressBusiness: map['addressBusiness'] ?? '',
         numberBD: map['numberBD'],
         status: map['status'] ?? '',
@@ -42,6 +45,7 @@ class DestinationModel {
   // convert DestinationModel to Map
   Map<String, dynamic> toMap() {
     return {
+      'tripId': tripId,
       'nameBusiness': nameBusiness,
       'addressBusiness': addressBusiness,
       'numberBD': numberBD,
