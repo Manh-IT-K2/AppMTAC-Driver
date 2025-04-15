@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/view/account_screen.dart';
@@ -7,6 +6,7 @@ import 'package:mtac_driver/view/home_screen.dart';
 import 'package:mtac_driver/view/mailbox_screen.dart';
 import 'package:mtac_driver/view/payment_screen.dart';
 import 'package:mtac_driver/view/schedule_screen.dart';
+import 'package:sizer/sizer.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -16,25 +16,18 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 2; // Mặc định là Home (FloatingActionButton)
+  int _selectedIndex = 2;
   final PageController _pageController = PageController(initialPage: 2);
-  final List<IconData> _icons = [
-    HugeIcons.strokeRoundedCalendar04, // Schedule (index 0)
-    HugeIcons.strokeRoundedClock01, // Payment (index 1)
-    HugeIcons.strokeRoundedNotification03, // Mailbox (index 2)
-    HugeIcons.strokeRoundedUser, // Account (index 3)
-  ];
 
   final List<Widget> _screens = [
-    const ScheduleScreen(), // index 0
-    const PaymentScreen(), // index 1
-    HomeScreen(), // index 2 (Home - FloatingActionButton)
-    const MailboxScreen(), // index 3
-    const AccountScreen(), // index 4
+    const ScheduleScreen(),
+    const PaymentScreen(),
+    HomeScreen(),
+    const MailboxScreen(),
+    const AccountScreen(),
   ];
 
   void _onItemTapped(int navBarIndex) {
-    // Chuyển đổi từ navBar index (0-3) sang screen index (0,1,3,4)
     final screenIndex = navBarIndex < 2 ? navBarIndex : navBarIndex + 1;
     setState(() => _selectedIndex = screenIndex);
     _pageController.animateToPage(
@@ -53,10 +46,14 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  int _getNavBarIndex(int screenIndex) {
+    return screenIndex < 2 ? screenIndex : screenIndex - 1;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 234, 232, 232),
+      backgroundColor: Colors.grey[200],
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) => setState(() => _selectedIndex = index),
@@ -64,44 +61,114 @@ class _MainScreenState extends State<MainScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _onHomePressed,
-        backgroundColor: _selectedIndex == 2 ? kPrimaryColor : Colors.grey,
-        foregroundColor: Colors.white,
-        tooltip: 'Home',
-        elevation: 6,
         shape: const CircleBorder(),
-        splashColor: Colors.white54,
-        hoverElevation: 8,
-        child: const Icon(HugeIcons.strokeRoundedHome11),
+        backgroundColor: _selectedIndex == 2 ? kPrimaryColor : Colors.white,
+        child: Icon(
+          HugeIcons.strokeRoundedHome11,
+          color: _selectedIndex == 2 ? Colors.white : Colors.black,
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: SizedBox(
-        height: 75,
-        child: AnimatedBottomNavigationBar(
-          icons: _icons,
-          activeIndex: _selectedIndex == 2 ? -1 : _getNavBarIndex(_selectedIndex),
-          gapLocation: GapLocation.center,
-        
-          leftCornerRadius: 50,
-          rightCornerRadius: 50,
-          onTap: _onItemTapped,
-          activeColor: kPrimaryColor,
-          inactiveColor: Colors.black,
-          iconSize: 24,
-          elevation: 8,
-          blurEffect: true, // Thêm hiệu ứng blur
-          shadow: BoxShadow(
-            offset: const Offset(0, 1),
-            blurRadius: 12,
-            spreadRadius: 0.5,
-            color: Colors.grey.withOpacity(0.3),
+      bottomNavigationBar: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          SizedBox(
+            height: 75,
+            child: CustomPaint(
+              painter: CurvedBottomBarPainter(backgroundColor: Colors.white),
+              child: Container(),
+            ),
           ),
-        ),
+          Positioned.fill(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildNavItem(
+                    icon: HugeIcons.strokeRoundedCalendar04, index: 0),
+                _buildNavItem(icon: HugeIcons.strokeRoundedClock01, index: 1),
+                const SizedBox(width: 50), // chừa chỗ cho FAB
+                _buildNavItem(
+                    icon: HugeIcons.strokeRoundedNotification03, index: 3),
+                _buildNavItem(icon: HugeIcons.strokeRoundedUser, index: 4),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  int _getNavBarIndex(int screenIndex) {
-    // Chuyển đổi từ screen index (0,1,3,4) sang navBar index (0-3)
-    return screenIndex < 2 ? screenIndex : screenIndex - 1;
+  Widget _buildNavItem({required IconData icon, required int index}) {
+    final isActive = _selectedIndex == index;
+    return IconButton(
+      icon: Icon(
+        icon,
+        size: 24,
+        color: isActive ? kPrimaryColor : Colors.black,
+      ),
+      onPressed: () => _onItemTapped(_getNavBarIndex(index)),
+    );
   }
+}
+
+class CurvedBottomBarPainter extends CustomPainter {
+  final Color backgroundColor;
+
+  CurvedBottomBarPainter({required this.backgroundColor});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = backgroundColor;
+
+    final path = Path();
+    path.moveTo(0, 20); // Góc trái hạ xuống 1 chút
+
+    // 🔽 Góc trái vát xuống
+    path.quadraticBezierTo(0, 0, 0, 0);
+
+    // ➡️ Đi dốc nhẹ lên hõm
+    path.cubicTo(
+      size.width * 0.25,
+      -20,
+      size.width * 0.35,
+      -40,
+      size.width / 2 - 45,
+      -10,
+    );
+
+    // 🔽 Hõm nghiêng từ trái sang phải
+    path.cubicTo(
+      size.width / 2 - 50, 30, // điểm control trái - cao
+      size.width / 2 - 30, 40, // điểm control đáy trái
+      size.width / 2, 40, // đáy hõm
+    );
+    path.cubicTo(
+      size.width / 2 + 30, 40, // điểm control đáy phải
+      size.width / 2 + 50, 30, // điểm control phải - thấp hơn
+      size.width / 2 + 45, -10, // kết thúc hõm
+    );
+
+    // ➡️ Đi dốc nhẹ xuống
+    path.cubicTo(
+      size.width * 0.65,
+      -30,
+      size.width * 0.75,
+      -20,
+      size.width - 10,
+      -1,
+    );
+
+    // 🔽 Góc phải vát xuống
+    path.quadraticBezierTo(size.width, 0, size.width, 0);
+
+    // ⬇️ Đóng phần dưới
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

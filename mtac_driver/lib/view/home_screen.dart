@@ -206,7 +206,9 @@ class _HeaderDriverScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 5.h,),  
+        SizedBox(
+          height: 5.h,
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -479,20 +481,17 @@ class _ItemDayOfWeek extends StatelessWidget {
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text.rich(
-            TextSpan(
-              text: "$day\n",
-              style: PrimaryFont.headerTextBold().copyWith(
-                  color: statusToday ? Colors.red : Colors.black, height: 1.2),
-              children: <TextSpan>[
-                TextSpan(
-                  text: weekdays,
-                  style: PrimaryFont.bodyTextMedium()
-                      .copyWith(color: statusToday ? Colors.red : Colors.black),
-                ),
-              ],
-            ),
+          Text(
+            day,
+            style: PrimaryFont.headerTextBold()
+                .copyWith(color: statusToday ? Colors.red : Colors.black),
+          ),
+          Text(
+            weekdays,
+            style: PrimaryFont.bodyTextMedium()
+                .copyWith(color: statusToday ? Colors.red : Colors.black),
           ),
           statusScheduleHighlight
               ? Container(
