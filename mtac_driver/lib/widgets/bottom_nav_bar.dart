@@ -31,9 +31,9 @@ class BottomNavBar extends StatelessWidget {
           backgroundColor: kBackgroundColor,
           type: BottomNavigationBarType.fixed,
           items: const [
-            BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedCalendar04), label: "Lên lịch"),
-            BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedClock01), label: "Thanh toán"),
+            //BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedCalendar04), label: "Lên lịch"),
             BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedHome11), label: "Trang chủ"),
+            BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedClock01), label: "Thanh toán"),
             BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedNotification03), label: "Hộp thư"),
             BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedUser), label: "Tài khoản"),
           ],

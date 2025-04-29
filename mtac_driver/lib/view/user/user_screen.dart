@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:mtac_driver/configs/api_config.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
-import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/theme_text.dart';
 import 'package:mtac_driver/widgets/user_widget/input_form_widget.dart';
@@ -17,22 +17,22 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-// @override
-// void initState() {
-//   initState();
-//   final apiConfig = ApiConfig();
-//   apiConfig.checkServerStatus().then((isOnline) {
-//     if (isOnline) {
-//       if (kDebugMode) {
-//         print("Server OK");
-//       }
-//     } else {
-//       if (kDebugMode) {
-//         print("Server không hoạt động");
-//       }
-//     }
-//   });
-// }
+@override
+void initState() {
+  initState();
+  final apiConfig = ApiConfig();
+  apiConfig.checkServerStatus().then((isOnline) {
+    if (isOnline) {
+      if (kDebugMode) {
+        print("Server OK");
+      }
+    } else {
+      if (kDebugMode) {
+        print("Server không hoạt động");
+      }
+    }
+  });
+}
 
 //
 final controller = Get.put(LoginController(), permanent: true);

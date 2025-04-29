@@ -14,7 +14,7 @@ class ScheduleController extends GetxController {
   // initial variable for time
   var currentDate = DateTime.now().obs;
   var daysInMonth = <DateTime>[].obs;
-  var scrollController = ScrollController().obs;
+  late final ScrollController scrollController;
 
   // username
   var username = ''.obs;
@@ -22,15 +22,35 @@ class ScheduleController extends GetxController {
   // initial list weekdays
   final List<String> weekdays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
+  final int totalItemCount = 9999;
+  final double itemWidth = 13.w;
+  double screenWidth = 100.w - 32;
+  late final double offset;
   // function initial
+  @override
   @override
   void onInit() {
     super.onInit();
     getUsername();
     daysInMonth.value = _generateDaysInMonth(currentDate.value);
-    //daysInMonth.value = _generateLoopedDaysInMonth(currentDate.value);
+    offset = calculateTodayScrollOffset(itemWidth, screenWidth);
+    scrollController = ScrollController(initialScrollOffset: offset);
+  }
 
-    Future.delayed(const Duration(milliseconds: 100), _scrollToToday);
+  // 
+  double calculateTodayScrollOffset(double itemWidth, double screenWidth) {
+    int todayIndex = daysInMonth.indexWhere((day) =>
+        day.day == currentDate.value.day &&
+        day.month == currentDate.value.month &&
+        day.year == currentDate.value.year);
+
+    int middle = totalItemCount ~/ 2;
+    int targetIndex = middle - (middle % daysInMonth.length) + todayIndex;
+
+    double scrollOffset =
+        (targetIndex * itemWidth) - (screenWidth / 2) + (itemWidth / 2);
+
+    return scrollOffset;
   }
 
   // initial list hour away two hour
@@ -48,44 +68,22 @@ class ScheduleController extends GetxController {
     );
   }
 
-  // List<DateTime> _generateLoopedDaysInMonth(DateTime date) {
-  //   int daysInMonth = DateTime(date.year, date.month + 1, 0).day;
-  //   List<DateTime> originalDays = List.generate(
-  //     daysInMonth,
-  //     (index) => DateTime(date.year, date.month, index + 1),
-  //   );
-
-  //   // Lặp thêm: copy 7 ngày cuối + 7 ngày đầu
-  //   List<DateTime> loopedDays = [
-  //     ...originalDays.takeLast(7), // 7 ngày cuối lên đầu
-  //     ...originalDays,
-  //     ...originalDays.take(7), // 7 ngày đầu thêm cuối
-  //   ];
-
-  //   return loopedDays;
-  // }
-
   // initial scroll to Today in center screen
- void _scrollToToday() {
-  int todayIndex = daysInMonth.indexWhere((day) =>
-      day.day == currentDate.value.day &&
-      day.month == currentDate.value.month &&
-      day.year == currentDate.value.year);
+  void scrollToTodayWithContext(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // double offset = calculateTodayScrollOffset(itemWidth, screenWidth);
 
-  if (todayIndex != -1) {
-    // Vì danh sách 9999, mình đặt today ở giữa:
-    int middle = 9999 ~/ 2; // chia lấy nguyên
-    int targetIndex = middle - (middle % daysInMonth.length) + todayIndex;
+      scrollController.animateTo(
+        offset,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
 
-    double itemWidth = 13.w + 1;
-    double screenWidth = 100.w;
-    double scrollOffset =
-        (targetIndex * itemWidth) - (screenWidth / 2) + (itemWidth / 2);
-
-    scrollController.value.jumpTo(scrollOffset);
+      if (kDebugMode) {
+        print('>> Scroll to today offset: $offset');
+      }
+    });
   }
-}
-
 
   // get weekday name
   String getWeekdayShortName(DateTime date) {

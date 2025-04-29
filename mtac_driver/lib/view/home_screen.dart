@@ -103,6 +103,8 @@ class _BodyDriverScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //
+    _driverController.scrollToTodayWithContext(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -115,20 +117,24 @@ class _BodyDriverScreen extends StatelessWidget {
         ),
         SizedBox(
           height: 20.w,
-          child: Obx(
-            () => ListView.builder(
-              controller: _driverController.scrollController.value,
-              scrollDirection: Axis.horizontal,
-              itemCount: 9999, // cực lớn để scroll hoài
-              itemBuilder: (context, index) {
+          child: ListView.builder(
+            controller: _driverController.scrollController,
+            scrollDirection: Axis.horizontal,
+            itemCount: _driverController.totalItemCount,
+            itemExtent: 13.w, // rất quan trọng để tối ưu!
+            itemBuilder: (context, index) {
+              return Obx(() {
+                // Tính realIndex để lặp lại
                 int realIndex = index % _driverController.daysInMonth.length;
                 DateTime day = _driverController.daysInMonth[realIndex];
 
+                // Kiểm tra có phải hôm nay không
                 bool isToday = day.day ==
                         _driverController.currentDate.value.day &&
                     day.month == _driverController.currentDate.value.month &&
                     day.year == _driverController.currentDate.value.year;
 
+                // Danh sách ngày highlight (tùy bạn)
                 List<int> highlightedDays = [
                   6,
                   10,
@@ -145,8 +151,8 @@ class _BodyDriverScreen extends StatelessWidget {
                   statusToday: isToday,
                   statusScheduleHighlight: isHighlight,
                 );
-              },
-            ),
+              });
+            },
           ),
         ),
         SizedBox(height: 5.w),
@@ -198,6 +204,7 @@ class _HeaderDriverScreen extends StatelessWidget {
   final ScheduleController driverController;
   @override
   Widget build(BuildContext context) {
+  
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
