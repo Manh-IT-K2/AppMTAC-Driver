@@ -26,7 +26,9 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const _HeaderDriverScreen(),
+              _HeaderDriverScreen(
+                driverController: _driverController,
+              ),
               SizedBox(
                 height: 3.w,
               ),
@@ -114,44 +116,36 @@ class _BodyDriverScreen extends StatelessWidget {
         SizedBox(
           height: 20.w,
           child: Obx(
-            () => CustomScrollView(
-              controller: _driverController.scrollController,
+            () => ListView.builder(
+              controller: _driverController.scrollController.value,
               scrollDirection: Axis.horizontal,
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Row(
-                    children: List.generate(
-                      _driverController.daysInMonth.length,
-                      (index) {
-                        DateTime day = _driverController.daysInMonth[index];
-                        bool isToday = day.day ==
-                                _driverController.currentDate.value.day &&
-                            day.month ==
-                                _driverController.currentDate.value.month &&
-                            day.year ==
-                                _driverController.currentDate.value.year;
+              itemCount: 9999, // cực lớn để scroll hoài
+              itemBuilder: (context, index) {
+                int realIndex = index % _driverController.daysInMonth.length;
+                DateTime day = _driverController.daysInMonth[realIndex];
 
-                        List<int> highlightedDays = [
-                          6,
-                          10,
-                          _driverController.currentDate.value.day,
-                          22,
-                          26,
-                          29
-                        ];
-                        bool isHighlight = highlightedDays.contains(day.day);
+                bool isToday = day.day ==
+                        _driverController.currentDate.value.day &&
+                    day.month == _driverController.currentDate.value.month &&
+                    day.year == _driverController.currentDate.value.year;
 
-                        return _ItemDayOfWeek(
-                          day: day.day.toString(),
-                          weekdays: _driverController.getWeekdayShortName(day),
-                          statusToday: isToday,
-                          statusScheduleHighlight: isHighlight,
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
+                List<int> highlightedDays = [
+                  6,
+                  10,
+                  _driverController.currentDate.value.day,
+                  22,
+                  26,
+                  29
+                ];
+                bool isHighlight = highlightedDays.contains(day.day);
+
+                return _ItemDayOfWeek(
+                  day: day.day.toString(),
+                  weekdays: _driverController.getWeekdayShortName(day),
+                  statusToday: isToday,
+                  statusScheduleHighlight: isHighlight,
+                );
+              },
             ),
           ),
         ),
@@ -199,8 +193,9 @@ class _BodyDriverScreen extends StatelessWidget {
 class _HeaderDriverScreen extends StatelessWidget {
   const _HeaderDriverScreen({
     super.key,
+    required this.driverController,
   });
-
+  final ScheduleController driverController;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -212,18 +207,20 @@ class _HeaderDriverScreen extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text.rich(
-              TextSpan(
-                text: txtHelloD,
-                style: PrimaryFont.bodyTextMedium()
-                    .copyWith(color: Colors.grey, height: 1.5),
-                children: <TextSpan>[
-                  TextSpan(
-                    text: "Phạm Huỳnh Tín",
-                    style: PrimaryFont.titleTextMedium()
-                        .copyWith(color: Colors.black),
-                  ),
-                ],
+            Obx(
+              () => Text.rich(
+                TextSpan(
+                  text: txtHelloD,
+                  style: PrimaryFont.bodyTextMedium()
+                      .copyWith(color: Colors.grey, height: 1.5),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: driverController.username.toString(),
+                      style: PrimaryFont.titleTextMedium()
+                          .copyWith(color: Colors.black),
+                    ),
+                  ],
+                ),
               ),
             ),
             Container(
@@ -438,7 +435,7 @@ class _ItemTripToday extends StatelessWidget {
         ),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 3.w),
-          width: 60.w,
+          width: 70.w,
           height: 10.w,
           decoration: BoxDecoration(
             color: kPrimaryColor.withOpacity(0.5),

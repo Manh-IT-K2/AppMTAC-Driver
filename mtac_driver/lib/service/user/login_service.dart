@@ -28,6 +28,7 @@ class LoginService {
       if (accessToken != null) {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('access_token', accessToken);
+        await prefs.setString('username', data['user']?['name']);
         //await prefs.setString('refresh_token', data['refresh_token']);
         //final expiry = DateTime.now().add(Duration(seconds: data['details']?['expires_in']));
        // await prefs.setString('expiry_time', expiry.toIso8601String());
