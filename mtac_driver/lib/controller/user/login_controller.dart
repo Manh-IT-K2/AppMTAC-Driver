@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/service/user/login_service.dart';
+import 'package:mtac_driver/theme/color.dart';
 
 class LoginController extends GetxController {
   // inital variable
@@ -44,27 +45,27 @@ class LoginController extends GetxController {
     }
   }
 
-  // // Call logout from loginService
-  // Future<void> logOut() async {
-  //   final success = await LoginService().logout();
-  //   if (success) {
-  //     Get.snackbar(
-  //       "OK",
-  //       "Đăng xuất thành công!.",
-  //       snackPosition: SnackPosition.TOP,
-  //       backgroundColor: kPrimaryColor.withOpacity(0.1),
-  //       colorText: Colors.green,
-  //     );
-  //     Get.offAllNamed(AppRoutes.login);
-  //   } else {
-  //     Get.snackbar(
-  //       "Lỗi",
-  //       "Đăng xuất thất bại!.",
-  //       snackPosition: SnackPosition.TOP,
-  //       colorText: Colors.red,
-  //     );
-  //   }
-  // }
+  // Call logout from loginService
+  Future<void> logOut() async {
+    final success = await LoginService().logout();
+    if (success) {
+      Get.snackbar(
+        "OK",
+        "Đăng xuất thành công!.",
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: kPrimaryColor.withOpacity(0.1),
+        colorText: Colors.green,
+      );
+      Get.offAllNamed(AppRoutes.login);
+    } else {
+      Get.snackbar(
+        "Lỗi",
+        "Đăng xuất thất bại!.",
+        snackPosition: SnackPosition.TOP,
+        colorText: Colors.red,
+      );
+    }
+  }
 
   // // Call checkLoginStatus from loginService
   // Future<void> checkLoginStatus() async {

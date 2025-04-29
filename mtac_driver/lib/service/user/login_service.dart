@@ -48,25 +48,25 @@ class LoginService {
   }
 
   // function logout
-  // Future<bool> logout() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final token = prefs.getString('access_token');
+  Future<bool> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
 
-  //   final url = Uri.parse("$baseUrl/api/logout");
-  //   final response = await http.post(
-  //     url,
-  //     headers: {
-  //       'Authorization': 'Bearer $token',
-  //       'Accept': 'application/json',
-  //     },
-  //   );
+    final url = Uri.parse("$baseUrl/api/logout");
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      },
+    );
 
-  //   if(response.statusCode == 200){
-  //     await prefs.remove('access_token');
-  //     return true;
-  //   }
-  //   return false;
-  // }
+    if(response.statusCode == 200){
+      await prefs.remove('access_token');
+      return true;
+    }
+    return false;
+  }
 
   // // Call api from server with function checkLoginStatus
   // Future<bool> checkLoginStatus() async {

@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
     const PaymentScreen(),
     HomeScreen(),
     const MailboxScreen(),
-    const AccountScreen(),
+    AccountScreen(),
   ];
 
   void _onItemTapped(int navBarIndex) {
