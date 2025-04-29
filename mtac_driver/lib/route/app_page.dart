@@ -4,6 +4,7 @@ import 'package:mtac_driver/view/main_screen.dart';
 import 'package:mtac_driver/view/schedule/handover_record_driver_screen.dart';
 import 'package:mtac_driver/view/schedule/map_driver_screen.dart';
 import 'package:mtac_driver/view/schedule/schedule_colection_driver_screen.dart';
+import 'package:mtac_driver/view/splash_screen.dart';
 import 'package:mtac_driver/view/user/user_screen.dart';
 
 class AppPages {
@@ -11,6 +12,10 @@ class AppPages {
     GetPage(
       name: AppRoutes.main,
       page: () => const MainScreen(),
+    ),
+     GetPage(
+      name: AppRoutes.splash,
+      page: () => const SplashScreen(),
     ),
     GetPage(
       name: AppRoutes.login,

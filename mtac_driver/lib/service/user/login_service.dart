@@ -69,32 +69,36 @@ class LoginService {
   }
 
   // // Call api from server with function checkLoginStatus
-  // Future<bool> checkLoginStatus() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final accessToken = prefs.getString('access_token');
-  //   final refreshToken = prefs.getString('refresh_token');
-  //   final expiryString = prefs.getString('expiry_time');
+  Future<bool> checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final accessToken = prefs.getString('access_token');
+    // final refreshToken = prefs.getString('refresh_token');
+    // final expiryString = prefs.getString('expiry_time');
 
-  //   // check token parameters
-  //   if (accessToken == null || refreshToken == null || expiryString == null) {
-  //     return false;
-  //   }
+    // check token parameters
+    // if (accessToken == null || refreshToken == null || expiryString == null) {
+    //   return false;
+    // }
 
-  //   final expiryTime = DateTime.tryParse(expiryString);
-  //   final now = DateTime.now();
+    // final expiryTime = DateTime.tryParse(expiryString);
+    // final now = DateTime.now();
 
-  //   // check token is still valid
-  //   if (expiryTime != null && now.isBefore(expiryTime)) {
-  //     return true;
-  //   } else {
-  //     final loginService = LoginService();
-  //     if (await loginService.refreshTokenWhenExpire()) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   }
-  // }
+    // // check token is still valid
+    // if (expiryTime != null && now.isBefore(expiryTime)) {
+    //   return true;
+    // } else {
+    //   final loginService = LoginService();
+    //   if (await loginService.refreshTokenWhenExpire()) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // }
+    if (accessToken != null) {
+      return true;
+    }
+    return false;
+  }
 
   // // call api from server with function login refresh token
   // Future<bool> refreshTokenWhenExpire() async {

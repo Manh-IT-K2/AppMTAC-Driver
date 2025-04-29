@@ -67,15 +67,15 @@ class LoginController extends GetxController {
     }
   }
 
-  // // Call checkLoginStatus from loginService
-  // Future<void> checkLoginStatus() async {
-  //   final success = await LoginService().checkLoginStatus();
-  //   if (success) {
-  //     Get.offAllNamed('/main');
-  //   } else {
-  //     Get.offAllNamed('/login');
-  //   }
-  // }
+  // Call checkLoginStatus from loginService
+  Future<void> checkLoginStatus() async {
+    final success = await LoginService().checkLoginStatus();
+    if (success) {
+      Get.offAllNamed('/main');
+    } else {
+      Get.offAllNamed('/login');
+    }
+  }
 
   // dispose
   @override
