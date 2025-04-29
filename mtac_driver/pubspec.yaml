@@ -64,6 +64,8 @@ dependencies:
   # webview_flutter: ^4.10.0
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
+  # save data local
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:

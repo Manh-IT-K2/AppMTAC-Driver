@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mtac_driver/route/app_route.dart';
+import 'package:mtac_driver/service/user/login_service.dart';
 
 class LoginController extends GetxController {
   // inital variable
   final formKeyLogin = GlobalKey<FormState>();
 
-  final emailController = TextEditingController();
+  final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final isLoading = false.obs;
   final obscurePassword = true.obs;
@@ -16,31 +18,31 @@ class LoginController extends GetxController {
   }
 
   // clear input email
-  void clearTextEmail(){
-    emailController.text = "";
+  void clearInputPhone(){
+    usernameController.text = "";
   }
 
   // Call login from loginService
-  // Future<void> login() async {
-  //   if(!formKeyLogin.currentState!.validate()) return;
+  Future<void> login() async {
+    if(!formKeyLogin.currentState!.validate()) return;
 
-  //   isLoading.value = true;
+    isLoading.value = true;
 
-  //   final success = await LoginService().login(
-  //     email: emailController.text.trim(),
-  //     password: passwordController.text,
-  //   );
+    final success = await LoginService().login(
+      username: usernameController.text,
+      password: passwordController.text,
+    );
 
-  //   isLoading.value = false;
+    isLoading.value = false;
 
-  //   if (success) {
-  //     Get.offAllNamed(AppRoutes.main);
-  //   } else {
-  //     Get.snackbar("Lỗi", "Đăng nhập thất bại. Kiểm tra lại thông tin.",
-  //         snackPosition: SnackPosition.TOP,
-  //         colorText: Colors.red);
-  //   }
-  // }
+    if (success) {
+      Get.offAllNamed(AppRoutes.main);
+    } else {
+      Get.snackbar("Lỗi", "Đăng nhập thất bại. Kiểm tra lại thông tin.",
+          snackPosition: SnackPosition.TOP,
+          colorText: Colors.red);
+    }
+  }
 
   // // Call logout from loginService
   // Future<void> logOut() async {
@@ -77,7 +79,7 @@ class LoginController extends GetxController {
   // dispose
   @override
   void onClose() {
-    emailController.dispose();
+    usernameController.dispose();
     passwordController.dispose();
     super.onClose();
   }

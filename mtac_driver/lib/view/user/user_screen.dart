@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   InputFormWidget(
                     title: 'Phone number',
                     obscureText: false,
-                    controller: controller.emailController,
+                    controller: controller.usernameController,
                     iconStart: HugeIcons.strokeRoundedCall02,
                     keyboardType: TextInputType.number,
                     inputFormatters: [
@@ -76,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     suffixIcon: IconButton(
                       icon: const Icon(HugeIcons.strokeRoundedCancel01),
                       iconSize: 5.w,
-                      onPressed: controller.clearTextEmail,
+                      onPressed: controller.clearInputPhone,
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -128,8 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         : SizedBox(
                             width: 100.w,
                             child: ElevatedButton(
-                              onPressed: () {},
-                              //onPressed: controller.login,
+                              onPressed: controller.login,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: kPrimaryColor,
                                 shape: RoundedRectangleBorder(
