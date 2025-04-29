@@ -4,13 +4,17 @@ import 'package:mtac_driver/view/main_screen.dart';
 import 'package:mtac_driver/view/schedule/handover_record_driver_screen.dart';
 import 'package:mtac_driver/view/schedule/map_driver_screen.dart';
 import 'package:mtac_driver/view/schedule/schedule_colection_driver_screen.dart';
-
+import 'package:mtac_driver/view/user/user_screen.dart';
 
 class AppPages {
   static final routes = [
     GetPage(
       name: AppRoutes.main,
       page: () => const MainScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.login,
+      page: () => const LoginScreen(),
     ),
     GetPage(
       name: AppRoutes.handoverRecord,

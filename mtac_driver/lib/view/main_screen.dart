@@ -6,7 +6,6 @@ import 'package:mtac_driver/view/home_screen.dart';
 import 'package:mtac_driver/view/mailbox_screen.dart';
 import 'package:mtac_driver/view/payment_screen.dart';
 import 'package:mtac_driver/view/schedule_screen.dart';
-import 'package:sizer/sizer.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
