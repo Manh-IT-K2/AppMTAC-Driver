@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mtac_driver/configs/api_config.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
+import 'package:sizer/sizer.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -35,7 +36,8 @@ class _SplashScreenState extends State<SplashScreen> {
       context: context,
       builder: (_) => AlertDialog(
         title: const Text("Lỗi kết nối"),
-        content: const Text("Không thể kết nối đến máy chủ. Vui lòng kiểm tra mạng hoặc thử lại sau."),
+        content: const Text(
+            "Không thể kết nối đến máy chủ. Vui lòng kiểm tra mạng hoặc thử lại sau."),
         actions: [
           TextButton(
             onPressed: () {
@@ -51,8 +53,15 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
+    return Scaffold(
+      body: Center(
+        child: Image.asset(
+          "assets/image/loadingDot.gif",
+          width: 70,
+          height: 70,
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 }

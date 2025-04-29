@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:mtac_driver/configs/api_config.dart';
+import 'package:mtac_driver/model/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginService {
@@ -9,6 +10,7 @@ class LoginService {
   final String baseUrl = ApiConfig.baseUrl;
 
   // call api from server with function login
+
   Future<bool> login({
     required String username,
     required String password,
@@ -21,21 +23,23 @@ class LoginService {
         'password': password,
       },
     );
+
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      final accessToken = data['access_token'];
 
-      if (accessToken != null) {
+      try {
+        final userModel = UserModel.fromJson(data);
+
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('access_token', accessToken);
+        await prefs.setString('access_token', data['access_token']);
         await prefs.setString('username', data['user']?['name']);
-        //await prefs.setString('refresh_token', data['refresh_token']);
-        //final expiry = DateTime.now().add(Duration(seconds: data['details']?['expires_in']));
-       // await prefs.setString('expiry_time', expiry.toIso8601String());
+        await prefs.setString(
+            'user_model', userModelToJson(userModel));
+
         return true;
-      } else {
+      } catch (e) {
         if (kDebugMode) {
-          print("Không tìm thấy access_token trong response: ${response.body}");
+          print('Lỗi parse UserModel: $e');
         }
         return false;
       }
@@ -61,7 +65,7 @@ class LoginService {
       },
     );
 
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       await prefs.remove('access_token');
       return true;
     }

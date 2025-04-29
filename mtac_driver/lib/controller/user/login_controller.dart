@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mtac_driver/model/user_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/service/user/login_service.dart';
 import 'package:mtac_driver/theme/color.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
   // inital variable
@@ -13,19 +15,29 @@ class LoginController extends GetxController {
   final isLoading = false.obs;
   final obscurePassword = true.obs;
 
+  //
+  final Rxn<UserModel> infoUser = Rxn<UserModel>();
+
+  //
+  @override
+  void onInit() {
+    super.onInit();
+    getUserModel();
+  }
+
   // password visibility
   void togglePasswordVisibility() {
     obscurePassword.value = !obscurePassword.value;
   }
 
   // clear input email
-  void clearInputPhone(){
+  void clearInputPhone() {
     usernameController.text = "";
   }
 
   // Call login from loginService
   Future<void> login() async {
-    if(!formKeyLogin.currentState!.validate()) return;
+    if (!formKeyLogin.currentState!.validate()) return;
 
     isLoading.value = true;
 
@@ -40,8 +52,7 @@ class LoginController extends GetxController {
       Get.offAllNamed(AppRoutes.main);
     } else {
       Get.snackbar("Lỗi", "Đăng nhập thất bại. Kiểm tra lại thông tin.",
-          snackPosition: SnackPosition.TOP,
-          colorText: Colors.red);
+          snackPosition: SnackPosition.TOP, colorText: Colors.red);
     }
   }
 
@@ -75,6 +86,18 @@ class LoginController extends GetxController {
     } else {
       Get.offAllNamed('/login');
     }
+  }
+
+  // get user saved from local SharedPreferences
+  Future<UserModel?> getUserModel() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userString = prefs.getString('user_model');
+
+    if (userString != null) {
+      infoUser.value = userModelFromJson(userString);
+      print("object: ${infoUser.value?.user.profilePhotoUrl}");
+    }
+    return null;
   }
 
   // dispose

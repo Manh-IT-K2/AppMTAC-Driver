@@ -154,10 +154,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         .copyWith(color: Colors.black),
                   ),
                   SizedBox(height: 15.w),
-                  Text(
-                    "1900.8080.2020",
-                    style: PrimaryFont.bodyTextMedium()
-                        .copyWith(color: kPrimaryColor),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(HugeIcons.strokeRoundedCall02, color: kPrimaryColor, size: 5.w,),
+                      Text(
+                        "1900.8080.0020",
+                        style: PrimaryFont.titleTextBold()
+                            .copyWith(color: kPrimaryColor),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 20.w),
                   Row(

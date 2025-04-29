@@ -28,7 +28,6 @@ class ScheduleController extends GetxController {
   late final double offset;
   // function initial
   @override
-  @override
   void onInit() {
     super.onInit();
     getUsername();
