@@ -5,6 +5,7 @@ import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/theme_text.dart';
+import 'package:mtac_driver/widgets/user_widget/build_avatar_widget.dart';
 import 'package:sizer/sizer.dart';
 
 class AccountScreen extends StatelessWidget {
@@ -14,7 +15,7 @@ class AccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 234, 232, 232),
+        backgroundColor: Colors.white,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
@@ -45,19 +46,7 @@ class AccountScreen extends StatelessWidget {
                           shape: BoxShape.circle,
                         ),
                         child: ClipOval(
-                          child: Image.network(
-                            user.user.profilePhotoUrl,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Center(
-                                child: Icon(
-                                  Icons.person,
-                                  size: 6.w,
-                                  color: Colors.grey,
-                                ),
-                              );
-                            },
-                          ),
+                          child: buildAvatar(user)
                         ),
                       ),
                       SizedBox(

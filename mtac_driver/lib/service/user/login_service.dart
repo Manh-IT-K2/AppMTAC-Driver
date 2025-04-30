@@ -10,7 +10,6 @@ class LoginService {
   final String baseUrl = ApiConfig.baseUrl;
 
   // call api from server with function login
-
   Future<bool> login({
     required String username,
     required String password,

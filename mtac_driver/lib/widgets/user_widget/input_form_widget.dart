@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mtac_driver/theme/color.dart';
+import 'package:mtac_driver/utils/theme_text.dart';
 
 // ignore: must_be_immutable
 class InputFormWidget extends StatelessWidget {
@@ -14,6 +15,9 @@ class InputFormWidget extends StatelessWidget {
       this.onChanged,
       this.keyboardType,
       this.inputFormatters,
+      this.showCursor,
+      this.colorText,
+      required this.readOnly,
       required this.obscureText});
 
   final TextEditingController controller;
@@ -21,6 +25,9 @@ class InputFormWidget extends StatelessWidget {
   IconData? iconStart;
   Widget? suffixIcon;
   bool obscureText;
+  bool readOnly;
+  bool? showCursor;
+  Color? colorText;
   String? Function(String?)? validator;
   Function(String)? onChanged;
   TextInputType? keyboardType;
@@ -30,15 +37,19 @@ class InputFormWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      readOnly: readOnly,
+      showCursor: showCursor,
       obscureText: obscureText,
       keyboardType: keyboardType,
       inputFormatters: inputFormatters,
       validator: validator,
       onChanged: onChanged,
+      style: PrimaryFont.bodyTextMedium().copyWith(color: colorText),
       cursorColor: kPrimaryColor.withOpacity(0.5),
       decoration: InputDecoration(
         labelText: title,
-        labelStyle: const TextStyle(color: Colors.blueAccent),
+        labelStyle:
+            PrimaryFont.bodyTextMedium().copyWith(color: Colors.blueAccent),
         prefixIcon: Icon(iconStart, color: Colors.blueAccent),
         filled: true,
         fillColor: Colors.blue.shade50,

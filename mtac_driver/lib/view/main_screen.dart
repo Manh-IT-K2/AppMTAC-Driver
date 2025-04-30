@@ -36,7 +36,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 234, 232, 232),
+      backgroundColor: Colors.white,
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {

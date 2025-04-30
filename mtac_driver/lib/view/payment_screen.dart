@@ -6,7 +6,7 @@ class PaymentScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Color.fromARGB(255, 234, 232, 232),
+      backgroundColor: Colors.white,
       body: Center(
         child: Text("Payment"),
       ),

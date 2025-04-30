@@ -65,6 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 5.w),
                   InputFormWidget(
+                    readOnly: false,
                     title: 'Phone number',
                     obscureText: false,
                     controller: controller.usernameController,
@@ -94,6 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 5.w),
                   Obx(
                     () => InputFormWidget(
+                      readOnly: false,
                       title: 'Password',
                       controller: controller.passwordController,
                       obscureText: controller.obscurePassword.value,
