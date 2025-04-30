@@ -6,5 +6,6 @@ class AppRoutes {
   static const map = "/map";
   static const handoverRecord = "/handoverRecord";
   static const driver = "/driver";
+  static const profile = "/profile";
   
 }

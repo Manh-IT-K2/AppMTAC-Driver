@@ -6,6 +6,7 @@ import 'package:mtac_driver/view/schedule/map_driver_screen.dart';
 import 'package:mtac_driver/view/schedule/schedule_colection_driver_screen.dart';
 import 'package:mtac_driver/view/splash_screen.dart';
 import 'package:mtac_driver/view/user/login_screen.dart';
+import 'package:mtac_driver/view/user/profile_screen.dart';
 
 class AppPages {
   static final routes = [
@@ -32,6 +33,10 @@ class AppPages {
     GetPage(
       name: AppRoutes.map,
       page: () => MapDriverScreen(),
+    ),
+    GetPage(
+      name: AppRoutes.profile,
+      page: () => ProfileScreen(),
     ),
   ];
 }

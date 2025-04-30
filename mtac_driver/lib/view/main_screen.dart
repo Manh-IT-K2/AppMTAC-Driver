@@ -23,11 +23,14 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       _selectedIndex = index;
     });
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
+    //
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _pageController.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    });
   }
 
   @override
