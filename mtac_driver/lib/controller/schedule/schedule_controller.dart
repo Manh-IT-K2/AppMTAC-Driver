@@ -18,8 +18,12 @@ class ScheduleController extends GetxController {
   var daysInMonth = <DateTime>[].obs;
   late final ScrollController scrollController;
 
-  
- final ScheduleService _scheduleService = ScheduleService();
+  final Map<int, RxBool> startingStatus = {}; // key: scheduleId
+  bool get isAnyTripStarted {
+    return startingStatus.values.any((status) => status.value);
+  }
+
+  final ScheduleService _scheduleService = ScheduleService();
 
   // Biến observable để lưu danh sách lịch hôm nay
   RxList<Datum> todaySchedules = <Datum>[].obs;
@@ -45,7 +49,14 @@ class ScheduleController extends GetxController {
     scrollController = ScrollController(initialScrollOffset: offset);
   }
 
-  // 
+  // Khởi tạo trạng thái
+  void initStartingStatus(List<int> ids) {
+    for (var id in ids) {
+      startingStatus[id] = false.obs;
+    }
+  }
+
+  //
   double calculateTodayScrollOffset(double itemWidth, double screenWidth) {
     int todayIndex = daysInMonth.indexWhere((day) =>
         day.day == currentDate.value.day &&
@@ -141,12 +152,44 @@ class ScheduleController extends GetxController {
     try {
       final schedules = await _scheduleService.getListScheduleToday();
       todaySchedules.value = schedules;
-      print("schedule: ${todaySchedules[0].collectionDate}" );
+      final ids = schedules.map((e) => e.id).toList();
+      initStartingStatus(ids);
+      if (kDebugMode) {
+        print("schedule: ${todaySchedules[0].collectionDate}");
+      }
     } catch (e) {
       Get.snackbar('Lỗi', 'Không thể tải lịch hôm nay');
       if (kDebugMode) {
         print('ScheduleController Error: $e');
       }
+    }
+  }
+
+  // start trip collection
+  Future<void> startTrip(int scheduleId) async {
+    if (isAnyTripStarted && !(startingStatus[scheduleId]?.value ?? false)) {
+      Get.snackbar(
+        'Thông báo',
+        'Bạn cần hoàn thành chuyến thu gom trước đó trước khi bắt đầu chuyến mới.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    final success = await _scheduleService.startCollectionTrip(scheduleId);
+
+    if (success) {
+      // Đánh dấu chuyến này đang được thu gom
+      startingStatus[scheduleId]?.value = true;
+      Get.snackbar('Thành công', 'Chuyến thu gom đã bắt đầu',
+          snackPosition: SnackPosition.BOTTOM);
+    } else {
+      Get.snackbar('Thất bại', 'Không thể bắt đầu chuyến thu gom',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
     }
   }
 

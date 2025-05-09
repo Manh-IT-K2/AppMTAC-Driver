@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:mtac_driver/controller/schedule/map_controller.dart';
+import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/model/destination_model.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
@@ -20,6 +21,7 @@ class MapDriverScreen extends StatelessWidget {
 
   // initial MapDriverController
   final MapDriverController controller = Get.put(MapDriverController());
+  final scheduleController = Get.find<ScheduleController>();
 
   //final int tripId = Get.arguments as int;
 
@@ -383,6 +385,7 @@ class MapDriverScreen extends StatelessWidget {
                       : '';
 
                   return _ItemDestination(
+                    scheduleId: destination.id,
                     distanceTime: distanceTime,
                     nameBusiness: destination.companyName,
                     //numberBD: destination.numberBD,
@@ -395,7 +398,9 @@ class MapDriverScreen extends StatelessWidget {
                     isLastItem: index == controller.destinationsData.length - 1,
                     onTap: () {
                       //controller.makePhoneCall(destination.phonePartner);
+                      scheduleController.startTrip(destination.id);
                     },
+                    controller: scheduleController,
                   );
                 },
                 childCount: controller.destinationsData.length,
@@ -665,6 +670,8 @@ class _ItemDestination extends StatelessWidget {
     //required this.note,
     required this.isLastItem,
     required this.distanceTime,
+    required this.scheduleId,
+    required this.controller,
     this.onTap,
   });
 
@@ -678,6 +685,8 @@ class _ItemDestination extends StatelessWidget {
   //note;
   final bool isLastItem;
   final Function()? onTap;
+  final int scheduleId;
+  final ScheduleController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -685,38 +694,43 @@ class _ItemDestination extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 3.w),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            GestureDetector(
-              onTap: () {},
-              child: Container(
-                width: 20.w,
-                height: 8.w,
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Icon(
-                      HugeIcons.strokeRoundedPlay,
-                      size: 5.w,
-                      color: Colors.white,
-                    ),
-                    Text(
-                      "Bắt đầu",
-                      style: PrimaryFont.bodyTextMedium()
-                          .copyWith(color: Colors.white),
-                    ),
-                  ],
+        Obx(() {
+          final isStarting = controller.startingStatus[scheduleId]?.value ?? false;
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: onTap,
+                child: Container(
+                  width: 20.w,
+                  height: 8.w,
+                  decoration: BoxDecoration(
+                    color: isStarting ? Colors.red : Colors.green,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Icon(
+                        isStarting
+                            ? HugeIcons.strokeRoundedStop
+                            : HugeIcons.strokeRoundedPlay,
+                        size: 5.w,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        isStarting ? "Kết thúc" : "Bắt đầu",
+                        style: PrimaryFont.bodyTextMedium()
+                            .copyWith(color: Colors.white),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            MovingGifWidget()
-          ],
-        ),
+              isStarting ? MovingGifWidget() : SizedBox(),
+            ],
+          );
+        }),
         SizedBox(height: 5.w),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:mtac_driver/configs/api_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -54,4 +55,41 @@ class ScheduleService {
       throw Exception('Error getting data schedule today: $e');
     }
   }
+
+  // Call api startCollectionTrip
+  Future<bool> startCollectionTrip(int id) async {
+  final url = Uri.parse('$baseUrl/api/driver/schedules/$id/start');
+  final token = await getToken();
+
+  try {
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      if (data['success'] == true) {
+        debugPrint('✅ Start trip success: ${data['message']}');
+        return true;
+      } else {
+        debugPrint('⚠️ Server responded but failed: ${data['message']}');
+        return false;
+      }
+    } else {
+      debugPrint('❌ Failed with status: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
+      return false;
+    }
+  } catch (e) {
+    debugPrint('❌ Exception occurred: $e');
+    return false;
+  }
+}
+
+
 }
