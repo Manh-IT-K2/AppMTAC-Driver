@@ -12,6 +12,7 @@ import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/text.dart';
 import 'package:mtac_driver/utils/theme_text.dart';
+import 'package:mtac_driver/widgets/schedule_widget/moving_gif_widget.dart';
 import 'package:sizer/sizer.dart';
 
 class MapDriverScreen extends StatelessWidget {
@@ -254,7 +255,7 @@ class MapDriverScreen extends StatelessWidget {
                                   Column(
                                     children: [
                                       SizedBox(
-                                        height: 8.h,
+                                        height: 5.h,
                                       ),
                                       _buildRouteDots(),
                                       SizedBox(
@@ -615,7 +616,7 @@ class MapDriverScreen extends StatelessWidget {
               ),
               Container(
                 width: 0.5.w,
-                height: 20.w,
+                height: 40.w,
                 color: kPrimaryColor,
               ),
               ...List.generate(
@@ -632,7 +633,7 @@ class MapDriverScreen extends StatelessWidget {
                     ),
                     Container(
                       width: 0.5.w,
-                      height: 25.w,
+                      height: 40.w,
                       color: Colors.grey,
                     ),
                   ],
@@ -674,7 +675,7 @@ class _ItemDestination extends StatelessWidget {
       //phonePartner,
       //namePartner,
       distanceTime;
-      //note;
+  //note;
   final bool isLastItem;
   final Function()? onTap;
 
@@ -684,6 +685,39 @@ class _ItemDestination extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 3.w),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            GestureDetector(
+              onTap: () {},
+              child: Container(
+                width: 20.w,
+                height: 8.w,
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Icon(
+                      HugeIcons.strokeRoundedPlay,
+                      size: 5.w,
+                      color: Colors.white,
+                    ),
+                    Text(
+                      "Bắt đầu",
+                      style: PrimaryFont.bodyTextMedium()
+                          .copyWith(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            MovingGifWidget()
+          ],
+        ),
+        SizedBox(height: 5.w),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -722,12 +756,14 @@ class _ItemDestination extends StatelessWidget {
         //     color: Colors.black,
         //   ),
         // ),
+        SizedBox(height: 1.w),
         Text(
           "Area: $area",
           style: PrimaryFont.bodyTextMedium().copyWith(
             color: Colors.black,
           ),
         ),
+        SizedBox(height: 1.w),
         Text(
           typeWate,
           style: PrimaryFont.bodyTextMedium().copyWith(
@@ -772,6 +808,7 @@ class _ItemDestination extends StatelessWidget {
         //     ),
         //   ],
         // ),
+        SizedBox(height: 1.w),
         Row(
           children: [
             Icon(
@@ -798,12 +835,12 @@ class _ItemDestination extends StatelessWidget {
         SizedBox(
           height: 5.w,
         ),
-        if (!isLastItem)
-          Icon(
-            Icons.arrow_downward,
-            color: kPrimaryColor,
-            size: 5.w,
-          ),
+        // if (!isLastItem)
+        //   Icon(
+        //     Icons.arrow_downward,
+        //     color: kPrimaryColor,
+        //     size: 5.w,
+        //   ),
       ],
     );
   }

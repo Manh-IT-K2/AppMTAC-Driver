@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
-import 'package:mtac_driver/data/schedule_screen/item_trip_work.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/text.dart';
