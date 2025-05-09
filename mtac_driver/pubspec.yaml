@@ -66,7 +66,10 @@ dependencies:
   latlong2: ^0.9.1
   # save data local
   shared_preferences: ^2.5.3
+  #check internet
   connectivity_plus: ^6.1.4
+  #
+  intl: ^0.19.0
 
 dev_dependencies:
   flutter_test:

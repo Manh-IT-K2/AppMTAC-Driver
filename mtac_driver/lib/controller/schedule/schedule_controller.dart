@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:mtac_driver/model/schedule_model.dart';
+import 'package:mtac_driver/service/schedule/schedule_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
@@ -15,6 +17,12 @@ class ScheduleController extends GetxController {
   var currentDate = DateTime.now().obs;
   var daysInMonth = <DateTime>[].obs;
   late final ScrollController scrollController;
+
+  
+ final ScheduleService _scheduleService = ScheduleService();
+
+  // Biến observable để lưu danh sách lịch hôm nay
+  RxList<Datum> todaySchedules = <Datum>[].obs;
 
   // username
   var username = ''.obs;
@@ -31,6 +39,7 @@ class ScheduleController extends GetxController {
   void onInit() {
     super.onInit();
     getUsername();
+    getListScheduleToday();
     daysInMonth.value = _generateDaysInMonth(currentDate.value);
     offset = calculateTodayScrollOffset(itemWidth, screenWidth);
     scrollController = ScrollController(initialScrollOffset: offset);
@@ -124,6 +133,20 @@ class ScheduleController extends GetxController {
     username.value = prefs.getString('username') ?? 'Unknown';
     if (kDebugMode) {
       print("Username loaded: ${username.value}");
+    }
+  }
+
+  // Hàm gọi từ UI
+  Future<void> getListScheduleToday() async {
+    try {
+      final schedules = await _scheduleService.getListScheduleToday();
+      todaySchedules.value = schedules;
+      print("schedule: ${todaySchedules[0].collectionDate}" );
+    } catch (e) {
+      Get.snackbar('Lỗi', 'Không thể tải lịch hôm nay');
+      if (kDebugMode) {
+        print('ScheduleController Error: $e');
+      }
     }
   }
 

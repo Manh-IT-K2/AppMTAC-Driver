@@ -14,7 +14,7 @@ class LoginService {
     required String username,
     required String password,
   }) async {
-    final url = Uri.parse("$baseUrl/api/login");
+    final url = Uri.parse("$baseUrl/api/driver/login");
     final response = await http.post(
       url,
       body: {
@@ -55,7 +55,7 @@ class LoginService {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('access_token');
 
-    final url = Uri.parse("$baseUrl/api/logout");
+    final url = Uri.parse("$baseUrl/api/driver/logout");
     final response = await http.post(
       url,
       headers: {

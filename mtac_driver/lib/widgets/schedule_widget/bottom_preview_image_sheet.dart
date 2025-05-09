@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mtac_driver/controller/handover_record_controller.dart';
+import 'package:mtac_driver/controller/schedule/handover_record_controller.dart';
 import 'package:sizer/sizer.dart';
 
 class BottomPreviewImageSheet extends StatelessWidget {

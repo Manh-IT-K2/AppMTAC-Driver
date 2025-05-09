@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mtac_driver/controller/schedule_controller.dart';
+import 'package:intl/intl.dart';
+import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/data/schedule_screen/item_trip_work.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
@@ -123,31 +124,20 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
                     .toList(),
               ),
             ),
-            Expanded(
+            SizedBox(
+              height: 20.h,
               child: PageView(
                 controller: controller.pageController,
                 onPageChanged: controller.onPageChanged,
                 children: controller.items.map(
                   (title) {
-                    return CustomScrollView(
-                      slivers: [
-                        SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final data = tripWorkData[index];
-                              return _ItemTripWork(
-                                title: data.title,
-                                nameWaste: data.nameWaste,
-                                addressBusiness: data.addressBusiness,
-                                day: data.day,
-                                status: data.status,
-                                tripId: data.id,
-                              );
-                            },
-                            childCount: tripWorkData.length,
-                          ),
-                        ),
-                      ],
+                    final data = controller.todaySchedules[0];
+                    return _ItemTripWork(
+                      nameWaste: data.companyName,
+                      addressBusiness: data.locationDetails,
+                      day: DateFormat('yyyy-MM-dd').format(data.collectionDate),
+                      status: data.status,
+                      tripId: data.id,
                     );
                   },
                 ).toList(),
@@ -163,7 +153,7 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
 class _ItemTripWork extends StatelessWidget {
   const _ItemTripWork({
     super.key,
-    required this.title,
+    // required this.title,
     required this.nameWaste,
     required this.addressBusiness,
     required this.day,
@@ -171,7 +161,7 @@ class _ItemTripWork extends StatelessWidget {
     required this.tripId,
   });
 
-  final String title, nameWaste, addressBusiness, day, status;
+  final String nameWaste, addressBusiness, day, status;
   final int tripId;
   @override
   Widget build(BuildContext context) {
@@ -201,29 +191,29 @@ class _ItemTripWork extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  width: 30.w,
-                  height: 10.w,
-                  decoration: BoxDecoration(
-                    color: title.contains("Khoán")
-                        ? const Color(0xFF22C7E4)
-                        : title.contains("Cân")
-                            ? Colors.orange
-                            : kPrimaryColor,
-                    borderRadius: BorderRadius.circular(5.w),
-                  ),
-                  child: Center(
-                    child: Text(
-                      title,
-                      style: PrimaryFont.bodyTextBold()
-                          .copyWith(color: Colors.white),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 3.w,
-                ),
+                // Container(
+                //   width: 30.w,
+                //   height: 10.w,
+                //   decoration: BoxDecoration(
+                //     color: title.contains("Khoán")
+                //         ? const Color(0xFF22C7E4)
+                //         : title.contains("Cân")
+                //             ? Colors.orange
+                //             : kPrimaryColor,
+                //     borderRadius: BorderRadius.circular(5.w),
+                //   ),
+                //   child: Center(
+                //     child: Text(
+                //       title,
+                //       style: PrimaryFont.bodyTextBold()
+                //           .copyWith(color: Colors.white),
+                //       textAlign: TextAlign.center,
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: 3.w,
+                // ),
                 Text(
                   nameWaste,
                   style:

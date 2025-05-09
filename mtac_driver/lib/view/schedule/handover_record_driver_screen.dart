@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mtac_driver/common/notify_success_dialog.dart';
-import 'package:mtac_driver/controller/handover_record_controller.dart';
+import 'package:mtac_driver/controller/schedule/handover_record_controller.dart';
 import 'package:mtac_driver/data/map_screen/item_info_waste.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';

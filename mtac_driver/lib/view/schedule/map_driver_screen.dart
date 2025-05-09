@@ -5,8 +5,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:mtac_driver/controller/map_controller.dart';
+import 'package:mtac_driver/controller/schedule/map_controller.dart';
 import 'package:mtac_driver/model/destination_model.dart';
+import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/text.dart';
@@ -382,16 +383,17 @@ class MapDriverScreen extends StatelessWidget {
 
                   return _ItemDestination(
                     distanceTime: distanceTime,
-                    nameBusiness: destination.nameBusiness,
-                    numberBD: destination.numberBD,
-                    status: destination.status,
-                    totalWeight: destination.totalWeight,
-                    phonePartner: destination.phonePartner,
-                    namePartner: destination.namePartner,
-                    note: destination.note,
+                    nameBusiness: destination.companyName,
+                    //numberBD: destination.numberBD,
+                    area: destination.area,
+                    typeWate: destination.wasteType,
+                    //totalWeight: destination.,
+                    //phonePartner: destination.phonePartner,
+                    //namePartner: destination.namePartner,
+                    //note: destination.note,
                     isLastItem: index == controller.destinationsData.length - 1,
                     onTap: () {
-                      controller.makePhoneCall(destination.phonePartner);
+                      //controller.makePhoneCall(destination.phonePartner);
                     },
                   );
                 },
@@ -571,7 +573,7 @@ class MapDriverScreen extends StatelessWidget {
   // sort
   void sortItemDestinationDataByOptimizedRoute() {
     //
-    final locationToDestination = <String, DestinationModel>{};
+    final locationToDestination = <String, Datum>{};
     //
     //final destinationData = controller.getDestinationsByTripId(tripId);
     //
@@ -585,7 +587,7 @@ class MapDriverScreen extends StatelessWidget {
           final key = "${latLng.latitude}_${latLng.longitude}";
           return locationToDestination[key];
         })
-        .whereType<DestinationModel>()
+        .whereType<Datum>()
         .toList();
 
     controller.destinationsData
@@ -613,7 +615,7 @@ class MapDriverScreen extends StatelessWidget {
               ),
               Container(
                 width: 0.5.w,
-                height: 45.w,
+                height: 20.w,
                 color: kPrimaryColor,
               ),
               ...List.generate(
@@ -630,7 +632,7 @@ class MapDriverScreen extends StatelessWidget {
                     ),
                     Container(
                       width: 0.5.w,
-                      height: 50.w,
+                      height: 25.w,
                       color: Colors.grey,
                     ),
                   ],
@@ -654,25 +656,25 @@ class _ItemDestination extends StatelessWidget {
   _ItemDestination({
     super.key,
     required this.nameBusiness,
-    required this.numberBD,
-    required this.status,
-    required this.totalWeight,
-    required this.phonePartner,
-    required this.namePartner,
-    required this.note,
+    required this.typeWate,
+    required this.area,
+    //required this.totalWeight,
+    // required this.phonePartner,
+    // required this.namePartner,
+    //required this.note,
     required this.isLastItem,
     required this.distanceTime,
     this.onTap,
   });
 
   final String nameBusiness,
-      numberBD,
-      status,
-      totalWeight,
-      phonePartner,
-      namePartner,
-      distanceTime,
-      note;
+      typeWate,
+      area,
+      //totalWeight,
+      //phonePartner,
+      //namePartner,
+      distanceTime;
+      //note;
   final bool isLastItem;
   final Function()? onTap;
 
@@ -683,7 +685,7 @@ class _ItemDestination extends StatelessWidget {
       children: [
         SizedBox(height: 3.w),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
@@ -708,68 +710,68 @@ class _ItemDestination extends StatelessWidget {
             ),
           ],
         ),
+        // Text(
+        //   "+BD: $numberBD",
+        //   style: PrimaryFont.bodyTextMedium().copyWith(
+        //     color: Colors.black,
+        //   ),
+        // ),
+        // Text(
+        //   "+CC: $totalWeight",
+        //   style: PrimaryFont.bodyTextMedium().copyWith(
+        //     color: Colors.black,
+        //   ),
+        // ),
         Text(
-          "+BD: $numberBD",
+          "Area: $area",
           style: PrimaryFont.bodyTextMedium().copyWith(
             color: Colors.black,
           ),
         ),
         Text(
-          "+CC: $totalWeight",
+          typeWate,
           style: PrimaryFont.bodyTextMedium().copyWith(
             color: Colors.black,
           ),
         ),
-        Text(
-          "GOM: $status",
-          style: PrimaryFont.bodyTextMedium().copyWith(
-            color: Colors.black,
-          ),
-        ),
-        Text(
-          note,
-          style: PrimaryFont.bodyTextMedium().copyWith(
-            color: Colors.black,
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              namePartner,
-              style: PrimaryFont.bodyTextBold().copyWith(
-                color: Colors.black,
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                if (onTap != null) {
-                  if (kDebugMode) {
-                    print("onTap function is called!");
-                  }
-                  onTap!();
-                } else {
-                  if (kDebugMode) {
-                    print("onTap is null!");
-                  }
-                }
-              },
-              child: Container(
-                width: 8.w,
-                height: 8.w,
-                decoration: BoxDecoration(
-                  color: kPrimaryColor,
-                  borderRadius: BorderRadius.circular(8.w),
-                ),
-                child: Icon(
-                  Icons.call,
-                  color: Colors.white,
-                  size: 4.w,
-                ),
-              ),
-            ),
-          ],
-        ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: [
+        //     Text(
+        //       namePartner,
+        //       style: PrimaryFont.bodyTextBold().copyWith(
+        //         color: Colors.black,
+        //       ),
+        //     ),
+        //     GestureDetector(
+        //       onTap: () {
+        //         if (onTap != null) {
+        //           if (kDebugMode) {
+        //             print("onTap function is called!");
+        //           }
+        //           onTap!();
+        //         } else {
+        //           if (kDebugMode) {
+        //             print("onTap is null!");
+        //           }
+        //         }
+        //       },
+        //       child: Container(
+        //         width: 8.w,
+        //         height: 8.w,
+        //         decoration: BoxDecoration(
+        //           color: kPrimaryColor,
+        //           borderRadius: BorderRadius.circular(8.w),
+        //         ),
+        //         child: Icon(
+        //           Icons.call,
+        //           color: Colors.white,
+        //           size: 4.w,
+        //         ),
+        //       ),
+        //     ),
+        //   ],
+        // ),
         Row(
           children: [
             Icon(

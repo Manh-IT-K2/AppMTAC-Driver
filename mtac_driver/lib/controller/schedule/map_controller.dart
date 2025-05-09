@@ -7,14 +7,16 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/data/map_screen/item_destination.dart';
 import 'package:mtac_driver/model/destination_model.dart';
+import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MapDriverController extends GetxController {
   // id trip
-  late int tripId;
-  late final destinationsData;
+  //late int tripId;
+  late final List<Datum> destinationsData;
   // status err input weight
   var statusInputWeight = false.obs;
 
@@ -35,12 +37,12 @@ class MapDriverController extends GetxController {
   final String mapboxAccessToken =
       'pk.eyJ1IjoicW1hbmgiLCJhIjoiY205NWNzcmlhMHZoajJycjBibnR5dW9rbiJ9.VEIUO9PSzCRKncGhIscUMw';
   final String mapboxStyleUrl = 'mapbox://styles/mapbox/streets-v11';
-
+//10.841626348121663, 106.67731436791038
   // inital variable Map
   var startLocation = Rx<LatLng>(const LatLng(0, 0));
   var endLocation = Rx<LatLng>(const LatLng(0, 0));
   var currentLocation =
-      Rx<LatLng?>(const LatLng(10.841626348121663, 106.67731436791038));
+      Rx<LatLng?>(const LatLng(20.888468419751373, 105.9829641688128));
   final RxList<LatLng> routePoints = <LatLng>[].obs;
   //final RxList<LatLng> mainPoints = <LatLng>[].obs;
   final RxList<LatLng> optimizedRoute = <LatLng>[].obs;
@@ -52,9 +54,10 @@ class MapDriverController extends GetxController {
   // initial flutter map
   MapController mapController = MapController();
 
+  final ScheduleController _scheduleController = Get.find();
+
   // list route
-  final List<String> routeAddresses =
-      itemDestinationData.map((e) => e.addressBusiness).toList();
+final RxList<String> routeAddresses = <String>[].obs;
 
   // initial variable truck parameters
   final RxDouble truckMaxHeight = 4.0.obs;
@@ -111,19 +114,26 @@ class MapDriverController extends GetxController {
   void onInit() {
     super.onInit();
     //getCurrentLocation();
-    tripId = Get.arguments as int;
-    destinationsData = getDestinationsByTripId(tripId);
+    fetchTodayRoutes();
+    //tripId = Get.arguments as int;
+    destinationsData = _scheduleController.todaySchedules;
     getOptimizedRoute();
     formatTruckInfo();
   }
 
   // get destination data by id
-  List<DestinationModel> getDestinationsByTripId(int tripId) {
-    return itemDestinationData
-        .where((destination) => destination.tripId == tripId)
-        .toList();
-  }
-
+  // List<DestinationModel> getDestinationsByTripId(int tripId) {
+  //   return itemDestinationData
+  //       .where((destination) => destination.tripId == tripId)
+  //       .toList();
+  // }
+    void fetchTodayRoutes() async {
+  await _scheduleController.getListScheduleToday();
+  routeAddresses.value = _scheduleController.todaySchedules
+      .map((e) => e.locationDetails) // hoặc e.area tùy bạn muốn lấy địa chỉ nào
+      .toList();
+      print("add ${routeAddresses.length}");
+}
   // move camera to currentLocation
   void moveToCurrentLocation() {
     if (currentLocation.value != null) {
@@ -208,7 +218,9 @@ class MapDriverController extends GetxController {
     //mainPoints.clear();
     List<LatLng> results = [];
     //final destinations = getDestinationsByTripId(tripId);
-    final routeAddress = destinationsData.map((e) => e.addressBusiness).toList();
+    final routeAddress = _scheduleController.todaySchedules
+      .map((e) => e.locationDetails)
+      .toList();
 
     for (int i = 0; i < routeAddress.length; i++) {
       String address = routeAddress[i];

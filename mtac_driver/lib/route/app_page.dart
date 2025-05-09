@@ -20,7 +20,6 @@ class AppPages {
     GetPage(
       name: AppRoutes.noConnection,
       page: () => const NoInternetScreen(),
-      middlewares: [NetworkCheckMiddlewareController()],
     ),
     GetPage(
       name: AppRoutes.splash,
