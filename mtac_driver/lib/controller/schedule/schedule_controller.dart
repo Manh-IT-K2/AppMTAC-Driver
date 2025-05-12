@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:mtac_driver/data/map_screen/item_destination.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
+import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/service/schedule/schedule_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
@@ -162,10 +162,9 @@ class ScheduleController extends GetxController {
 
 //
   Future<void> clearScheduleLocal() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.remove('schedule_today');
-}
-
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('schedule_today');
+  }
 
   //
   Future<void> loadScheduleFromLocal() async {
@@ -174,7 +173,7 @@ class ScheduleController extends GetxController {
     if (jsonString != null) {
       final List<dynamic> decodedList = jsonDecode(jsonString);
       final list = decodedList.map((e) => Datum.fromJson(e)).toList();
-      todaySchedules.assignAll(list);//
+      todaySchedules.assignAll(list); //
       final ids = list.map((e) => e.id).toList();
       initStartingStatus(ids);
     } else {
@@ -184,62 +183,104 @@ class ScheduleController extends GetxController {
 
   // Hàm gọi từ UI
 //final RxList<Datum> todaySchedules = <Datum>[].obs;
-final RxMap<String, List<Datum>> schedulesByWasteType = <String, List<Datum>>{}.obs;
+  final RxMap<String, List<Datum>> schedulesByWasteType =
+      <String, List<Datum>>{}.obs;
 
-Future<void> getListScheduleToday() async {
-  try {
-    final schedules = await _scheduleService.getListScheduleToday();
-    //todaySchedules.value = schedules;
+  Future<void> getListScheduleToday() async {
+    try {
+      final schedules = await _scheduleService.getListScheduleToday();
+      //todaySchedules.value = schedules;
 
-    // Nhóm theo loại chất thải
-    // final Map<String, List<Datum>> grouped = {};
-    // for (var schedule in schedules) {
-    //   grouped.putIfAbsent(schedule.wasteType, () => []).add(schedule);
-    // }
-    schedulesByWasteType.value = schedules;
+      // Nhóm theo loại chất thải
+      // final Map<String, List<Datum>> grouped = {};
+      // for (var schedule in schedules) {
+      //   grouped.putIfAbsent(schedule.wasteType, () => []).add(schedule);
+      // }
+      schedulesByWasteType.value = schedules;
 
-    if (kDebugMode) {
-      print("Các loại chất thải hôm nay: ${schedulesByWasteType.keys.toList()}");
-    }
-  } catch (e) {
-    Get.snackbar('Lỗi', 'Không thể tải lịch hôm nay');
-    if (kDebugMode) {
-      print('ScheduleController Error: $e');
+      if (kDebugMode) {
+        print(
+            "Các loại chất thải hôm nay: ${schedulesByWasteType.keys.toList()}");
+      }
+    } catch (e) {
+      if (e.toString().contains('401')) {
+        Get.snackbar(
+            'Lỗi', 'Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.',
+            snackPosition: SnackPosition.TOP, colorText: Colors.red);
+        Get.offAllNamed(AppRoutes.login);
+      } else {
+        Get.snackbar('Lỗi', 'Không thể tải lịch hôm nay',
+            snackPosition: SnackPosition.TOP, colorText: Colors.red);
+      }
+      if (kDebugMode) {
+        print('ScheduleController Error: $e');
+      }
     }
   }
-}
 
   // start trip collection
   Future<void> startCollectionTrip(int scheduleId) async {
-    if (isAnyTripStarted && !(startingStatus[scheduleId]?.value ?? false)) {
-      Get.snackbar(
-        'Thông báo',
-        'Bạn cần hoàn thành chuyến thu gom trước đó trước khi bắt đầu chuyến mới.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
-      return;
-    }
+    try {
+      if (isAnyTripStarted && !(startingStatus[scheduleId]?.value ?? false)) {
+        Get.snackbar(
+          'Thông báo',
+          'Bạn cần hoàn thành chuyến thu gom trước đó trước khi bắt đầu chuyến mới.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+        );
+        return;
+      }
 
-    final success = await _scheduleService.startCollectionTrip(scheduleId);
+      final success = await _scheduleService.startCollectionTrip(scheduleId);
 
-    if (success) {
-      // Đánh dấu chuyến này đang được thu gom
-      startingStatus[scheduleId]?.value = true;
-      // Khởi tạo nếu chưa có
-  startingStatuss[scheduleId] ??= Rx(CollectionStatus.idle);
-  
-  // Cập nhật trạng thái
-  startingStatuss[scheduleId]!.value = CollectionStatus.started;
-      Get.snackbar('Thành công', 'Chuyến thu gom đã bắt đầu',
-          snackPosition: SnackPosition.BOTTOM);
+      if (success) {
+        // Đánh dấu chuyến này đang được thu gom
+        startingStatus[scheduleId]?.value = true;
+        startingStatuss[scheduleId] ??= Rx(CollectionStatus.idle);
+
+        // Cập nhật trạng thái
+        startingStatuss[scheduleId]!.value = CollectionStatus.started;
+
+        Get.snackbar(
+          'Thành công',
+          'Chuyến thu gom đã bắt đầu',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+
+        if (kDebugMode) {
           print("manh ${startingStatuss[scheduleId]?.value}");
-    } else {
-      Get.snackbar('Thất bại', 'Không thể bắt đầu chuyến thu gom',
+        }
+      } else {
+        Get.snackbar(
+          'Thất bại',
+          'Không thể bắt đầu chuyến thu gom',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
-          colorText: Colors.white);
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      if (e.toString().contains('401')) {
+        Get.snackbar(
+            'Lỗi', 'Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.',
+            snackPosition: SnackPosition.TOP, colorText: Colors.red);
+        Get.offAllNamed(AppRoutes.login);
+      } else {
+        Get.snackbar(
+          'Lỗi',
+          'Đã xảy ra lỗi khi bắt đầu chuyến thu gom. Vui lòng thử lại.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+
+      if (kDebugMode) {
+        print('startCollectionTrip Error: $e');
+      }
     }
   }
 
@@ -279,8 +320,16 @@ Future<void> getListScheduleToday() async {
         Get.snackbar("Thất bại", "Không thể bắt đầu thu gom");
       }
     } catch (e) {
+      if (e.toString().contains('401')) {
+        Get.snackbar(
+            'Lỗi', 'Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.',
+            snackPosition: SnackPosition.TOP, colorText: Colors.red);
+        Get.offAllNamed(AppRoutes.login);
+      } else {
+        Get.snackbar("Lỗi", "Đã có lỗi xảy ra",
+            snackPosition: SnackPosition.TOP, colorText: Colors.red);
+      }
       if (kDebugMode) print("❌ startCollection error: $e");
-      Get.snackbar("Lỗi", "Đã có lỗi xảy ra");
     } finally {
       isLoading.value = false;
     }

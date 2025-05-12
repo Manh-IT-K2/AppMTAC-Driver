@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mtac_driver/model/user_model.dart';
+import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/service/user/user_service.dart';
 
 class ProfileController extends GetxController {
@@ -20,6 +22,12 @@ class ProfileController extends GetxController {
       infoUser.value = user;
       print(user);
     } catch (e) {
+      if (e.toString().contains('401')) {
+        Get.snackbar(
+            'Lỗi', 'Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.',
+            snackPosition: SnackPosition.TOP, colorText: Colors.red);
+        Get.offAllNamed(AppRoutes.login);
+      }
       if (kDebugMode) {
         print("Error fetching user: $e");
       }
