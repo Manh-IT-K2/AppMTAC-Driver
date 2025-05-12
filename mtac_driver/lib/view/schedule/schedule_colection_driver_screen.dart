@@ -123,21 +123,48 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
                     .toList(),
               ),
             ),
-            SizedBox(
-              height: 20.h,
+            Expanded(
               child: PageView(
                 controller: controller.pageController,
                 onPageChanged: controller.onPageChanged,
                 children: controller.items.map(
                   (title) {
-                    final data = controller.todaySchedules[0];
-                    return _ItemTripWork(
-                      nameWaste: data.companyName,
-                      addressBusiness: data.locationDetails,
-                      day: DateFormat('yyyy-MM-dd').format(data.collectionDate),
-                      status: data.status,
-                      tripId: data.id,
-                    );
+                    //final data = controller.todaySchedules[0];
+                    return Obx(() {
+                      final scheduleMap = controller.schedulesByWasteType;
+
+                      if (scheduleMap.isEmpty) {
+                        return const Text("Không có lịch hôm nay");
+                      }
+
+                      final entries = scheduleMap.entries.toList();
+
+                      return CustomScrollView(
+                        slivers: [
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                final wasteType = entries[index].key;
+                                final datum = entries[index]
+                                    .value
+                                    .first; // Lấy địa điểm đầu tiên của loại chất thải đó
+
+                                return _ItemTripWork(
+                                  nameWaste:
+                                      wasteType, // hoặc datum.companyName nếu bạn muốn
+                                  addressBusiness: datum.locationDetails,
+                                  day: DateFormat('yyyy-MM-dd')
+                                      .format(datum.collectionDate),
+                                  status: datum.status,
+                                  tripId: datum.id,
+                                );
+                              },
+                              childCount: entries.length,
+                            ),
+                          ),
+                        ],
+                      );
+                    });
                   },
                 ).toList(),
               ),
@@ -216,7 +243,7 @@ class _ItemTripWork extends StatelessWidget {
                 Text(
                   nameWaste,
                   style:
-                      PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
+                      PrimaryFont.titleTextBold().copyWith(color: Colors.red),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(
@@ -224,9 +251,11 @@ class _ItemTripWork extends StatelessWidget {
                 ),
                 Text(
                   addressBusiness,
-                  style:
-                      PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
+                  style: PrimaryFont.bodyTextBold()
+                      .copyWith(color: Colors.black),
                   textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(
                   height: 3.w,

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mtac_driver/common/notify_success_dialog.dart';
 import 'package:mtac_driver/controller/schedule/handover_record_controller.dart';
+import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/data/map_screen/item_info_waste.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
@@ -18,8 +19,10 @@ class HandoverRecordDriverScreen extends StatelessWidget {
   HandoverRecordDriverScreen({super.key});
 
   // Initial _handoverRecordController
-  final HandoverRecordController _handoverRecordController =
-      Get.put(HandoverRecordController());
+  final _handoverRecordController =
+      Get.find<HandoverRecordController>();
+
+  final scheduleController = Get.find<ScheduleController>();
 
   @override
   Widget build(BuildContext context) {
@@ -226,11 +229,11 @@ class _BottomHandoverRecordSceen extends StatelessWidget {
         Center(
           child: ElevatedButton(
             onPressed: () {
-              if (imageController.selectedImages.isNotEmpty) {
+              if (imageController.selectedImages.isNotEmpty && imageController.allInputsValid.value) {
                 NotifySuccessDialog().showNotifyPopup("Gửi biên bản thành công",
                     () {
                   Navigator.pop(context);
-                  Get.offAllNamed(AppRoutes.main);
+                  Get.back();
                 });
               }
             },

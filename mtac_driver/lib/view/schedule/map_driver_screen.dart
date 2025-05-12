@@ -5,8 +5,10 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:mtac_driver/controller/schedule/handover_record_controller.dart';
 import 'package:mtac_driver/controller/schedule/map_controller.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
+import 'package:mtac_driver/data/map_screen/item_info_waste.dart';
 import 'package:mtac_driver/model/destination_model.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
@@ -24,7 +26,7 @@ class MapDriverScreen extends StatelessWidget {
   final scheduleController = Get.find<ScheduleController>();
 
   //final int tripId = Get.arguments as int;
-
+  final HandoverRecordController handoverController = Get.put(HandoverRecordController());
   @override
   Widget build(BuildContext context) {
     double screenHeight = 100.h;
@@ -383,8 +385,11 @@ class MapDriverScreen extends StatelessWidget {
                   final distanceTime = index < controller.distances.length
                       ? '${controller.formatDistance(controller.distances[index])} - ${controller.formatDuration(controller.durations[index])}'
                       : '';
+                  final status = scheduleController.startingStatuss[destination.id] ??= Rx(CollectionStatus.idle);
 
-                  return _ItemDestination(
+                      print("object111 : $status");
+                  return Obx (() {
+                    return _ItemDestination(
                     scheduleId: destination.id,
                     distanceTime: distanceTime,
                     nameBusiness: destination.companyName,
@@ -396,12 +401,51 @@ class MapDriverScreen extends StatelessWidget {
                     //namePartner: destination.namePartner,
                     //note: destination.note,
                     isLastItem: index == controller.destinationsData.length - 1,
-                    onTap: () {
-                      //controller.makePhoneCall(destination.phonePartner);
-                      scheduleController.startTrip(destination.id);
+                    onTap: () async {
+                      if (status == CollectionStatus.ended) {
+                         print("object111 : $status");
+                        // final canEnd = await controller.canEndTrip(
+                        //     destination.id,
+                        //     destination.latitude!,
+                        //     destination.longitude!);
+                        // if (canEnd) {
+                        //   handoverController.updateSelectedGoods(infoWasteData);
+                        //   await scheduleController
+                        //       .endCollectionTrip(destination.id, handoverController.selectedGoods, handoverController.selectedImages);
+                        // }
+                        // // warning item end
+                        // if(scheduleController.checkTodaySchedules.isEmpty){
+                        //   scheduleController.clearScheduleLocal();
+                        // }
+                        Get.snackbar(
+                            "Thông báo", "Chuyến thu gom này đã hoàn thành");
+                        return;
+                      }
+                      if (status == CollectionStatus.started) {
+                         print("objectmanhEnd : $status");
+                        // final canEnd = await controller.canEndTrip(
+                        //     destination.id,
+                        //     destination.latitude!,
+                        //     destination.longitude!);
+                        // if (canEnd) {
+                        //   print("end : $status");
+                          handoverController.updateSelectedGoods(infoWasteData);
+                          await scheduleController
+                              .endCollectionTrip(destination.id, handoverController.selectedGoods, handoverController.selectedImages);
+                        //}
+
+                        // warning item end
+                        // if(scheduleController.checkTodaySchedules.isEmpty){
+                        //   scheduleController.clearScheduleLocal();
+                        //  }
+                      } else {
+                         print("object111Start : $status");
+                        await scheduleController.startCollectionTrip(destination.id);
+                      }
                     },
                     controller: scheduleController,
                   );
+                  },) ;
                 },
                 childCount: controller.destinationsData.length,
               ),
@@ -625,7 +669,7 @@ class MapDriverScreen extends StatelessWidget {
                 color: kPrimaryColor,
               ),
               ...List.generate(
-                controller.destinationsData.length - 2,
+                controller.destinationsData.length - 2, //
                 (index) => Column(
                   children: [
                     Container(
@@ -695,7 +739,8 @@ class _ItemDestination extends StatelessWidget {
       children: [
         SizedBox(height: 3.w),
         Obx(() {
-          final isStarting = controller.startingStatus[scheduleId]?.value ?? false;
+          final isStarting =
+              controller.startingStatus[scheduleId]?.value ?? false;
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

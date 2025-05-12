@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mtac_driver/common/notify_success_dialog.dart';
+import 'package:mtac_driver/model/waste_model.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/theme_text.dart';
 import 'package:sizer/sizer.dart';
@@ -31,7 +32,7 @@ class HandoverRecordController extends GetxController {
   /* CODE CHOSE IMAGE */
   // Create variable image
   final ImagePicker _picker = ImagePicker();
-  var selectedImages = <File>[].obs;
+  RxList<File> selectedImages = <File>[].obs;
   var checkDistance = false.obs;
 
   // Selected image library
@@ -76,10 +77,41 @@ class HandoverRecordController extends GetxController {
   var status = false.obs;
   var textController = TextEditingController();
 
+  //
+  var allInputsValid = false.obs;
+void validateAllInputs() {
+  allInputsValid.value = numbers.every(
+    (element) => element.value.trim().isNotEmpty && element.value.trim() != "0",
+  );
+}
+
+
   void initializeList(int length) {
     numbers.assignAll(List.generate(length, (index) => "".obs));
     initializeDropdowns(length);
   }
+
+  RxList<Map<String, dynamic>> selectedGoods = <Map<String, dynamic>>[].obs;
+
+// Danh sách ảnh được chọn từ gallery/camera
+ 
+  //
+  void updateSelectedGoods(List<WasteModel> infoWasteData) {
+  selectedGoods.clear();
+
+  for (int i = 0; i < infoWasteData.length; i++) {
+    final quantityStr = numbers[i].value.trim();
+    final quantity = double.tryParse(quantityStr);
+    final name = infoWasteData[i].name;
+
+    if (quantity != null && quantity > 0) {
+      selectedGoods.add({
+        "name": name,
+        "quantity": quantity,
+      });
+    }
+  }
+}
 
   //
   void showInputPopup(int index) {
@@ -193,6 +225,7 @@ class HandoverRecordController extends GetxController {
                                   !textController.text.contains("Not value")) {
                                 numbers[index].value = textController.text;
                                 status.value = false;
+                                validateAllInputs(); //
                                 Navigator.pop(Get.context!);
                                 Future.delayed(const Duration(milliseconds: 300), () {
                                   NotifySuccessDialog().showNotifyPopup(

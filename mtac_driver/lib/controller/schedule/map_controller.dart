@@ -37,12 +37,15 @@ class MapDriverController extends GetxController {
   final String mapboxAccessToken =
       'pk.eyJ1IjoicW1hbmgiLCJhIjoiY205NWNzcmlhMHZoajJycjBibnR5dW9rbiJ9.VEIUO9PSzCRKncGhIscUMw';
   final String mapboxStyleUrl = 'mapbox://styles/mapbox/streets-v11';
+  //hcm
 //10.841626348121663, 106.67731436791038
+//hn
+//20.888468419751373, 105.9829641688128
   // inital variable Map
   var startLocation = Rx<LatLng>(const LatLng(0, 0));
   var endLocation = Rx<LatLng>(const LatLng(0, 0));
   var currentLocation =
-      Rx<LatLng?>(const LatLng(20.888468419751373, 105.9829641688128));
+      Rx<LatLng?>(const LatLng(10.841626348121663, 106.67731436791038));
   final RxList<LatLng> routePoints = <LatLng>[].obs;
   //final RxList<LatLng> mainPoints = <LatLng>[].obs;
   final RxList<LatLng> optimizedRoute = <LatLng>[].obs;
@@ -57,7 +60,7 @@ class MapDriverController extends GetxController {
   final ScheduleController _scheduleController = Get.find();
 
   // list route
-final RxList<String> routeAddresses = <String>[].obs;
+  final RxList<String> routeAddresses = <String>[].obs;
 
   // initial variable truck parameters
   final RxDouble truckMaxHeight = 4.0.obs;
@@ -127,13 +130,15 @@ final RxList<String> routeAddresses = <String>[].obs;
   //       .where((destination) => destination.tripId == tripId)
   //       .toList();
   // }
-    void fetchTodayRoutes() async {
-  await _scheduleController.getListScheduleToday();
-  routeAddresses.value = _scheduleController.todaySchedules
-      .map((e) => e.locationDetails) // hoặc e.area tùy bạn muốn lấy địa chỉ nào
-      .toList();
-      print("add ${routeAddresses.length}");
-}
+  void fetchTodayRoutes() async {
+    await _scheduleController.getListScheduleToday();
+    routeAddresses.value = _scheduleController.todaySchedules
+        .map((e) =>
+            e.locationDetails) // hoặc e.area tùy bạn muốn lấy địa chỉ nào
+        .toList();
+    print("add ${routeAddresses.length}");
+  }
+
   // move camera to currentLocation
   void moveToCurrentLocation() {
     if (currentLocation.value != null) {
@@ -219,8 +224,8 @@ final RxList<String> routeAddresses = <String>[].obs;
     List<LatLng> results = [];
     //final destinations = getDestinationsByTripId(tripId);
     final routeAddress = _scheduleController.todaySchedules
-      .map((e) => e.locationDetails)
-      .toList();
+        .map((e) => e.locationDetails)
+        .toList();
 
     for (int i = 0; i < routeAddress.length; i++) {
       String address = routeAddress[i];
@@ -607,7 +612,7 @@ final RxList<String> routeAddresses = <String>[].obs;
       ];
 
       await fetchRouteFromMapbox(fullRoute);
-      await checkTruckRestrictions(optimizedRoute);
+      //await checkTruckRestrictions(optimizedRoute);
 
       if (kDebugMode) print("✅ Hoàn thành tối ưu hóa tuyến đường");
     } catch (e) {
@@ -883,4 +888,36 @@ final RxList<String> routeAddresses = <String>[].obs;
 
 //     return points;
 //   }
+  final Map<int, DateTime> tripStartTimes = {}; // key: scheduleId
+
+  Future<bool> canEndTrip(
+      int scheduleId, double destinationLat, double destinationLng) async {
+    final startTime = tripStartTimes[scheduleId];
+    if (startTime == null) return false;
+
+    final now = DateTime.now();
+    final duration = now.difference(startTime);
+    if (duration.inMinutes < 30) {
+      Get.snackbar(
+          "Thông báo", "Cần ít nhất 30 phút để kết thúc chuyến thu gom");
+      return false;
+    }
+
+    // Lấy vị trí hiện tại
+    final currentLatLng = LatLng(
+        currentLocation.value!.latitude, currentLocation.value!.longitude);
+    final destination = LatLng(destinationLat, destinationLng);
+    final distance = await calculateRoadDistance(currentLatLng, destination);
+
+    if (distance > 100) {
+      Get.snackbar("Thông báo",
+          "Bạn chưa đến gần địa điểm thu gom (cách ${distance.toStringAsFixed(1)}m)");
+      return false;
+    }
+
+    return true;
+  }
+
+  //
+  
 }
