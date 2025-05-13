@@ -6,7 +6,6 @@ import 'package:mtac_driver/common/notify_success_dialog.dart';
 import 'package:mtac_driver/controller/schedule/handover_record_controller.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/data/map_screen/item_info_waste.dart';
-import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/text.dart';
 import 'package:mtac_driver/utils/theme_text.dart';
@@ -19,8 +18,7 @@ class HandoverRecordDriverScreen extends StatelessWidget {
   HandoverRecordDriverScreen({super.key});
 
   // Initial _handoverRecordController
-  final _handoverRecordController =
-      Get.find<HandoverRecordController>();
+  final _handoverRecordController = Get.find<HandoverRecordController>();
 
   final scheduleController = Get.find<ScheduleController>();
 
@@ -229,7 +227,8 @@ class _BottomHandoverRecordSceen extends StatelessWidget {
         Center(
           child: ElevatedButton(
             onPressed: () {
-              if (imageController.selectedImages.isNotEmpty && imageController.allInputsValid.value) {
+              if (imageController.selectedImages.isNotEmpty &&
+                  imageController.allInputsValid.value) {
                 NotifySuccessDialog().showNotifyPopup("Gửi biên bản thành công",
                     () {
                   Navigator.pop(context);
@@ -302,104 +301,104 @@ class _BodyHandoverRecordScreen extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 3.w,),
+        SizedBox(
+          height: 3.w,
+        ),
         SizedBox(
           height: sHeightBody,
           child: CustomScrollView(
             slivers: [
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final item = infoWasteData[index];
-                      return Container(
-                        height: sHeightItem,
-                        margin: const EdgeInsets.only(
-                            bottom: 12), 
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: kPrimaryColor,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(10),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final item = infoWasteData[index];
+                    return Container(
+                      height: sHeightItem,
+                      margin: const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: kPrimaryColor,
+                          width: 1,
                         ),
-                        child: Row(
-                          children: [
-                            SizedBox(width: sWidthSizeBox),
-                            SizedBox(
-                              width: sWidthNameWaste,
-                              child: Text(
-                                item.name,
-                                style: PrimaryFont.bodyTextLight()
-                                    .copyWith(color: Colors.black),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(width: sWidthSizeBox),
+                          SizedBox(
+                            width: sWidthNameWaste,
+                            child: Text(
+                              item.name,
+                              style: PrimaryFont.bodyTextLight()
+                                  .copyWith(color: Colors.black),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(width: 12),
-                            SizedBox(
-                              width: sWidthCodeWaste,
-                              child: Text(
-                                item.code,
-                                style: PrimaryFont.bodyTextLight()
-                                    .copyWith(color: Colors.black),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                          ),
+                          const SizedBox(width: 12),
+                          SizedBox(
+                            width: sWidthCodeWaste,
+                            child: Text(
+                              item.code,
+                              style: PrimaryFont.bodyTextLight()
+                                  .copyWith(color: Colors.black),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(width: 12),
-                            SizedBox(
-                              width: sWidthStatusWaste,
-                              child: Obx(() => DropdownButton<String>(
-                                    isExpanded: true,
-                                    value: controller
-                                        .wasteControllers[index].value,
-                                    icon: const Icon(Icons.keyboard_arrow_down),
-                                    style: PrimaryFont.bodyTextBold().copyWith(
-                                      color: Colors.green,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    onChanged: (String? newValue) {
-                                      controller.wasteControllers[index].value =
-                                          newValue!;
-                                    },
-                                    items: controller.statusItems
-                                        .map<DropdownMenuItem<String>>(
-                                            (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(
-                                          value,
-                                          style: const TextStyle(
-                                              overflow: TextOverflow.ellipsis),
-                                        ),
-                                      );
-                                    }).toList(),
+                          ),
+                          const SizedBox(width: 12),
+                          SizedBox(
+                            width: sWidthStatusWaste,
+                            child: Obx(() => DropdownButton<String>(
+                                  isExpanded: true,
+                                  value:
+                                      controller.wasteControllers[index].value,
+                                  icon: const Icon(Icons.keyboard_arrow_down),
+                                  style: PrimaryFont.bodyTextBold().copyWith(
+                                    color: Colors.green,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  onChanged: (String? newValue) {
+                                    controller.wasteControllers[index].value =
+                                        newValue!;
+                                  },
+                                  items: controller.statusItems
+                                      .map<DropdownMenuItem<String>>(
+                                          (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: const TextStyle(
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                    );
+                                  }).toList(),
+                                )),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () => controller.showInputPopup(index),
+                              child: Obx(() => Text(
+                                    controller.numbers[index].value.isEmpty
+                                        ? "0 (kg)"
+                                        : "${controller.numbers[index].value} (kg)",
+                                    style: PrimaryFont.bodyTextLight()
+                                        .copyWith(color: Colors.black),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   )),
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () => controller.showInputPopup(index),
-                                child: Obx(() => Text(
-                                      controller.numbers[index].value.isEmpty
-                                          ? "0 (kg)"
-                                          : "${controller.numbers[index].value} (kg)",
-                                      style: PrimaryFont.bodyTextLight()
-                                          .copyWith(color: Colors.black),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    )),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                          ],
-                        ),
-                      );
-                    },
-                    childCount: infoWasteData.length,
-                  ),
+                          ),
+                          const SizedBox(width: 12),
+                        ],
+                      ),
+                    );
+                  },
+                  childCount: infoWasteData.length,
                 ),
-              
+              ),
             ],
           ),
         )

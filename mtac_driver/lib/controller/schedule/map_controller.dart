@@ -8,8 +8,6 @@ import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
-import 'package:mtac_driver/data/map_screen/item_destination.dart';
-import 'package:mtac_driver/model/destination_model.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -625,10 +623,10 @@ class MapDriverController extends GetxController {
 
   // Get route from Mapbox
   Future<void> fetchRouteFromMapbox(List<LatLng> points) async {
-    // if (points.length < 2) {
-    //   if (kDebugMode) print("⚠️ Cần ít nhất 2 điểm để tạo tuyến đường");
-    //   return;
-    // }
+    if (points.length < 2) {
+      if (kDebugMode) print("⚠️ Cần ít nhất 2 điểm để tạo tuyến đường");
+      return;
+    }
 
     // convert points to coordinates for Mapbox
     final waypointsString =

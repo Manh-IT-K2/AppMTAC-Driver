@@ -692,7 +692,7 @@ class MapDriverScreen extends StatelessWidget {
                 color: kPrimaryColor,
               ),
               ...List.generate(
-                controller.destinationsData.length - 1, //
+                controller.destinationsData.length - 2, //
                 (index) => Column(
                   children: [
                     Container(

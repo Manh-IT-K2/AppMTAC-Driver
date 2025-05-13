@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mtac_driver/configs/api_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -19,32 +19,29 @@ class ScheduleService {
     return prefs.getString('access_token');
   }
 
+  // offline
+  Future<Map<String, List<Datum>>> getMockListScheduleToday() async {
+    const String today = "2025-05-20";
+    final filtered = mockScheduleData.where((item) {
+      final itemDate = DateFormat('yyyy-MM-dd').format(item.collectionDate);
+      return itemDate == today;
+    }).toList();
 
-// offline
-Future<Map<String, List<Datum>>> getMockListScheduleToday() async {
-  const String today = "2025-05-20";
+    Map<String, List<Datum>> grouped = {};
+    for (var item in filtered) {
+      grouped.putIfAbsent(item.wasteType, () => []);
+      grouped[item.wasteType]!.add(item);
+    }
 
-  final filtered = mockScheduleData.where((item) {
-    final itemDate = DateFormat('yyyy-MM-dd').format(item.collectionDate);
-    return itemDate == today;
-  }).toList();
-
-  Map<String, List<Datum>> grouped = {};
-  for (var item in filtered) {
-    grouped.putIfAbsent(item.wasteType, () => []);
-    grouped[item.wasteType]!.add(item);
+    return grouped;
   }
 
-  return grouped;
-}
-
- // function saveGroupedScheduleToLocal
+  // Function saveGroupedScheduleToLocal
   Future<void> saveGroupedScheduleToLocal(
       Map<String, List<Datum>> grouped) async {
-         print(">>> GỌI getListScheduleToday từ Service");
     final prefs = await SharedPreferences.getInstance();
 
-    // Chuyển Map<String, List<Datum>> => Map<String, dynamic>
+    // trannfer Map<String, List<Datum>> => Map<String, dynamic>
     final Map<String, dynamic> groupedJson = grouped.map(
         (key, value) => MapEntry(key, value.map((e) => e.toJson()).toList()));
 
@@ -55,54 +52,55 @@ Future<Map<String, List<Datum>>> getMockListScheduleToday() async {
 
   // Call api getListScheduleToday
   Future<Map<String, List<Datum>>> getListScheduleToday() async {
-  final url = Uri.parse('$baseUrl/api/driver/schedules');
-  final token = await getToken();
-
-  try {
-    final response = await http.get(
-      url,
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Accept': 'application/json',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final scheduleModel = ScheduleModel.fromJson(data);
-
-      // Lấy ngày hôm nay
-      // final String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      const String today = "2023-06-10";
-
-      // Lọc theo collection_date là hôm nay
-      final filtered = scheduleModel.data.where((item) {
-        final itemDate = DateFormat('yyyy-MM-dd').format(item.collectionDate);
-        return itemDate == today;
-      }).toList();
-
-      // Nhóm theo loại chất thải (waste_type)
-      Map<String, List<Datum>> grouped = {};
-      for (var item in filtered) {
-        if (!grouped.containsKey(item.wasteType)) {
-          grouped[item.wasteType] = [];
-        }
-        grouped[item.wasteType]!.add(item);
-      }
-
-      // Lưu nếu cần
-      await saveGroupedScheduleToLocal(grouped);
-
-      return grouped;
-    } else {
-      throw Exception(
-          'Failed to load data schedule today: ${response.statusCode}');
+    if (kDebugMode) {
+      print(">>> GỌI getListScheduleToday từ Service");
     }
-  } catch (e) {
-    throw Exception('Error getting data schedule today: $e');
-  }
-}
+    final url = Uri.parse('$baseUrl/api/driver/schedules');
+    final token = await getToken();
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
 
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final scheduleModel = ScheduleModel.fromJson(data);
+
+        // get today
+        // final String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+        const String today = "2025-05-14";
+
+        // filter collection_date is today
+        final filtered = scheduleModel.data.where((item) {
+          final itemDate = DateFormat('yyyy-MM-dd').format(item.collectionDate);
+          return itemDate == today;
+        }).toList();
+
+        // group waste type
+        Map<String, List<Datum>> grouped = {};
+        for (var item in filtered) {
+          if (!grouped.containsKey(item.wasteType)) {
+            grouped[item.wasteType] = [];
+          }
+          grouped[item.wasteType]!.add(item);
+        }
+
+        // save data in local
+        await saveGroupedScheduleToLocal(grouped);
+
+        return grouped;
+      } else {
+        throw Exception(
+            'Failed to load data schedule today: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error getting data schedule today: $e');
+    }
+  }
 
   // Call api startCollectionTrip
   Future<bool> startCollectionTrip(int id) async {
@@ -153,14 +151,14 @@ Future<Map<String, List<Datum>>> getMockListScheduleToday() async {
       request.headers['Authorization'] = 'Bearer $token';
       request.headers['Accept'] = 'application/json';
 
-      // Thêm goods vào form-data
+      // add goods in form-data
       for (int i = 0; i < goods.length; i++) {
         final item = goods[i];
         request.fields['goods[$i][name]'] = item['name'];
         request.fields['goods[$i][quantity]'] = item['quantity'].toString();
       }
 
-      // Thêm images vào form-data
+      // Thêm images in form-data
       for (int i = 0; i < images.length; i++) {
         final image = images[i];
         final fileStream =
@@ -168,7 +166,7 @@ Future<Map<String, List<Datum>>> getMockListScheduleToday() async {
         request.files.add(fileStream);
       }
 
-      // Gửi request
+      // send request
       final response = await request.send();
       final responseBody = await response.stream.bytesToString();
 

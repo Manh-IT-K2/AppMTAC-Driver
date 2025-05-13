@@ -10,12 +10,6 @@ import 'package:mtac_driver/service/schedule/schedule_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
-// extension ListExtensions<T> on List<T> {
-//   List<T> takeLast(int n) {
-//     return skip(length - n).toList();
-//   }
-// }
-
 // status collection
 enum CollectionStatus { idle, started, ended }
 
@@ -24,38 +18,6 @@ class ScheduleController extends GetxController {
   var currentDate = DateTime.now().obs;
   var daysInMonth = <DateTime>[].obs;
   late final ScrollController scrollController;
-
-  // final Map<int, RxBool> startingStatus = {}; // key: scheduleId
-  // bool get isAnyTripStarted {
-  //   return startingStatus.values.any((status) => status.value);
-  // }
-
-  // Future<void> saveStartingStatusesToLocal() async {
-  //   final prefs = await SharedPreferences.getInstance();
-
-  //   // Chuyển Map<int, RxBool> thành Map<int, bool>
-  //   final Map<String, bool> mapToSave = startingStatus.map((key, value) {
-  //     return MapEntry(key.toString(), value.value);
-  //   });
-
-  //   // Lưu vào SharedPreferences dưới dạng chuỗi JSON
-  //   await prefs.setString('starting_statuses', jsonEncode(mapToSave));
-  // }
-
-  // Future<void> loadStartingStatusesFromLocal() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final jsonString = prefs.getString('starting_statuses');
-
-  //   if (jsonString != null) {
-  //     final Map<String, dynamic> decoded = jsonDecode(jsonString);
-
-  //     // Chuyển đổi từ Map<String, bool> thành Map<int, RxBool>
-  //     decoded.forEach((key, value) {
-  //       final int id = int.parse(key);
-  //       startingStatus[id] = (value as bool).obs;
-  //     });
-  //   }
-  // }
 
   // status collection
   Map<int, Rx<CollectionStatus>> collectionStatus = {};
@@ -121,36 +83,18 @@ class ScheduleController extends GetxController {
   final double itemWidth = 13.w;
   double screenWidth = 100.w - 32;
   late final double offset;
+
   // function initial
   @override
   void onInit() {
     super.onInit();
     getUsername();
-    //   loadGroupedScheduleFromLocal().then((_) async {
-    //   final hasLocal = await hasLocalGroupedSchedule();
-    //   if (!hasLocal) {
-    //     await getListScheduleToday(); // nếu không có mới gọi API
-    //     print("Sai luon getListScheduleToday");
-    //   }
-    // });
     checkAndLoadSchedule();
-    // getListScheduleToday();
-    // loadGroupedScheduleFromLocal();
     loadCollectionStatusesFromLocal();
-    // loadStartingStatusesFromLocal();
-
-    //loadScheduleFromLocal();
     daysInMonth.value = _generateDaysInMonth(currentDate.value);
     offset = calculateTodayScrollOffset(itemWidth, screenWidth);
     scrollController = ScrollController(initialScrollOffset: offset);
   }
-
-  // Khởi tạo trạng thái
-  // void initStartingStatus(List<int> ids) {
-  //   for (var id in ids) {
-  //     startingStatus[id] = false.obs;
-  //   }
-  // }
 
   // calculateTodayScrollOffset
   double calculateTodayScrollOffset(double itemWidth, double screenWidth) {
@@ -243,43 +187,29 @@ class ScheduleController extends GetxController {
     }
   }
 
-//
-  Future<void> clearScheduleLocal() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('schedule_today');
-  }
-
-  // //
-  // Future<void> loadScheduleFromLocal() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final jsonString = prefs.getString('schedule_today');
-  //   if (jsonString != null) {
-  //     final List<dynamic> decodedList = jsonDecode(jsonString);
-  //     final list = decodedList.map((e) => Datum.fromJson(e)).toList();
-  //     todaySchedules.assignAll(list); //
-  //     final ids = list.map((e) => e.id).toList();
-  //     initStartingStatus(ids);
-  //   } else {
-  //     todaySchedules.clear(); // Nếu không có data, đảm bảo list rỗng
-  //   }
-  // }
-
+  // check data local exist
   Future<bool> hasLocalGroupedSchedule() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.containsKey('grouped_schedule_today');
   }
-Future<void> checkAndLoadSchedule() async {
-  final hasLocal = await hasLocalGroupedSchedule();
-  if (hasLocal) {
-    await loadGroupedScheduleFromLocal();
-    print("✅ Loaded local grouped schedule");
-  } else {
-    print("🚨 Local schedule not found, calling API");
-    await getListScheduleToday(); // Gọi API và trong đó đã save vào local
-  }
-}
 
-  // function loadGroupedScheduleFromLocal
+  // Function checkAndLoadSchedule
+  Future<void> checkAndLoadSchedule() async {
+    final hasLocal = await hasLocalGroupedSchedule();
+    if (hasLocal) {
+      await loadGroupedScheduleFromLocal();
+      if (kDebugMode) {
+        print("✅ Loaded local grouped schedule");
+      }
+    } else {
+      if (kDebugMode) {
+        print("🚨 Local schedule not found, calling API");
+      }
+      await getListScheduleToday();
+    }
+  }
+
+  // Function loadGroupedScheduleFromLocal
   Future<void> loadGroupedScheduleFromLocal() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonString = prefs.getString('grouped_schedule_today');
@@ -287,36 +217,27 @@ Future<void> checkAndLoadSchedule() async {
     if (jsonString != null) {
       final Map<String, dynamic> decodedMap = jsonDecode(jsonString);
 
-      // Chuyển sang Map<String, List<Datum>>
+      // tranfer Map<String, List<Datum>>
       final Map<String, List<Datum>> parsedMap = decodedMap.map((key, value) {
         final list = (value as List).map((e) => Datum.fromJson(e)).toList();
         return MapEntry(key, list);
       });
 
-      // Gán vào schedulesByWasteType
       schedulesByWasteType.addAll(parsedMap);
-      print("loadGroupedScheduleFromLocal: ${schedulesByWasteType.length}");
-      print('✅ jsonString from local: $jsonString');
-
     } else {
-      schedulesByWasteType.clear(); // nếu không có dữ liệu local
+      schedulesByWasteType.clear();
     }
   }
-  //
+
+  // remove data schedule today local
   Future<void> clearGroupedScheduleFromLocal() async {
-  final prefs = await SharedPreferences.getInstance();
-
-  // Xóa key 'grouped_schedule_today'
-  await prefs.remove('grouped_schedule_today');
-
-  // Đồng thời xóa dữ liệu trong biến tạm
-  schedulesByWasteType.clear();
-
-  print('Đã xóa dữ liệu grouped_schedule_today khỏi local và bộ nhớ.');
-}
-
-
-  //final RxList<Datum> todaySchedules = <Datum>[].obs;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('grouped_schedule_today');
+    schedulesByWasteType.clear();
+    if (kDebugMode) {
+      print('Đã xóa dữ liệu grouped_schedule_today khỏi local và bộ nhớ.');
+    }
+  }
 
   // function getSchedulesByWasteType
   List<Datum> getSchedulesByWasteType(String wasteType) {
@@ -326,18 +247,18 @@ Future<void> checkAndLoadSchedule() async {
     return list;
   }
 
-//
+  // Function getListScheduleToday from service
   Future<void> getListScheduleToday() async {
     try {
-      print(">>> GỌI getListScheduleToday từ Controller");
+      if (kDebugMode) {
+        print(">>> GỌI getListScheduleToday từ Controller");
+      }
       final schedule = await _scheduleService.getListScheduleToday();
-
       schedulesByWasteType.value = schedule;
-
-      // if (kDebugMode) {
-      //   print(
-      //       "Các loại chất thải hôm nay: ${schedulesByWasteType.keys.toList()}");
-      // }
+      if (kDebugMode) {
+        print(
+            "Các loại chất thải hôm nay: ${schedulesByWasteType.keys.toList()}");
+      }
     } catch (e) {
       if (e.toString().contains('401')) {
         Get.snackbar(
@@ -354,29 +275,49 @@ Future<void> checkAndLoadSchedule() async {
     }
   }
 
-  // start trip collection
+  //
+  Future<void> resetLocalCollectionStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('collection_statuses');
+    collectionStatus.clear();
+    if (kDebugMode) {
+      print('✅ Đã reset collectionStatuses trong local.');
+    }
+  }
+
+  // Start trip collection
   Future<void> startCollectionTrip(int scheduleId) async {
+    // Check if any flights are "started" and not "ended"
+    bool hasUnfinishedTrip = collectionStatus.entries.any(
+      (entry) =>
+          entry.key != scheduleId &&
+          entry.value.value == CollectionStatus.started,
+    );
+    //resetLocalCollectionStatus();
+    if (kDebugMode) {
+      print('--- DEBUG: Danh sách trạng thái collection ---');
+    }
+    collectionStatus.forEach((key, value) {
+      if (kDebugMode) {
+        print('🟡 scheduleId: $key, status: ${value.value}');
+      }
+    });
+
+    if (hasUnfinishedTrip) {
+      Get.snackbar(
+        'Chưa hoàn thành',
+        'Bạn cần kết thúc chuyến thu gom trước đó trước khi bắt đầu chuyến mới.',
+        snackPosition: SnackPosition.TOP,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
     try {
-      // if (isAnyTripStarted && !(startingStatus[scheduleId]?.value ?? false)) {
-      //   Get.snackbar(
-      //     'Thông báo',
-      //     'Bạn cần hoàn thành chuyến thu gom trước đó trước khi bắt đầu chuyến mới.',
-      //     snackPosition: SnackPosition.BOTTOM,
-      //     backgroundColor: Colors.orange,
-      //     colorText: Colors.white,
-      //   );
-      //   return;
-      // }
-
       final success = await _scheduleService.startCollectionTrip(scheduleId);
-
       if (success) {
-        // Đánh dấu chuyến này đang được thu gom
-        // startingStatus[scheduleId]?.value = true;
-        // saveStartingStatusesToLocal();
         collectionStatus[scheduleId] ??= Rx(CollectionStatus.idle);
-
-        // Cập nhật trạng thái
         collectionStatus[scheduleId]!.value = CollectionStatus.started;
         await saveCollectionStatusesToLocal();
 
@@ -387,10 +328,6 @@ Future<void> checkAndLoadSchedule() async {
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
-
-        if (kDebugMode) {
-          print("manh ${collectionStatus[scheduleId]?.value}");
-        }
       } else {
         Get.snackbar(
           'Thất bại',
@@ -422,7 +359,7 @@ Future<void> checkAndLoadSchedule() async {
     }
   }
 
-  // function endCollectionTrip from service
+  // Function endCollectionTrip from service
   Future<void> endCollectionTrip(
       int scheduleId,
       List<Map<String, dynamic>> selectedGoods,
@@ -460,7 +397,7 @@ Future<void> checkAndLoadSchedule() async {
     }
   }
 
-  // 🔥memory leak
+  // memory leak
   @override
   void onClose() {
     pageController.dispose();
