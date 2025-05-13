@@ -10,7 +10,6 @@ import 'package:mtac_driver/controller/schedule/handover_record_controller.dart'
 import 'package:mtac_driver/controller/schedule/map_controller.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/data/map_screen/item_info_waste.dart';
-import 'package:mtac_driver/model/destination_model.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
@@ -98,12 +97,12 @@ class MapDriverScreen extends StatelessWidget {
                         // Current location marker
                         Marker(
                           point: controller.currentLocation.value!,
-                           width: 20.w,
-                            height: 20.w,
+                          width: 15.w,
+                          height: 15.w,
                           child: Image.asset(
                             "assets/image/current_location.gif",
-                            width: 10.w,
-                            height: 10.w,
+                            width: 15.w,
+                            height: 15.w,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -423,7 +422,7 @@ class MapDriverScreen extends StatelessWidget {
                         //   scheduleController.clearScheduleLocal();
                         // }
                         NotifySuccessDialog().showNotifyPopup(
-                            "Chuyến gom này đã hoàn thành!", () {
+                            "Chuyến gom này đã hoàn thành!", true, () {
                           Navigator.pop(context);
                         });
                       }
@@ -446,7 +445,7 @@ class MapDriverScreen extends StatelessWidget {
                           }
                         } else {
                           NotifySuccessDialog().showNotifyPopup(
-                              "Chưa ghi biên bản giao nhận!", () {
+                              "Chưa ghi biên bản giao nhận!", false, () {
                             Navigator.pop(context);
                           });
                         }
@@ -675,66 +674,66 @@ class MapDriverScreen extends StatelessWidget {
 
   //
   Widget _buildRouteDots() {
+    final destinations = controller.destinationsData;
+
+    if (destinations.isEmpty) return const SizedBox();
+
     return controller.optimizedRoute.isNotEmpty
         ? Column(
-            children: [
-              Container(
+            children: List.generate(destinations.length, (index) {
+              final current = destinations[index];
+              final currentStatus =
+                  scheduleController.collectionStatus[current.id]?.value ??
+                      CollectionStatus.idle;
+
+              // Dot color
+              final dotColor = currentStatus == CollectionStatus.ended
+                  ? kPrimaryColor
+                  : Colors.grey.withOpacity(0.5);
+
+              final dot = Container(
                 width: 3.w,
                 height: 3.w,
                 decoration: BoxDecoration(
-                  color: kPrimaryColor,
+                  color: dotColor,
                   borderRadius: BorderRadius.circular(3.w),
                 ),
-              ),
-              Container(
+              );
+
+              // Nếu là điểm cuối, không có đường nối sau, chỉ trả về dot
+              if (index == destinations.length - 1) return dot;
+
+              // Line color: chỉ đổi sang màu chính nếu cả 2 điểm đều đã ended
+              final next = destinations[index + 1];
+              final nextStatus =
+                  scheduleController.collectionStatus[next.id]?.value ??
+                      CollectionStatus.idle;
+
+              final lineColor = (currentStatus == CollectionStatus.ended &&
+                      nextStatus == CollectionStatus.ended)
+                  ? kPrimaryColor
+                  : Colors.grey;
+
+              final line = Container(
                 width: 0.5.w,
                 height: 40.w,
-                color: kPrimaryColor,
-              ),
-              ...List.generate(
-                controller.destinationsData.length - 2, //
-                (index) => Column(
-                  children: [
-                    Container(
-                      width: 3.w,
-                      height: 3.w,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(3.w),
-                      ),
-                    ),
-                    Container(
-                      width: 0.5.w,
-                      height: 40.w,
-                      color: Colors.grey,
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                width: 3.w,
-                height: 3.w,
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(3.w),
-                ),
-              ),
-            ],
+                color: lineColor,
+              );
+
+              return Column(
+                children: [dot, line],
+              );
+            }),
           )
         : const SizedBox();
   }
 }
 
 class _ItemDestination extends StatelessWidget {
-  _ItemDestination({
-    super.key,
+  const _ItemDestination({
     required this.nameBusiness,
     required this.typeWate,
     required this.area,
-    //required this.totalWeight,
-    // required this.phonePartner,
-    // required this.namePartner,
-    //required this.note,
     required this.isLastItem,
     required this.distanceTime,
     required this.scheduleId,
@@ -742,14 +741,7 @@ class _ItemDestination extends StatelessWidget {
     this.onTap,
   });
 
-  final String nameBusiness,
-      typeWate,
-      area,
-      //totalWeight,
-      //phonePartner,
-      //namePartner,
-      distanceTime;
-  //note;
+  final String nameBusiness, typeWate, area, distanceTime;
   final bool isLastItem;
   final Function()? onTap;
   final int scheduleId;
@@ -757,40 +749,37 @@ class _ItemDestination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 3.w),
-        Obx(() {
-          final status = controller.collectionStatus[scheduleId] ??=
-              Rx(CollectionStatus.idle);
+    return Obx(() {
+      final status =
+          controller.collectionStatus[scheduleId] ??= Rx(CollectionStatus.idle);
+      // Depending on the status, the color, icon, and text will change.
+      Color buttonColor;
+      IconData icon;
+      String buttonText;
 
-          // Tùy theo trạng thái sẽ thay đổi màu, biểu tượng, và văn bản
-          Color buttonColor;
-          IconData icon;
-          String buttonText;
-
-          switch (status.value) {
-            case CollectionStatus.started:
-              buttonColor = Colors.red;
-              icon = HugeIcons.strokeRoundedStop;
-              buttonText = "Kết thúc";
-              break;
-            case CollectionStatus.ended:
-              buttonColor = Colors.green;
-              icon = HugeIcons
-                  .strokeRoundedCheckmarkCircle02; // hoặc icon bạn muốn
-              buttonText = "Hoàn thành";
-              break;
-            case CollectionStatus.idle:
-            default:
-              buttonColor = kPrimaryColor;
-              icon = HugeIcons.strokeRoundedPlay;
-              buttonText = "Bắt đầu";
-              break;
-          }
-
-          return Row(
+      switch (status.value) {
+        case CollectionStatus.started:
+          buttonColor = Colors.red;
+          icon = HugeIcons.strokeRoundedStop;
+          buttonText = "Kết thúc";
+          break;
+        case CollectionStatus.ended:
+          buttonColor = Colors.green;
+          icon = HugeIcons.strokeRoundedCheckmarkCircle02;
+          buttonText = "Hoàn thành";
+          break;
+        case CollectionStatus.idle:
+        default:
+          buttonColor = kPrimaryColor;
+          icon = HugeIcons.strokeRoundedPlay;
+          buttonText = "Bắt đầu";
+          break;
+      }
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 3.w),
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
@@ -820,8 +809,8 @@ class _ItemDestination extends StatelessWidget {
                 ),
               ),
               status.value == CollectionStatus.started
-                  ? MovingGifWidget()
-                  : SizedBox(),
+                  ? const MovingGifWidget()
+                  : const SizedBox(),
               status.value == CollectionStatus.ended
                   ? Image.asset(
                       "assets/image/success_collection.gif",
@@ -829,136 +818,92 @@ class _ItemDestination extends StatelessWidget {
                       height: 8.w,
                       fit: BoxFit.cover,
                     )
-                  : SizedBox()
+                  : const SizedBox()
             ],
-          );
-        }),
+          ),
 
-        SizedBox(height: 5.w),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 50.w,
-              child: Text(
-                nameBusiness,
-                style: PrimaryFont.bodyTextBold().copyWith(
-                  color: Colors.black,
+          SizedBox(height: 5.w),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 50.w,
+                child: Text(
+                  nameBusiness,
+                  style: PrimaryFont.bodyTextBold().copyWith(
+                    color: Colors.black,
+                  ),
                 ),
               ),
-            ),
-            Container(
-              height: 15,
-              width: 1,
-              color: Colors.grey,
-            ),
-            Text(
-              distanceTime,
-              style: PrimaryFont.bodyTextBold().copyWith(
-                color: Colors.blue,
+              Container(
+                height: 15,
+                width: 1,
+                color: Colors.grey,
               ),
-            ),
-          ],
-        ),
-        // Text(
-        //   "+BD: $numberBD",
-        //   style: PrimaryFont.bodyTextMedium().copyWith(
-        //     color: Colors.black,
-        //   ),
-        // ),
-        // Text(
-        //   "+CC: $totalWeight",
-        //   style: PrimaryFont.bodyTextMedium().copyWith(
-        //     color: Colors.black,
-        //   ),
-        // ),
-        SizedBox(height: 1.w),
-        Text(
-          "Area: $area",
-          style: PrimaryFont.bodyTextMedium().copyWith(
-            color: Colors.black,
-          ),
-        ),
-        SizedBox(height: 1.w),
-        Text(
-          typeWate,
-          style: PrimaryFont.bodyTextMedium().copyWith(
-            color: Colors.black,
-          ),
-        ),
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   children: [
-        //     Text(
-        //       namePartner,
-        //       style: PrimaryFont.bodyTextBold().copyWith(
-        //         color: Colors.black,
-        //       ),
-        //     ),
-        //     GestureDetector(
-        //       onTap: () {
-        //         if (onTap != null) {
-        //           if (kDebugMode) {
-        //             print("onTap function is called!");
-        //           }
-        //           onTap!();
-        //         } else {
-        //           if (kDebugMode) {
-        //             print("onTap is null!");
-        //           }
-        //         }
-        //       },
-        //       child: Container(
-        //         width: 8.w,
-        //         height: 8.w,
-        //         decoration: BoxDecoration(
-        //           color: kPrimaryColor,
-        //           borderRadius: BorderRadius.circular(8.w),
-        //         ),
-        //         child: Icon(
-        //           Icons.call,
-        //           color: Colors.white,
-        //           size: 4.w,
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // ),
-        SizedBox(height: 1.w),
-        Row(
-          children: [
-            Icon(
-              Icons.edit_square,
-              color: const Color(0xFF997FEC),
-              size: 5.w,
-            ),
-            SizedBox(
-              width: 2.w,
-            ),
-            GestureDetector(
-              onTap: () {
-                Get.toNamed(AppRoutes.handoverRecord);
-              },
-              child: Text(
-                txtWriteRecordM,
+              Text(
+                distanceTime,
                 style: PrimaryFont.bodyTextBold().copyWith(
-                  color: const Color(0xFF997FEC),
+                  color: Colors.blue,
                 ),
               ),
+            ],
+          ),
+          SizedBox(height: 1.w),
+          Text(
+            "Area: $area",
+            style: PrimaryFont.bodyTextMedium().copyWith(
+              color: Colors.black,
             ),
-          ],
-        ),
-        SizedBox(
-          height: 5.w,
-        ),
-        // if (!isLastItem)
-        //   Icon(
-        //     Icons.arrow_downward,
-        //     color: kPrimaryColor,
-        //     size: 5.w,
-        //   ),
-      ],
-    );
+          ),
+          SizedBox(height: 1.w),
+          Text(
+            typeWate,
+            style: PrimaryFont.bodyTextMedium().copyWith(
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 1.w),
+          Row(
+            children: [
+              Icon(
+                Icons.edit_square,
+                color: status == CollectionStatus.ended
+                    ? Colors.grey
+                    : const Color(0xFF997FEC),
+                size: 5.w,
+              ),
+              SizedBox(
+                width: 2.w,
+              ),
+              GestureDetector(
+                onTap: status == CollectionStatus.ended
+                    ? null
+                    : () {
+                        Get.toNamed(AppRoutes.handoverRecord);
+                      },
+                child: Text(
+                  txtWriteRecordM,
+                  style: PrimaryFont.bodyTextBold().copyWith(
+                    color: status == CollectionStatus.ended
+                        ? Colors.grey
+                        : const Color(0xFF997FEC),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 5.w,
+          ),
+          // if (!isLastItem)
+          //   Icon(
+          //     Icons.arrow_downward,
+          //     color: kPrimaryColor,
+          //     size: 5.w,
+          //   ),
+        ],
+      );
+    });
   }
 }

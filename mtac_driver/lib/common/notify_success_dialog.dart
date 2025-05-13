@@ -5,7 +5,7 @@ import 'package:mtac_driver/utils/theme_text.dart';
 import 'package:sizer/sizer.dart';
 
 class NotifySuccessDialog {
-  void showNotifyPopup(String title, Function()? onTap) {
+  void showNotifyPopup(String title, bool status, Function()? onTap) {
     showDialog(
         context: Get.context!,
         barrierDismissible: false,
@@ -36,14 +36,18 @@ class NotifySuccessDialog {
                             height: 30.w,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
-                              color: kPrimaryColor,
+                              color: status ? kPrimaryColor : Colors.orange.withOpacity(0.6),
                               borderRadius: BorderRadius.circular(30.w),
                             ),
-                            child: Image.asset(
+                            child: status ? Image.asset(
                               "assets/image/icon_congratulation.png",
                               width: 15.w,
                               height: 15.w,
-                            ),
+                            ) : Image.asset(
+                              "assets/image/icons_warning.png",
+                              width: 15.w,
+                              height: 15.w,
+                            ) ,
                           ),
                         ),
                         SizedBox(height: 5.w),
@@ -56,7 +60,7 @@ class NotifySuccessDialog {
                         ElevatedButton(
                           onPressed: onTap,
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: kPrimaryColor,
+                              backgroundColor: status ? kPrimaryColor : Colors.orange.withOpacity(0.6),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(2.w),
                               ),

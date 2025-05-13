@@ -229,7 +229,7 @@ class _BottomHandoverRecordSceen extends StatelessWidget {
             onPressed: () {
               if (imageController.selectedImages.isNotEmpty &&
                   imageController.allInputsValid.value) {
-                NotifySuccessDialog().showNotifyPopup("Gửi biên bản thành công",
+                NotifySuccessDialog().showNotifyPopup("Gửi biên bản thành công", true,
                     () {
                   Navigator.pop(context);
                   Get.back();
@@ -388,7 +388,7 @@ class _BodyHandoverRecordScreen extends StatelessWidget {
                                         .copyWith(color: Colors.black),
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                  )),
+                                  ),),
                             ),
                           ),
                           const SizedBox(width: 12),
