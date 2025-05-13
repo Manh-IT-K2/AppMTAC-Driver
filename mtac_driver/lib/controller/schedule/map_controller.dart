@@ -45,7 +45,7 @@ class MapDriverController extends GetxController {
   var startLocation = Rx<LatLng>(const LatLng(0, 0));
   var endLocation = Rx<LatLng>(const LatLng(0, 0));
   var currentLocation =
-      Rx<LatLng?>(const LatLng(10.841626348121663, 106.67731436791038));
+      Rx<LatLng?>(const LatLng(20.888468419751373, 105.9829641688128));
   final RxList<LatLng> routePoints = <LatLng>[].obs;
   //final RxList<LatLng> mainPoints = <LatLng>[].obs;
   final RxList<LatLng> optimizedRoute = <LatLng>[].obs;
@@ -112,6 +112,9 @@ class MapDriverController extends GetxController {
   ''';
   }
 
+  final nameWaste = Get.arguments;
+
+
   // function initial
   @override
   void onInit() {
@@ -119,7 +122,7 @@ class MapDriverController extends GetxController {
     //getCurrentLocation();
     fetchTodayRoutes();
     //tripId = Get.arguments as int;
-    destinationsData = _scheduleController.todaySchedules;
+    destinationsData = _scheduleController.getSchedulesByWasteType(nameWaste);
     getOptimizedRoute();
     formatTruckInfo();
   }
@@ -131,8 +134,8 @@ class MapDriverController extends GetxController {
   //       .toList();
   // }
   void fetchTodayRoutes() async {
-    await _scheduleController.getListScheduleToday();
-    routeAddresses.value = _scheduleController.todaySchedules
+    // await _scheduleController.getListScheduleToday();
+    routeAddresses.value = _scheduleController.getSchedulesByWasteType(nameWaste)
         .map((e) =>
             e.locationDetails) // hoặc e.area tùy bạn muốn lấy địa chỉ nào
         .toList();
@@ -223,7 +226,7 @@ class MapDriverController extends GetxController {
     //mainPoints.clear();
     List<LatLng> results = [];
     //final destinations = getDestinationsByTripId(tripId);
-    final routeAddress = _scheduleController.todaySchedules
+    final routeAddress = _scheduleController.getSchedulesByWasteType(nameWaste)
         .map((e) => e.locationDetails)
         .toList();
 
@@ -622,10 +625,10 @@ class MapDriverController extends GetxController {
 
   // Get route from Mapbox
   Future<void> fetchRouteFromMapbox(List<LatLng> points) async {
-    if (points.length < 2) {
-      if (kDebugMode) print("⚠️ Cần ít nhất 2 điểm để tạo tuyến đường");
-      return;
-    }
+    // if (points.length < 2) {
+    //   if (kDebugMode) print("⚠️ Cần ít nhất 2 điểm để tạo tuyến đường");
+    //   return;
+    // }
 
     // convert points to coordinates for Mapbox
     final waypointsString =

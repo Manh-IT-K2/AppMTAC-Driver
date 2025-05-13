@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mtac_driver/common/notify_success_dialog.dart';
@@ -35,34 +36,52 @@ class HandoverRecordController extends GetxController {
   RxList<File> selectedImages = <File>[].obs;
   var checkDistance = false.obs;
 
+  
   // Selected image library
-  Future<void> pickMultipleImages() async {
-    final List<XFile>? images = await _picker.pickMultiImage();
-    if (images != null) {
-      List<File> newImages = images.map((img) => File(img.path)).toList();
-      // filter image name
-      final Set<String> fileNames =
-          selectedImages.map((file) => file.path.split('/').last).toSet();
-      for (var img in newImages) {
-        if (!fileNames.contains(img.path.split('/').last)) {
-          selectedImages.add(img);
-        }
+Future<void> pickMultipleImages() async {
+  final List<XFile>? images = await _picker.pickMultiImage();
+  if (images != null) {
+    List<File> newImages = [];
+    final Set<String> fileNames = selectedImages.map((file) => file.path.split('/').last).toSet();
+    
+    for (var img in images) {
+      if (!fileNames.contains(img.path.split('/').last)) {
+        // Compress the image before adding
+        File compressedFile = await compressImage(File(img.path));
+        newImages.add(compressedFile);
       }
-      checkDistance.value = selectedImages.isNotEmpty;
-      //selectedImages.refresh();
-      //print("Selected Images: ${selectedImages.map((e) => e.path).toList()}");
     }
+    
+    selectedImages.addAll(newImages);
+    checkDistance.value = selectedImages.isNotEmpty;
   }
+}
 
   // Open Camera
-  Future<void> pickImageFromCamera() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-    if (image != null) {
-      selectedImages.add(File(image.path));
-      checkDistance.value = selectedImages.isNotEmpty;
-      //selectedImages.refresh();
-    }
+ Future<void> pickImageFromCamera() async {
+  final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+  if (image != null) {
+    // Compress the image before adding
+    File compressedFile = await compressImage(File(image.path));
+    selectedImages.add(compressedFile);
+    checkDistance.value = selectedImages.isNotEmpty;
   }
+}
+
+// Function to compress image
+Future<File> compressImage(File file) async {
+  final result = await FlutterImageCompress.compressWithFile(
+    file.path,
+    minWidth: 800,  // Resize width
+    minHeight: 600,  // Resize height
+    quality: 80,  // Quality of the image (lower = smaller file size)
+    rotate: 0,
+  );
+  
+  // Create a new file from the compressed data
+  final compressedFile = File(file.path)..writeAsBytesSync(result!);
+  return compressedFile;
+}
 
   // Renove image from index
   void removeImage(int index) {
@@ -227,12 +246,12 @@ void validateAllInputs() {
                                 status.value = false;
                                 validateAllInputs(); //
                                 Navigator.pop(Get.context!);
-                                Future.delayed(const Duration(milliseconds: 300), () {
-                                  NotifySuccessDialog().showNotifyPopup(
-                                    "Thêm khối lượng thành công",
-                                    () => Navigator.pop(Get.context!),
-                                  );
-                                });
+                                // Future.delayed(const Duration(milliseconds: 300), () {
+                                //   NotifySuccessDialog().showNotifyPopup(
+                                //     "Thêm khối lượng thành công",
+                                //     () => Navigator.pop(Get.context!),
+                                //   );
+                                // });
                               } else {
                                 status.value = true;
                               }

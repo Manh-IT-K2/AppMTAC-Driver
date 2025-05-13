@@ -43,24 +43,27 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
               txtTitleS,
               style: PrimaryFont.headerTextBold().copyWith(color: Colors.black),
             ),
-            Container(
-              width: 10.w,
-              height: 10.w,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.w),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      offset: const Offset(2, 2),
-                    ),
-                  ]),
-              child: Icon(
-                Icons.menu,
-                color: Colors.black,
-                size: 5.w,
+            GestureDetector(
+              onTap: () => controller.clearGroupedScheduleFromLocal(),
+              child: Container(
+                width: 10.w,
+                height: 10.w,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.w),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(2, 2),
+                      ),
+                    ]),
+                child: Icon(
+                  Icons.menu,
+                  color: Colors.black,
+                  size: 5.w,
+                ),
               ),
             ),
           ],
@@ -156,7 +159,7 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
                                   day: DateFormat('yyyy-MM-dd')
                                       .format(datum.collectionDate),
                                   status: datum.status,
-                                  tripId: datum.id,
+                                  
                                 );
                               },
                               childCount: entries.length,
@@ -184,16 +187,16 @@ class _ItemTripWork extends StatelessWidget {
     required this.addressBusiness,
     required this.day,
     required this.status,
-    required this.tripId,
+   
   });
 
   final String nameWaste, addressBusiness, day, status;
-  final int tripId;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 20.h,
-      width: double.infinity,
+      width: 100.w,
       margin: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -211,67 +214,69 @@ class _ItemTripWork extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 12, top: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Container(
-                //   width: 30.w,
-                //   height: 10.w,
-                //   decoration: BoxDecoration(
-                //     color: title.contains("Khoán")
-                //         ? const Color(0xFF22C7E4)
-                //         : title.contains("Cân")
-                //             ? Colors.orange
-                //             : kPrimaryColor,
-                //     borderRadius: BorderRadius.circular(5.w),
-                //   ),
-                //   child: Center(
-                //     child: Text(
-                //       title,
-                //       style: PrimaryFont.bodyTextBold()
-                //           .copyWith(color: Colors.white),
-                //       textAlign: TextAlign.center,
-                //     ),
-                //   ),
-                // ),
-                // SizedBox(
-                //   height: 3.w,
-                // ),
-                Text(
-                  nameWaste,
-                  style:
-                      PrimaryFont.titleTextBold().copyWith(color: Colors.red),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 3.w,
-                ),
-                Text(
-                  addressBusiness,
-                  style: PrimaryFont.bodyTextBold()
-                      .copyWith(color: Colors.black),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(
-                  height: 3.w,
-                ),
-                Text(
-                  day,
-                  style:
-                      PrimaryFont.bodyTextBold().copyWith(color: Colors.grey),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 12, top: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Container(
+                  //   width: 30.w,
+                  //   height: 10.w,
+                  //   decoration: BoxDecoration(
+                  //     color: title.contains("Khoán")
+                  //         ? const Color(0xFF22C7E4)
+                  //         : title.contains("Cân")
+                  //             ? Colors.orange
+                  //             : kPrimaryColor,
+                  //     borderRadius: BorderRadius.circular(5.w),
+                  //   ),
+                  //   child: Center(
+                  //     child: Text(
+                  //       title,
+                  //       style: PrimaryFont.bodyTextBold()
+                  //           .copyWith(color: Colors.white),
+                  //       textAlign: TextAlign.center,
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: 3.w,
+                  // ),
+                  Text(
+                    nameWaste,
+                    style:
+                        PrimaryFont.titleTextBold().copyWith(color: Colors.red),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 3.w,
+                  ),
+                  Text(
+                    addressBusiness,
+                    style: PrimaryFont.bodyTextBold()
+                        .copyWith(color: Colors.black),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(
+                    height: 3.w,
+                  ),
+                  Text(
+                    day,
+                    style:
+                        PrimaryFont.bodyTextBold().copyWith(color: Colors.grey),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             ),
           ),
           GestureDetector(
             onTap: () {
-              Get.toNamed(AppRoutes.map, arguments: tripId);
+              Get.toNamed(AppRoutes.map, arguments: nameWaste);
             },
             child: Container(
               height: double.infinity,

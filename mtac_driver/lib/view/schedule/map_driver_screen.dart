@@ -5,6 +5,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:mtac_driver/common/notify_success_dialog.dart';
 import 'package:mtac_driver/controller/schedule/handover_record_controller.dart';
 import 'package:mtac_driver/controller/schedule/map_controller.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
@@ -26,7 +27,8 @@ class MapDriverScreen extends StatelessWidget {
   final scheduleController = Get.find<ScheduleController>();
 
   //final int tripId = Get.arguments as int;
-  final HandoverRecordController handoverController = Get.put(HandoverRecordController());
+  final HandoverRecordController handoverController =
+      Get.put(HandoverRecordController());
   @override
   Widget build(BuildContext context) {
     double screenHeight = 100.h;
@@ -96,12 +98,13 @@ class MapDriverScreen extends StatelessWidget {
                         // Current location marker
                         Marker(
                           point: controller.currentLocation.value!,
-                          width: 60,
-                          height: 60,
-                          child: const Icon(
-                            HugeIcons.strokeRoundedGps01,
-                            color: kPrimaryColor,
-                            size: 30.0,
+                           width: 20.w,
+                            height: 20.w,
+                          child: Image.asset(
+                            "assets/image/current_location.gif",
+                            width: 10.w,
+                            height: 10.w,
+                            fit: BoxFit.cover,
                           ),
                         ),
 
@@ -385,11 +388,13 @@ class MapDriverScreen extends StatelessWidget {
                   final distanceTime = index < controller.distances.length
                       ? '${controller.formatDistance(controller.distances[index])} - ${controller.formatDuration(controller.durations[index])}'
                       : '';
-                  final status = scheduleController.startingStatuss[destination.id] ??= Rx(CollectionStatus.idle);
+                  final status =
+                      scheduleController.collectionStatus[destination.id] ??=
+                          Rx(CollectionStatus.idle);
 
-                      print("object111 : $status");
-                  return Obx (() {
-                    return _ItemDestination(
+                  print("object111 : $status");
+
+                  return _ItemDestination(
                     scheduleId: destination.id,
                     distanceTime: distanceTime,
                     nameBusiness: destination.companyName,
@@ -403,7 +408,7 @@ class MapDriverScreen extends StatelessWidget {
                     isLastItem: index == controller.destinationsData.length - 1,
                     onTap: () async {
                       if (status == CollectionStatus.ended) {
-                         print("object111 : $status");
+                        print("object111 : $status");
                         // final canEnd = await controller.canEndTrip(
                         //     destination.id,
                         //     destination.latitude!,
@@ -417,35 +422,53 @@ class MapDriverScreen extends StatelessWidget {
                         // if(scheduleController.checkTodaySchedules.isEmpty){
                         //   scheduleController.clearScheduleLocal();
                         // }
-                        Get.snackbar(
-                            "Thông báo", "Chuyến thu gom này đã hoàn thành");
-                        return;
+                        NotifySuccessDialog().showNotifyPopup(
+                            "Chuyến gom này đã hoàn thành!", () {
+                          Navigator.pop(context);
+                        });
                       }
                       if (status == CollectionStatus.started) {
-                         print("objectmanhEnd : $status");
+                        print("objectmanhEnd : $status");
                         // final canEnd = await controller.canEndTrip(
                         //     destination.id,
                         //     destination.latitude!,
                         //     destination.longitude!);
                         // if (canEnd) {
-                        //   print("end : $status");
+                        print("end : $status");
+                        if (handoverController.numbers.isNotEmpty) {
                           handoverController.updateSelectedGoods(infoWasteData);
-                          await scheduleController
-                              .endCollectionTrip(destination.id, handoverController.selectedGoods, handoverController.selectedImages);
-                        //}
+                          if (handoverController.selectedGoods.isNotEmpty &&
+                              handoverController.selectedImages.isNotEmpty) {
+                            await scheduleController.endCollectionTrip(
+                                destination.id,
+                                handoverController.selectedGoods,
+                                handoverController.selectedImages);
+                          }
+                        } else {
+                          NotifySuccessDialog().showNotifyPopup(
+                              "Chưa ghi biên bản giao nhận!", () {
+                            Navigator.pop(context);
+                          });
+                        }
+
+                        // }
 
                         // warning item end
                         // if(scheduleController.checkTodaySchedules.isEmpty){
                         //   scheduleController.clearScheduleLocal();
                         //  }
                       } else {
-                         print("object111Start : $status");
-                        await scheduleController.startCollectionTrip(destination.id);
+                        // NotifySuccessDialog()
+                        //     .showNotifyPopup("Chuyến gom đang thực hiện!", () {
+                        //   Navigator.pop(context);
+                        // });
+                        print("object111Start : $status");
+                        await scheduleController
+                            .startCollectionTrip(destination.id);
                       }
                     },
                     controller: scheduleController,
                   );
-                  },) ;
                 },
                 childCount: controller.destinationsData.length,
               ),
@@ -669,7 +692,7 @@ class MapDriverScreen extends StatelessWidget {
                 color: kPrimaryColor,
               ),
               ...List.generate(
-                controller.destinationsData.length - 2, //
+                controller.destinationsData.length - 1, //
                 (index) => Column(
                   children: [
                     Container(
@@ -739,32 +762,56 @@ class _ItemDestination extends StatelessWidget {
       children: [
         SizedBox(height: 3.w),
         Obx(() {
-          final isStarting =
-              controller.startingStatus[scheduleId]?.value ?? false;
+          final status = controller.collectionStatus[scheduleId] ??=
+              Rx(CollectionStatus.idle);
+
+          // Tùy theo trạng thái sẽ thay đổi màu, biểu tượng, và văn bản
+          Color buttonColor;
+          IconData icon;
+          String buttonText;
+
+          switch (status.value) {
+            case CollectionStatus.started:
+              buttonColor = Colors.red;
+              icon = HugeIcons.strokeRoundedStop;
+              buttonText = "Kết thúc";
+              break;
+            case CollectionStatus.ended:
+              buttonColor = Colors.green;
+              icon = HugeIcons
+                  .strokeRoundedCheckmarkCircle02; // hoặc icon bạn muốn
+              buttonText = "Hoàn thành";
+              break;
+            case CollectionStatus.idle:
+            default:
+              buttonColor = kPrimaryColor;
+              icon = HugeIcons.strokeRoundedPlay;
+              buttonText = "Bắt đầu";
+              break;
+          }
+
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
-                onTap: onTap,
+                onTap: status.value == CollectionStatus.ended ? null : onTap,
                 child: Container(
-                  width: 20.w,
+                  width: 25.w,
                   height: 8.w,
                   decoration: BoxDecoration(
-                    color: isStarting ? Colors.red : Colors.green,
+                    color: buttonColor,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Icon(
-                        isStarting
-                            ? HugeIcons.strokeRoundedStop
-                            : HugeIcons.strokeRoundedPlay,
+                        icon,
                         size: 5.w,
                         color: Colors.white,
                       ),
                       Text(
-                        isStarting ? "Kết thúc" : "Bắt đầu",
+                        buttonText,
                         style: PrimaryFont.bodyTextMedium()
                             .copyWith(color: Colors.white),
                       ),
@@ -772,10 +819,21 @@ class _ItemDestination extends StatelessWidget {
                   ),
                 ),
               ),
-              isStarting ? MovingGifWidget() : SizedBox(),
+              status.value == CollectionStatus.started
+                  ? MovingGifWidget()
+                  : SizedBox(),
+              status.value == CollectionStatus.ended
+                  ? Image.asset(
+                      "assets/image/success_collection.gif",
+                      width: 8.w,
+                      height: 8.w,
+                      fit: BoxFit.cover,
+                    )
+                  : SizedBox()
             ],
           );
         }),
+
         SizedBox(height: 5.w),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

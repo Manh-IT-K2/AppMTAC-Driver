@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:mtac_driver/configs/api_config.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:mtac_driver/data/map_screen/item_destination.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,13 +19,41 @@ class ScheduleService {
     return prefs.getString('access_token');
   }
 
-  // Hàm lưu danh sách Datum vào SharedPreferences
-Future<void> saveScheduleToLocal(List<Datum> schedules) async {
-  final prefs = await SharedPreferences.getInstance();
-  final jsonString = jsonEncode(schedules.map((e) => e.toJson()).toList());
-  await prefs.setString('schedule_today', jsonString);
+
+// offline
+Future<Map<String, List<Datum>>> getMockListScheduleToday() async {
+  const String today = "2025-05-20";
+
+  final filtered = mockScheduleData.where((item) {
+    final itemDate = DateFormat('yyyy-MM-dd').format(item.collectionDate);
+    return itemDate == today;
+  }).toList();
+
+  Map<String, List<Datum>> grouped = {};
+  for (var item in filtered) {
+    grouped.putIfAbsent(item.wasteType, () => []);
+    grouped[item.wasteType]!.add(item);
+  }
+
+  return grouped;
 }
-// Call api getListScheduleToday
+
+ // function saveGroupedScheduleToLocal
+  Future<void> saveGroupedScheduleToLocal(
+      Map<String, List<Datum>> grouped) async {
+         print(">>> GỌI getListScheduleToday từ Service");
+    final prefs = await SharedPreferences.getInstance();
+
+    // Chuyển Map<String, List<Datum>> => Map<String, dynamic>
+    final Map<String, dynamic> groupedJson = grouped.map(
+        (key, value) => MapEntry(key, value.map((e) => e.toJson()).toList()));
+
+    final jsonString = jsonEncode(groupedJson);
+
+    await prefs.setString('grouped_schedule_today', jsonString);
+  }
+
+  // Call api getListScheduleToday
   Future<Map<String, List<Datum>>> getListScheduleToday() async {
   final url = Uri.parse('$baseUrl/api/driver/schedules');
   final token = await getToken();
@@ -44,7 +73,7 @@ Future<void> saveScheduleToLocal(List<Datum> schedules) async {
 
       // Lấy ngày hôm nay
       // final String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-      const String today = "2025-05-13";
+      const String today = "2023-06-10";
 
       // Lọc theo collection_date là hôm nay
       final filtered = scheduleModel.data.where((item) {
@@ -62,7 +91,7 @@ Future<void> saveScheduleToLocal(List<Datum> schedules) async {
       }
 
       // Lưu nếu cần
-      // await saveScheduleToLocal(filtered);
+      await saveGroupedScheduleToLocal(grouped);
 
       return grouped;
     } else {

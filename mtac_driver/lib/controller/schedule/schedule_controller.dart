@@ -10,12 +10,13 @@ import 'package:mtac_driver/service/schedule/schedule_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
-extension ListExtensions<T> on List<T> {
-  List<T> takeLast(int n) {
-    return skip(length - n).toList();
-  }
-}
+// extension ListExtensions<T> on List<T> {
+//   List<T> takeLast(int n) {
+//     return skip(length - n).toList();
+//   }
+// }
 
+// status collection
 enum CollectionStatus { idle, started, ended }
 
 class ScheduleController extends GetxController {
@@ -24,16 +25,83 @@ class ScheduleController extends GetxController {
   var daysInMonth = <DateTime>[].obs;
   late final ScrollController scrollController;
 
-  final Map<int, RxBool> startingStatus = {}; // key: scheduleId
-  bool get isAnyTripStarted {
-    return startingStatus.values.any((status) => status.value);
+  // final Map<int, RxBool> startingStatus = {}; // key: scheduleId
+  // bool get isAnyTripStarted {
+  //   return startingStatus.values.any((status) => status.value);
+  // }
+
+  // Future<void> saveStartingStatusesToLocal() async {
+  //   final prefs = await SharedPreferences.getInstance();
+
+  //   // Chuyển Map<int, RxBool> thành Map<int, bool>
+  //   final Map<String, bool> mapToSave = startingStatus.map((key, value) {
+  //     return MapEntry(key.toString(), value.value);
+  //   });
+
+  //   // Lưu vào SharedPreferences dưới dạng chuỗi JSON
+  //   await prefs.setString('starting_statuses', jsonEncode(mapToSave));
+  // }
+
+  // Future<void> loadStartingStatusesFromLocal() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final jsonString = prefs.getString('starting_statuses');
+
+  //   if (jsonString != null) {
+  //     final Map<String, dynamic> decoded = jsonDecode(jsonString);
+
+  //     // Chuyển đổi từ Map<String, bool> thành Map<int, RxBool>
+  //     decoded.forEach((key, value) {
+  //       final int id = int.parse(key);
+  //       startingStatus[id] = (value as bool).obs;
+  //     });
+  //   }
+  // }
+
+  // status collection
+  Map<int, Rx<CollectionStatus>> collectionStatus = {};
+  String collectionStatusToString(CollectionStatus status) {
+    return status.toString().split('.').last;
   }
 
   //
-  Map<int, Rx<CollectionStatus>> startingStatuss = {};
+  CollectionStatus collectionStatusFromString(String value) {
+    return CollectionStatus.values.firstWhere(
+      (e) => e.toString().split('.').last == value,
+      orElse: () => CollectionStatus.idle,
+    );
+  }
 
+  // saveCollectionStatusesToLocal
+  Future<void> saveCollectionStatusesToLocal() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Chuyển sang Map<String, String> để dễ lưu
+    final Map<String, String> mapToSave = collectionStatus.map((key, value) =>
+        MapEntry(key.toString(), collectionStatusToString(value.value)));
+
+    await prefs.setString('collection_statuses', jsonEncode(mapToSave));
+  }
+
+  // loadCollectionStatusesFromLocal
+  Future<void> loadCollectionStatusesFromLocal() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString('collection_statuses');
+
+    if (jsonString != null) {
+      final Map<String, dynamic> decoded = jsonDecode(jsonString);
+      decoded.forEach((key, value) {
+        final int scheduleId = int.parse(key);
+        final CollectionStatus status = collectionStatusFromString(value);
+
+        collectionStatus[scheduleId] = Rx(status);
+      });
+    }
+  }
+
+  // initial tripStartTimes
   final Map<int, DateTime> tripStartTimes = {}; // key: scheduleId
 
+  // initial ScheduleService
   final ScheduleService _scheduleService = ScheduleService();
 
   // Biến observable để lưu danh sách lịch hôm nay
@@ -43,6 +111,9 @@ class ScheduleController extends GetxController {
   // username
   var username = ''.obs;
 
+  // initial variable schedulesByWasteType
+  final RxMap<String, List<Datum>> schedulesByWasteType =
+      <String, List<Datum>>{}.obs;
   // initial list weekdays
   final List<String> weekdays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
@@ -55,21 +126,33 @@ class ScheduleController extends GetxController {
   void onInit() {
     super.onInit();
     getUsername();
-    getListScheduleToday();
-    loadScheduleFromLocal();
+    //   loadGroupedScheduleFromLocal().then((_) async {
+    //   final hasLocal = await hasLocalGroupedSchedule();
+    //   if (!hasLocal) {
+    //     await getListScheduleToday(); // nếu không có mới gọi API
+    //     print("Sai luon getListScheduleToday");
+    //   }
+    // });
+    checkAndLoadSchedule();
+    // getListScheduleToday();
+    // loadGroupedScheduleFromLocal();
+    loadCollectionStatusesFromLocal();
+    // loadStartingStatusesFromLocal();
+
+    //loadScheduleFromLocal();
     daysInMonth.value = _generateDaysInMonth(currentDate.value);
     offset = calculateTodayScrollOffset(itemWidth, screenWidth);
     scrollController = ScrollController(initialScrollOffset: offset);
   }
 
   // Khởi tạo trạng thái
-  void initStartingStatus(List<int> ids) {
-    for (var id in ids) {
-      startingStatus[id] = false.obs;
-    }
-  }
+  // void initStartingStatus(List<int> ids) {
+  //   for (var id in ids) {
+  //     startingStatus[id] = false.obs;
+  //   }
+  // }
 
-  //
+  // calculateTodayScrollOffset
   double calculateTodayScrollOffset(double itemWidth, double screenWidth) {
     int todayIndex = daysInMonth.indexWhere((day) =>
         day.day == currentDate.value.day &&
@@ -166,42 +249,95 @@ class ScheduleController extends GetxController {
     await prefs.remove('schedule_today');
   }
 
-  //
-  Future<void> loadScheduleFromLocal() async {
+  // //
+  // Future<void> loadScheduleFromLocal() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final jsonString = prefs.getString('schedule_today');
+  //   if (jsonString != null) {
+  //     final List<dynamic> decodedList = jsonDecode(jsonString);
+  //     final list = decodedList.map((e) => Datum.fromJson(e)).toList();
+  //     todaySchedules.assignAll(list); //
+  //     final ids = list.map((e) => e.id).toList();
+  //     initStartingStatus(ids);
+  //   } else {
+  //     todaySchedules.clear(); // Nếu không có data, đảm bảo list rỗng
+  //   }
+  // }
+
+  Future<bool> hasLocalGroupedSchedule() async {
     final prefs = await SharedPreferences.getInstance();
-    final jsonString = prefs.getString('schedule_today');
+    return prefs.containsKey('grouped_schedule_today');
+  }
+Future<void> checkAndLoadSchedule() async {
+  final hasLocal = await hasLocalGroupedSchedule();
+  if (hasLocal) {
+    await loadGroupedScheduleFromLocal();
+    print("✅ Loaded local grouped schedule");
+  } else {
+    print("🚨 Local schedule not found, calling API");
+    await getListScheduleToday(); // Gọi API và trong đó đã save vào local
+  }
+}
+
+  // function loadGroupedScheduleFromLocal
+  Future<void> loadGroupedScheduleFromLocal() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString('grouped_schedule_today');
+
     if (jsonString != null) {
-      final List<dynamic> decodedList = jsonDecode(jsonString);
-      final list = decodedList.map((e) => Datum.fromJson(e)).toList();
-      todaySchedules.assignAll(list); //
-      final ids = list.map((e) => e.id).toList();
-      initStartingStatus(ids);
+      final Map<String, dynamic> decodedMap = jsonDecode(jsonString);
+
+      // Chuyển sang Map<String, List<Datum>>
+      final Map<String, List<Datum>> parsedMap = decodedMap.map((key, value) {
+        final list = (value as List).map((e) => Datum.fromJson(e)).toList();
+        return MapEntry(key, list);
+      });
+
+      // Gán vào schedulesByWasteType
+      schedulesByWasteType.addAll(parsedMap);
+      print("loadGroupedScheduleFromLocal: ${schedulesByWasteType.length}");
+      print('✅ jsonString from local: $jsonString');
+
     } else {
-      todaySchedules.clear(); // Nếu không có data, đảm bảo list rỗng
+      schedulesByWasteType.clear(); // nếu không có dữ liệu local
     }
   }
+  //
+  Future<void> clearGroupedScheduleFromLocal() async {
+  final prefs = await SharedPreferences.getInstance();
 
-  // Hàm gọi từ UI
-//final RxList<Datum> todaySchedules = <Datum>[].obs;
-  final RxMap<String, List<Datum>> schedulesByWasteType =
-      <String, List<Datum>>{}.obs;
+  // Xóa key 'grouped_schedule_today'
+  await prefs.remove('grouped_schedule_today');
 
+  // Đồng thời xóa dữ liệu trong biến tạm
+  schedulesByWasteType.clear();
+
+  print('Đã xóa dữ liệu grouped_schedule_today khỏi local và bộ nhớ.');
+}
+
+
+  //final RxList<Datum> todaySchedules = <Datum>[].obs;
+
+  // function getSchedulesByWasteType
+  List<Datum> getSchedulesByWasteType(String wasteType) {
+    final list = schedulesByWasteType[wasteType] ?? [];
+    // final ids = list.map((e) => e.id).toList();
+    // initStartingStatus(ids);
+    return list;
+  }
+
+//
   Future<void> getListScheduleToday() async {
     try {
-      final schedules = await _scheduleService.getListScheduleToday();
-      //todaySchedules.value = schedules;
+      print(">>> GỌI getListScheduleToday từ Controller");
+      final schedule = await _scheduleService.getListScheduleToday();
 
-      // Nhóm theo loại chất thải
-      // final Map<String, List<Datum>> grouped = {};
-      // for (var schedule in schedules) {
-      //   grouped.putIfAbsent(schedule.wasteType, () => []).add(schedule);
+      schedulesByWasteType.value = schedule;
+
+      // if (kDebugMode) {
+      //   print(
+      //       "Các loại chất thải hôm nay: ${schedulesByWasteType.keys.toList()}");
       // }
-      schedulesByWasteType.value = schedules;
-
-      if (kDebugMode) {
-        print(
-            "Các loại chất thải hôm nay: ${schedulesByWasteType.keys.toList()}");
-      }
     } catch (e) {
       if (e.toString().contains('401')) {
         Get.snackbar(
@@ -221,26 +357,28 @@ class ScheduleController extends GetxController {
   // start trip collection
   Future<void> startCollectionTrip(int scheduleId) async {
     try {
-      if (isAnyTripStarted && !(startingStatus[scheduleId]?.value ?? false)) {
-        Get.snackbar(
-          'Thông báo',
-          'Bạn cần hoàn thành chuyến thu gom trước đó trước khi bắt đầu chuyến mới.',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-        );
-        return;
-      }
+      // if (isAnyTripStarted && !(startingStatus[scheduleId]?.value ?? false)) {
+      //   Get.snackbar(
+      //     'Thông báo',
+      //     'Bạn cần hoàn thành chuyến thu gom trước đó trước khi bắt đầu chuyến mới.',
+      //     snackPosition: SnackPosition.BOTTOM,
+      //     backgroundColor: Colors.orange,
+      //     colorText: Colors.white,
+      //   );
+      //   return;
+      // }
 
       final success = await _scheduleService.startCollectionTrip(scheduleId);
 
       if (success) {
         // Đánh dấu chuyến này đang được thu gom
-        startingStatus[scheduleId]?.value = true;
-        startingStatuss[scheduleId] ??= Rx(CollectionStatus.idle);
+        // startingStatus[scheduleId]?.value = true;
+        // saveStartingStatusesToLocal();
+        collectionStatus[scheduleId] ??= Rx(CollectionStatus.idle);
 
         // Cập nhật trạng thái
-        startingStatuss[scheduleId]!.value = CollectionStatus.started;
+        collectionStatus[scheduleId]!.value = CollectionStatus.started;
+        await saveCollectionStatusesToLocal();
 
         Get.snackbar(
           'Thành công',
@@ -251,7 +389,7 @@ class ScheduleController extends GetxController {
         );
 
         if (kDebugMode) {
-          print("manh ${startingStatuss[scheduleId]?.value}");
+          print("manh ${collectionStatus[scheduleId]?.value}");
         }
       } else {
         Get.snackbar(
@@ -284,27 +422,17 @@ class ScheduleController extends GetxController {
     }
   }
 
-  // Danh sách hàng hóa được nhập từ người dùng
-//   RxList<Map<String, dynamic>> selectedGoods = <Map<String, dynamic>>[].obs;
-
-// // Danh sách ảnh được chọn từ gallery/camera
-//   RxList<File> selectedImages = <File>[].obs;
-
-// Loading indicator
-  RxBool isLoading = false.obs;
-
+  // function endCollectionTrip from service
   Future<void> endCollectionTrip(
       int scheduleId,
       List<Map<String, dynamic>> selectedGoods,
       List<File> selectedImages) async {
     if (selectedGoods.isEmpty || selectedImages.isEmpty) {
-      Get.snackbar("Thiếu thông tin", "Chưa ghi biên bản giao nhận");
+      //Get.snackbar("Thiếu thông tin", "Chưa ghi biên bản giao nhận");
       return;
     }
 
     try {
-      isLoading.value = true; // nếu bạn dùng loading
-
       final success = await _scheduleService.endCollectionTrip(
         id: scheduleId,
         goods: selectedGoods,
@@ -312,10 +440,9 @@ class ScheduleController extends GetxController {
       );
 
       if (success) {
-        startingStatuss[scheduleId]?.value = CollectionStatus.ended;
-
-        Get.snackbar("Thành công", "Bắt đầu thu gom thành công");
-        // Có thể cập nhật trạng thái schedule tại đây
+        collectionStatus[scheduleId]?.value = CollectionStatus.ended;
+        await saveCollectionStatusesToLocal();
+        // Get.snackbar("Thành công", "Bắt đầu thu gom thành công");
       } else {
         Get.snackbar("Thất bại", "Không thể bắt đầu thu gom");
       }
@@ -330,8 +457,6 @@ class ScheduleController extends GetxController {
             snackPosition: SnackPosition.TOP, colorText: Colors.red);
       }
       if (kDebugMode) print("❌ startCollection error: $e");
-    } finally {
-      isLoading.value = false;
     }
   }
 
