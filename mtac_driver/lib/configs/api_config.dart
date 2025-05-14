@@ -14,7 +14,7 @@ class ApiConfig {
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         if (kDebugMode) {
-          print("✅ Server is running with port 8000");
+          print("✅ Server is running with domain http://partner.moitruongachau.vn");
         }
         return true;
       } else {

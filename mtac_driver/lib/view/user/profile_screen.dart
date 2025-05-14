@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -20,7 +22,7 @@ class ProfileScreen extends StatelessWidget {
   final taxCodeController = TextEditingController();
   final addressController = TextEditingController();
 
-  final ProfileController _profileController = Get.put(ProfileController());
+  final  ProfileController _profileController = Get.put(ProfileController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,16 +115,21 @@ class ProfileScreen extends StatelessWidget {
                               Positioned(
                                 bottom: 0,
                                 right: 0,
-                                child: Container(
-                                  padding: const EdgeInsets.all(4),
-                                  decoration: BoxDecoration(
-                                    color: kPrimaryColor.withOpacity(0.8),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                    Icons.camera_alt,
-                                    size: 18,
-                                    color: Colors.white,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _profileController.pickImageFromGallery();
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(4),
+                                    decoration: BoxDecoration(
+                                      color: kPrimaryColor.withOpacity(0.8),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.camera_alt,
+                                      size: 18,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -215,9 +222,9 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         ElevatedButton(
                           onPressed: () {
+                            
                             _profileController.updateUser({
                               "name": nameController.text.trim(),
-                              "username": phoneController.text.trim(),
                               "email": emailController.text.trim(),
                               "masothue": null,
                               "phone": phoneController.text.trim(),

@@ -10,7 +10,7 @@ import 'package:sizer/sizer.dart';
 
 class AccountScreen extends StatelessWidget {
   AccountScreen({super.key});
-  final loginController = Get.put(LoginController());
+  final LoginController loginController = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
     return SafeArea(

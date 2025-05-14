@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/controller/schedule/handover_record_controller.dart';
 import 'package:mtac_driver/utils/text.dart';
 import 'package:mtac_driver/utils/theme_text.dart';
@@ -16,7 +17,7 @@ class BottomImageSourceSheet extends StatelessWidget {
     return Wrap(
       children: [
         ListTile(
-          leading: const Icon(Icons.image),
+          leading: const Icon(HugeIcons.strokeRoundedImage02),
           title: Text(txtLibrary,
               style: PrimaryFont.bodyTextMedium().copyWith(color: Colors.black)),
           onTap: () {
@@ -25,7 +26,7 @@ class BottomImageSourceSheet extends StatelessWidget {
           },
         ),
         ListTile(
-          leading: const Icon(Icons.camera_alt),
+          leading: const Icon(HugeIcons.strokeRoundedCamera02),
           title: Text(
             txtCamera,
             style: PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),

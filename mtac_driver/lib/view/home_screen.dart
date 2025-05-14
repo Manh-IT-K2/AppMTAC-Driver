@@ -222,7 +222,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                       .copyWith(color: Colors.grey, height: 1.5),
                   children: <TextSpan>[
                     TextSpan(
-                      text: driverController.username.toString(),
+                      text: driverController.username.value,
                       style: PrimaryFont.titleTextMedium()
                           .copyWith(color: Colors.black),
                     ),

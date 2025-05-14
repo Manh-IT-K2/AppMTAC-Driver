@@ -95,7 +95,6 @@ class LoginController extends GetxController {
 
     if (userString != null) {
       infoUser.value = userModelFromJson(userString);
-      print("object: ${infoUser.value?.user.profilePhotoUrl}");
     }
     return null;
   }
