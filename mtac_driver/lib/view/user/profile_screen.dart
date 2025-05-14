@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/controller/user/profile_controller.dart';
+import 'package:mtac_driver/model/user_model.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/theme_text.dart';
 import 'package:mtac_driver/widgets/user_widget/build_avatar_widget.dart';
@@ -213,7 +214,18 @@ class ProfileScreen extends StatelessWidget {
                           height: 10.w,
                         ),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _profileController.updateUser({
+                              "name": nameController.text.trim(),
+                              "username": phoneController.text.trim(),
+                              "email": emailController.text.trim(),
+                              "masothue": null,
+                              "phone": phoneController.text.trim(),
+                              "soCCCD": nummberIDController.text.trim(),
+                              "adress": addressController.text.trim(),
+                              "soGPLX": numberVehicleController.text.trim(),
+                            });
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: kPrimaryColor,
                             shape: RoundedRectangleBorder(
