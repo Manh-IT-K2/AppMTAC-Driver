@@ -1,14 +1,12 @@
-import 'dart:convert';
 import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:flutter/material.dart';
-import 'package:mtac_driver/model/schedule_model.dart';
-import 'package:mtac_driver/route/app_route.dart';
-import 'package:mtac_driver/service/schedule/schedule_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:mtac_driver/route/app_route.dart';
+import 'package:mtac_driver/model/schedule_model.dart';
+import 'package:mtac_driver/service/schedule/schedule_service.dart';
+import 'package:mtac_driver/shared/schedule/schedule_shared.dart';
 
 // status collection
 enum CollectionStatus { idle, started, ended }
@@ -21,44 +19,6 @@ class ScheduleController extends GetxController {
 
   // status collection
   Map<int, Rx<CollectionStatus>> collectionStatus = {};
-  String collectionStatusToString(CollectionStatus status) {
-    return status.toString().split('.').last;
-  }
-
-  //
-  CollectionStatus collectionStatusFromString(String value) {
-    return CollectionStatus.values.firstWhere(
-      (e) => e.toString().split('.').last == value,
-      orElse: () => CollectionStatus.idle,
-    );
-  }
-
-  // saveCollectionStatusesToLocal
-  Future<void> saveCollectionStatusesToLocal() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    // Chuyển sang Map<String, String> để dễ lưu
-    final Map<String, String> mapToSave = collectionStatus.map((key, value) =>
-        MapEntry(key.toString(), collectionStatusToString(value.value)));
-
-    await prefs.setString('collection_statuses', jsonEncode(mapToSave));
-  }
-
-  // loadCollectionStatusesFromLocal
-  Future<void> loadCollectionStatusesFromLocal() async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonString = prefs.getString('collection_statuses');
-
-    if (jsonString != null) {
-      final Map<String, dynamic> decoded = jsonDecode(jsonString);
-      decoded.forEach((key, value) {
-        final int scheduleId = int.parse(key);
-        final CollectionStatus status = collectionStatusFromString(value);
-
-        collectionStatus[scheduleId] = Rx(status);
-      });
-    }
-  }
 
   // initial tripStartTimes
   final Map<int, DateTime> tripStartTimes = {}; // key: scheduleId
@@ -88,9 +48,9 @@ class ScheduleController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getUsername();
+    //getUsername();
     checkAndLoadSchedule();
-    loadCollectionStatusesFromLocal();
+    getCollectionStatusesFromLocal(collectionStatus);
     daysInMonth.value = _generateDaysInMonth(currentDate.value);
     offset = calculateTodayScrollOffset(itemWidth, screenWidth);
     scrollController = ScrollController(initialScrollOffset: offset);
@@ -178,26 +138,20 @@ class ScheduleController extends GetxController {
     }
   }
 
-  // get username
-  Future<void> getUsername() async {
-    final prefs = await SharedPreferences.getInstance();
-    username.value = prefs.getString('username') ?? 'Unknown';
-    if (kDebugMode) {
-      print("Username loaded: ${username.value}");
-    }
-  }
-
-  // check data local exist
-  Future<bool> hasLocalGroupedSchedule() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.containsKey('grouped_schedule_today');
-  }
+  // // get username
+  // Future<void> getUsername() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   username.value = prefs.getString('username') ?? 'Unknown';
+  //   if (kDebugMode) {
+  //     print("Username loaded: ${username.value}");
+  //   }
+  // }
 
   // Function checkAndLoadSchedule
   Future<void> checkAndLoadSchedule() async {
     final hasLocal = await hasLocalGroupedSchedule();
     if (hasLocal) {
-      await loadGroupedScheduleFromLocal();
+      await getGroupedScheduleFromLocal(schedulesByWasteType);
       if (kDebugMode) {
         print("✅ Loaded local grouped schedule");
       }
@@ -206,36 +160,6 @@ class ScheduleController extends GetxController {
         print("🚨 Local schedule not found, calling API");
       }
       await getListScheduleToday();
-    }
-  }
-
-  // Function loadGroupedScheduleFromLocal
-  Future<void> loadGroupedScheduleFromLocal() async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonString = prefs.getString('grouped_schedule_today');
-
-    if (jsonString != null) {
-      final Map<String, dynamic> decodedMap = jsonDecode(jsonString);
-
-      // tranfer Map<String, List<Datum>>
-      final Map<String, List<Datum>> parsedMap = decodedMap.map((key, value) {
-        final list = (value as List).map((e) => Datum.fromJson(e)).toList();
-        return MapEntry(key, list);
-      });
-
-      schedulesByWasteType.addAll(parsedMap);
-    } else {
-      schedulesByWasteType.clear();
-    }
-  }
-
-  // remove data schedule today local
-  Future<void> clearGroupedScheduleFromLocal() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('grouped_schedule_today');
-    schedulesByWasteType.clear();
-    if (kDebugMode) {
-      print('Đã xóa dữ liệu grouped_schedule_today khỏi local và bộ nhớ.');
     }
   }
 
@@ -275,16 +199,6 @@ class ScheduleController extends GetxController {
     }
   }
 
-  //
-  Future<void> resetLocalCollectionStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('collection_statuses');
-    collectionStatus.clear();
-    if (kDebugMode) {
-      print('✅ Đã reset collectionStatuses trong local.');
-    }
-  }
-
   // Start trip collection
   Future<void> startCollectionTrip(int scheduleId) async {
     // Check if any flights are "started" and not "ended"
@@ -319,7 +233,7 @@ class ScheduleController extends GetxController {
       if (success) {
         collectionStatus[scheduleId] ??= Rx(CollectionStatus.idle);
         collectionStatus[scheduleId]!.value = CollectionStatus.started;
-        await saveCollectionStatusesToLocal();
+        await setCollectionStatusesToLocal(collectionStatus);
 
         Get.snackbar(
           'Thành công',
@@ -378,7 +292,7 @@ class ScheduleController extends GetxController {
 
       if (success) {
         collectionStatus[scheduleId]?.value = CollectionStatus.ended;
-        await saveCollectionStatusesToLocal();
+        await setCollectionStatusesToLocal(collectionStatus);
         // Get.snackbar("Thành công", "Bắt đầu thu gom thành công");
       } else {
         Get.snackbar("Thất bại", "Không thể bắt đầu thu gom");

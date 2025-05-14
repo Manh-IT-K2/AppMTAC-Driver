@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:mtac_driver/model/user_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/service/user/login_service.dart';
+import 'package:mtac_driver/shared/user/user_shared.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends GetxController {
   // inital variable
@@ -88,16 +88,16 @@ class LoginController extends GetxController {
     }
   }
 
-  // get user saved from local SharedPreferences
-  Future<UserModel?> getUserModel() async {
-    final prefs = await SharedPreferences.getInstance();
-    final userString = prefs.getString('user_model');
+  // // get user saved from local SharedPreferences
+  // Future<UserModel?> getUserModel() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final userString = prefs.getString('user_model');
 
-    if (userString != null) {
-      infoUser.value = userModelFromJson(userString);
-    }
-    return null;
-  }
+  //   if (userString != null) {
+  //     infoUser.value = userModelFromJson(userString);
+  //   }
+  //   return null;
+  // }
 
   // dispose
   @override

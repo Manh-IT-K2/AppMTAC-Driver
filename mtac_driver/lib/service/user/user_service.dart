@@ -3,17 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:mtac_driver/configs/api_config.dart';
 import 'package:mtac_driver/model/user_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mtac_driver/shared/token_shared.dart';
+import 'package:mtac_driver/shared/user/user_shared.dart';
 
 class UserService {
   // initial url
   final String baseUrl = ApiConfig.baseUrl;
 
-  // get token saved
-  Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('access_token');
-  }
 
   // Call api get user
   Future<UserModel> getUser() async {
@@ -61,11 +57,8 @@ class UserService {
         if (kDebugMode) {
           print(data);
         }
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.remove('username');
-        await prefs.remove('user_model');
-        await prefs.setString('username', data['data']['user']['name']);
-        await prefs.setString('user_model', userModelToJson(UserModel.fromJson(data['data'])));
+        setUsername(data['data']['user']['name']);
+        setUserModel(UserModel.fromJson(data['data']));
         return UserModel.fromJson(data['data']);
       } else {
         throw Exception('Failed to update user: ${response.statusCode}');

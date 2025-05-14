@@ -23,7 +23,6 @@ class AccountScreen extends StatelessWidget {
               Obx(
                 () {
                   final user = loginController.infoUser.value;
-
                   if (user == null) {
                     return Image.asset(
                       "assets/image/loadingDot.gif",
@@ -32,7 +31,6 @@ class AccountScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                     );
                   }
-
                   return Row(
                     children: [
                       Container(

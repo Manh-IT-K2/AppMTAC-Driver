@@ -7,17 +7,12 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:mtac_driver/data/map_screen/item_destination.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mtac_driver/shared/schedule/schedule_shared.dart';
+import 'package:mtac_driver/shared/token_shared.dart';
 
 class ScheduleService {
   // initial url
   final String baseUrl = ApiConfig.baseUrl;
-
-  // get token saved
-  Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('access_token');
-  }
 
   // offline
   Future<Map<String, List<Datum>>> getMockListScheduleToday() async {
@@ -34,20 +29,6 @@ class ScheduleService {
     }
 
     return grouped;
-  }
-
-  // Function saveGroupedScheduleToLocal
-  Future<void> saveGroupedScheduleToLocal(
-      Map<String, List<Datum>> grouped) async {
-    final prefs = await SharedPreferences.getInstance();
-
-    // trannfer Map<String, List<Datum>> => Map<String, dynamic>
-    final Map<String, dynamic> groupedJson = grouped.map(
-        (key, value) => MapEntry(key, value.map((e) => e.toJson()).toList()));
-
-    final jsonString = jsonEncode(groupedJson);
-
-    await prefs.setString('grouped_schedule_today', jsonString);
   }
 
   // Call api getListScheduleToday
@@ -90,7 +71,7 @@ class ScheduleService {
         }
 
         // save data in local
-        await saveGroupedScheduleToLocal(grouped);
+        await setGroupedScheduleToLocal(grouped);
 
         return grouped;
       } else {

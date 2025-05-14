@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,9 +7,8 @@ import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/model/user_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
-import 'package:mtac_driver/service/user/login_service.dart';
 import 'package:mtac_driver/service/user/user_service.dart';
-import 'package:mtac_driver/theme/color.dart';
+import 'package:mtac_driver/shared/user/user_shared.dart';
 
 class ProfileController extends GetxController {
   //
@@ -51,8 +49,8 @@ class ProfileController extends GetxController {
       Map<String, dynamic> updateUser) async {
     try {
      await UserService().updateUser(updateUser);
-     log.getUserModel();
-     sche.getUsername();
+     getUserModel();
+     getUsername();
       Get.snackbar('Thành công', 'Thông tin của bạn đã được cập nhật.',
           snackPosition: SnackPosition.TOP,
           colorText: Colors.white,

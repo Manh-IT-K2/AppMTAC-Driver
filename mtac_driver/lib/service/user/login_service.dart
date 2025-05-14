@@ -3,7 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:mtac_driver/configs/api_config.dart';
 import 'package:mtac_driver/model/user_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mtac_driver/shared/token_shared.dart';
+import 'package:mtac_driver/shared/user/user_shared.dart';
 
 class LoginService {
   // initial url
@@ -28,12 +29,9 @@ class LoginService {
 
       try {
         final userModel = UserModel.fromJson(data);
-
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('access_token', data['access_token']);
-        await prefs.setString('username', data['user']?['name']);
-        await prefs.setString(
-            'user_model', userModelToJson(userModel));
+        setToken(data['access_token']);
+        setUsername(data['user']?['name']);
+        setUserModel(userModel);
 
         return true;
       } catch (e) {
@@ -52,9 +50,7 @@ class LoginService {
 
   // function logout
   Future<bool> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('access_token');
-
+    final token = await getToken();
     final url = Uri.parse("$baseUrl/api/driver/logout");
     final response = await http.post(
       url,
@@ -65,7 +61,7 @@ class LoginService {
     );
 
     if (response.statusCode == 200) {
-      await prefs.remove('access_token');
+      await removeToken();
       return true;
     }
     return false;
@@ -73,13 +69,11 @@ class LoginService {
 
   // Call api from server with function checkLoginStatus
   Future<bool> checkLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final accessToken = prefs.getString('access_token');
+    final accessToken = await getToken();
 
-    if (accessToken != null) {
-      return true;
+    if (accessToken == "unknown") {
+      return false;
     }
-    return false;
+    return true;
   }
-
 }
