@@ -15,14 +15,22 @@ class LoginController extends GetxController {
   final isLoading = false.obs;
   final obscurePassword = true.obs;
 
-  //
+  // infor user
   final Rxn<UserModel> infoUser = Rxn<UserModel>();
 
-  //
+  // init
   @override
   void onInit() {
     super.onInit();
-    getUserModel();
+    loadUserModel();
+  }
+
+  // load user model
+  void loadUserModel() async {
+    final user = await getUserModel();
+    if (user != null) {
+      infoUser.value = user;
+    }
   }
 
   // password visibility
@@ -87,17 +95,6 @@ class LoginController extends GetxController {
       Get.offAllNamed('/login');
     }
   }
-
-  // // get user saved from local SharedPreferences
-  // Future<UserModel?> getUserModel() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final userString = prefs.getString('user_model');
-
-  //   if (userString != null) {
-  //     infoUser.value = userModelFromJson(userString);
-  //   }
-  //   return null;
-  // }
 
   // dispose
   @override

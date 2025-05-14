@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   // initial ScheduleController
-  final ScheduleController _driverController = Get.put(ScheduleController());
+  final ScheduleController _scheduleController = Get.put(ScheduleController());
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +27,12 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _HeaderDriverScreen(
-                driverController: _driverController,
+                scheduleController: _scheduleController,
               ),
               SizedBox(
                 height: 3.w,
               ),
-              _BodyDriverScreen(driverController: _driverController),
+              _BodyDriverScreen(scheduleController: _scheduleController),
               const _BottomDriverScreen(),
               SizedBox(
                 height: 5.w,
@@ -96,15 +96,15 @@ class _BottomDriverScreen extends StatelessWidget {
 class _BodyDriverScreen extends StatelessWidget {
   const _BodyDriverScreen({
     super.key,
-    required ScheduleController driverController,
-  }) : _driverController = driverController;
+    required ScheduleController scheduleController,
+  }) : _scheduleController = scheduleController;
 
-  final ScheduleController _driverController;
+  final ScheduleController _scheduleController;
 
   @override
   Widget build(BuildContext context) {
     //
-    _driverController.scrollToTodayWithContext(context);
+    _scheduleController.scrollToTodayWithContext(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -118,27 +118,27 @@ class _BodyDriverScreen extends StatelessWidget {
         SizedBox(
           height: 20.w,
           child: ListView.builder(
-            controller: _driverController.scrollController,
+            controller: _scheduleController.scrollController,
             scrollDirection: Axis.horizontal,
-            itemCount: _driverController.totalItemCount,
+            itemCount: _scheduleController.totalItemCount,
             itemExtent: 13.w, // rất quan trọng để tối ưu!
             itemBuilder: (context, index) {
               return Obx(() {
                 // Tính realIndex để lặp lại
-                int realIndex = index % _driverController.daysInMonth.length;
-                DateTime day = _driverController.daysInMonth[realIndex];
+                int realIndex = index % _scheduleController.daysInMonth.length;
+                DateTime day = _scheduleController.daysInMonth[realIndex];
 
                 // Kiểm tra có phải hôm nay không
                 bool isToday = day.day ==
-                        _driverController.currentDate.value.day &&
-                    day.month == _driverController.currentDate.value.month &&
-                    day.year == _driverController.currentDate.value.year;
+                        _scheduleController.currentDate.value.day &&
+                    day.month == _scheduleController.currentDate.value.month &&
+                    day.year == _scheduleController.currentDate.value.year;
 
                 // Danh sách ngày highlight (tùy bạn)
                 List<int> highlightedDays = [
                   6,
                   10,
-                  _driverController.currentDate.value.day,
+                  _scheduleController.currentDate.value.day,
                   22,
                   26,
                   29
@@ -147,7 +147,7 @@ class _BodyDriverScreen extends StatelessWidget {
 
                 return _ItemDayOfWeek(
                   day: day.day.toString(),
-                  weekdays: _driverController.getWeekdayShortName(day),
+                  weekdays: _scheduleController.getWeekdayShortName(day),
                   statusToday: isToday,
                   statusScheduleHighlight: isHighlight,
                 );
@@ -177,13 +177,13 @@ class _BodyDriverScreen extends StatelessWidget {
                             return Padding(
                               padding: EdgeInsets.only(bottom: 5.w),
                               child: _ItemTripToday(
-                                hour: _driverController.tripTimes[index],
+                                hour: _scheduleController.tripTimes[index],
                                 addressBusiness:
                                     'Bệnh viện Nhi Đồng 1 Bệnh viện Nhi Đồng 1 Bệnh viện Nhi Đồng 1 Bệnh viện Nhi Đồng 1',
                               ),
                             );
                           },
-                          childCount: _driverController.tripTimes.length,
+                          childCount: _scheduleController.tripTimes.length,
                         ),
                       )
                     ],
@@ -199,9 +199,9 @@ class _BodyDriverScreen extends StatelessWidget {
 class _HeaderDriverScreen extends StatelessWidget {
   const _HeaderDriverScreen({
     super.key,
-    required this.driverController,
+    required this.scheduleController,
   });
-  final ScheduleController driverController;
+  final ScheduleController scheduleController;
   @override
   Widget build(BuildContext context) {
   
@@ -222,12 +222,12 @@ class _HeaderDriverScreen extends StatelessWidget {
                       .copyWith(color: Colors.grey, height: 1.5),
                   children: <TextSpan>[
                     TextSpan(
-                      text: driverController.username.value,
+                      text: scheduleController.username.value,
                       style: PrimaryFont.titleTextMedium()
                           .copyWith(color: Colors.black),
                     ),
                   ],
-                ),
+                ),  
               ),
             ),
             Container(

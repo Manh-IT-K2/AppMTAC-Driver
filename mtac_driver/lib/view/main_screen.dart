@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:hugeicons/hugeicons.dart';
-import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/view/account_screen.dart';
 import 'package:mtac_driver/view/home_screen.dart';
 import 'package:mtac_driver/view/mailbox_screen.dart';
 import 'package:mtac_driver/view/payment_screen.dart';
-import 'package:mtac_driver/view/schedule_screen.dart';
 import 'package:mtac_driver/widgets/bottom_nav_bar.dart';
 
 class MainScreen extends StatefulWidget {

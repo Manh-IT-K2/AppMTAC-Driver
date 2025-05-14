@@ -8,9 +8,9 @@ Future<void> setUsername(String username) async {
 }
 
 // get username
-Future<void> getUsername() async {
+Future<String?> getUsername() async {
   final prefs = await SharedPreferences.getInstance();
-  prefs.getString('username');
+  return prefs.getString('username') ?? "Unknown";
 }
 
 // remove username
@@ -22,14 +22,12 @@ Future<void> removeUsername() async {
 // set user model
 Future<void> setUserModel(UserModel userModel) async {
   final prefs = await SharedPreferences.getInstance();
-  await prefs.remove('username');
   await prefs.setString('user_model', userModelToJson(userModel));
 }
 
 // get user model
 Future<UserModel?> getUserModel() async {
   final prefs = await SharedPreferences.getInstance();
-  await prefs.remove('user_model');
   final userJson = prefs.getString('user_model');
   if (userJson != null) {
     return userModelFromJson(userJson);

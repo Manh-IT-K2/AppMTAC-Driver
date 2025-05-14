@@ -57,8 +57,10 @@ class UserService {
         if (kDebugMode) {
           print(data);
         }
-        setUsername(data['data']['user']['name']);
-        setUserModel(UserModel.fromJson(data['data']));
+        await removeUsername();
+        await removeUserModel();
+        await setUsername(data['data']['user']['name']);
+        await setUserModel(UserModel.fromJson(data['data']));
         return UserModel.fromJson(data['data']);
       } else {
         throw Exception('Failed to update user: ${response.statusCode}');

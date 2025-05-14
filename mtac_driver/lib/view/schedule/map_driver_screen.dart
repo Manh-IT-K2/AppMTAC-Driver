@@ -675,56 +675,55 @@ class MapDriverScreen extends StatelessWidget {
   //
   Widget _buildRouteDots() {
     final destinations = controller.destinationsData;
-
     if (destinations.isEmpty) return const SizedBox();
-
     return controller.optimizedRoute.isNotEmpty
-        ? Column(
-            children: List.generate(destinations.length, (index) {
-              final current = destinations[index];
-              final currentStatus =
-                  scheduleController.collectionStatus[current.id]?.value ??
-                      CollectionStatus.idle;
-
-              // Dot color
-              final dotColor = currentStatus == CollectionStatus.ended
-                  ? kPrimaryColor
-                  : Colors.grey.withOpacity(0.5);
-
-              final dot = Container(
-                width: 3.w,
-                height: 3.w,
-                decoration: BoxDecoration(
-                  color: dotColor,
-                  borderRadius: BorderRadius.circular(3.w),
-                ),
-              );
-
-              // Nếu là điểm cuối, không có đường nối sau, chỉ trả về dot
-              if (index == destinations.length - 1) return dot;
-
-              // Line color: chỉ đổi sang màu chính nếu cả 2 điểm đều đã ended
-              final next = destinations[index + 1];
-              final nextStatus =
-                  scheduleController.collectionStatus[next.id]?.value ??
-                      CollectionStatus.idle;
-
-              final lineColor = (currentStatus == CollectionStatus.ended &&
-                      nextStatus == CollectionStatus.ended)
-                  ? kPrimaryColor
-                  : Colors.grey;
-
-              final line = Container(
-                width: 0.5.w,
-                height: 40.w,
-                color: lineColor,
-              );
-
-              return Column(
-                children: [dot, line],
-              );
-            }),
-          )
+        ? Obx(
+          () => Column(
+              children: List.generate(destinations.length, (index) {
+                final current = destinations[index];
+                final currentStatus =
+                    scheduleController.collectionStatus[current.id]?.value ??
+                        CollectionStatus.idle;
+                // Dot color
+                final dotColor = currentStatus == CollectionStatus.ended
+                    ? kPrimaryColor
+                    : Colors.grey.withOpacity(0.5);
+          
+                final dot = Container(
+                  width: 3.w,
+                  height: 3.w,
+                  decoration: BoxDecoration(
+                    color: dotColor,
+                    borderRadius: BorderRadius.circular(3.w),
+                  ),
+                );
+          
+                // Nếu là điểm cuối, không có đường nối sau, chỉ trả về dot
+                if (index == destinations.length - 1) return dot;
+          
+                // Line color: chỉ đổi sang màu chính nếu cả 2 điểm đều đã ended
+                final next = destinations[index + 1];
+                final nextStatus =
+                    scheduleController.collectionStatus[next.id]?.value ??
+                        CollectionStatus.idle;
+          
+                final lineColor = (currentStatus == CollectionStatus.ended &&
+                        nextStatus == CollectionStatus.ended)
+                    ? kPrimaryColor
+                    : Colors.grey;
+          
+                final line = Container(
+                  width: 0.5.w,
+                  height: 40.w,
+                  color: lineColor,
+                );
+          
+                return Column(
+                  children: [dot, line],
+                );
+              }),
+            ),
+        )
         : const SizedBox();
   }
 }

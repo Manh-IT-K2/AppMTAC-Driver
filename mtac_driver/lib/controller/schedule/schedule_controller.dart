@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:get/get.dart';
+import 'package:mtac_driver/shared/user/user_shared.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -48,12 +49,28 @@ class ScheduleController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    //getUsername();
+    loadUsername();
     checkAndLoadSchedule();
     getCollectionStatusesFromLocal(collectionStatus);
     daysInMonth.value = _generateDaysInMonth(currentDate.value);
     offset = calculateTodayScrollOffset(itemWidth, screenWidth);
     scrollController = ScrollController(initialScrollOffset: offset);
+  }
+
+  // load user name
+  void loadUsername() async {
+    final result = await getUsername();
+    username.value = result ?? "Unknown";
+  }
+
+  //
+  void removeSchedule () async {
+    removeGroupedScheduleFromLocal(schedulesByWasteType);
+  }
+
+   //
+  void removeCollectionStatus () async {
+    removeLocalCollectionStatus(collectionStatus);
   }
 
   // calculateTodayScrollOffset
@@ -137,15 +154,6 @@ class ScheduleController extends GetxController {
       selectedTitle.value = items[index];
     }
   }
-
-  // // get username
-  // Future<void> getUsername() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   username.value = prefs.getString('username') ?? 'Unknown';
-  //   if (kDebugMode) {
-  //     print("Username loaded: ${username.value}");
-  //   }
-  // }
 
   // Function checkAndLoadSchedule
   Future<void> checkAndLoadSchedule() async {

@@ -44,7 +44,10 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
               style: PrimaryFont.headerTextBold().copyWith(color: Colors.black),
             ),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                controller.removeCollectionStatus();
+                //controller.removeSchedule();
+              },
               child: Container(
                 width: 10.w,
                 height: 10.w,

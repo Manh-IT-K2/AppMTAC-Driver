@@ -14,8 +14,8 @@ class ProfileController extends GetxController {
   //
   final Rxn<UserModel> infoUser = Rxn<UserModel>();
   final Rx<File?> imagePath = Rx<File?>(null);
-  final log = Get.find<LoginController>();
-  final sche = Get.find<ScheduleController>();
+  final loginController = Get.find<LoginController>();
+  final scheduleController = Get.find<ScheduleController>();
   // init
   @override
   void onInit() {
@@ -45,16 +45,15 @@ class ProfileController extends GetxController {
   }
 
   // Call function update user from service
-  Future<void> updateUser(
-      Map<String, dynamic> updateUser) async {
+  Future<void> updateUser(Map<String, dynamic> updateUser) async {
     try {
-     await UserService().updateUser(updateUser);
-     getUserModel();
-     getUsername();
+      await UserService().updateUser(updateUser);
+      loginController.loadUserModel();
+      scheduleController.loadUsername();
       Get.snackbar('Thành công', 'Thông tin của bạn đã được cập nhật.',
           snackPosition: SnackPosition.TOP,
           colorText: Colors.white,
-          backgroundColor: Colors.green);
+          backgroundColor: Colors.green.withOpacity(0.6));
     } catch (e) {
       if (e.toString().contains('401')) {
         Get.snackbar(
