@@ -121,12 +121,40 @@ class MapDriverScreen extends StatelessWidget {
                           LatLng point = entry.value;
                           bool isLast =
                               idx == controller.optimizedRoute.length - 1;
+
+                          // Tìm id từ danh sách Datum
+                          final matchedDatum =
+                              controller.destinationsData.firstWhere(
+                            (datum) =>
+                                datum.latitude?.toStringAsFixed(6) ==
+                                    point.latitude.toStringAsFixed(6) &&
+                                datum.longitude?.toStringAsFixed(6) ==
+                                    point.longitude.toStringAsFixed(6),
+                            orElse: () => Datum(
+                              id: -1,
+                              code: '',
+                              companyName: '',
+                              locationDetails: '',
+                              wasteType: '',
+                              collectionDate: DateTime.now(),
+                              area: '',
+                              truck: Truck(name: '', plateNumber: ''),
+                              status: '',
+                              goods: [],
+                              latitude: 0.0,
+                              longitude: 0.0,
+                            ),
+                          );
                           return Marker(
                             point: point,
                             width: 60,
                             height: 80,
-                            child:
-                                _buildCustomMarker(idx, point, isLast: isLast),
+                            child: _buildCustomMarker(
+                              idx,
+                              point,
+                              destinationId: matchedDatum.id,
+                              isLast: isLast,
+                            ),
                           );
                         }),
                       ],
@@ -294,13 +322,25 @@ class MapDriverScreen extends StatelessWidget {
   }
 
   // initial widget
-  Widget _buildCustomMarker(int index, LatLng point, {bool isLast = false}) {
+  Widget _buildCustomMarker(
+    int index,
+    LatLng point, {
+    required int destinationId,
+    bool isLast = false,
+  }) {
+    // Lấy status hiện tại (default: idle)
+    final status = scheduleController.collectionStatus[destinationId]?.value ??
+        CollectionStatus.idle;
+
+    // Đổi màu marker nếu status là ended
+    final markerColor =
+        status == CollectionStatus.ended ? Colors.green : Colors.red;
+
     return GestureDetector(
-      onTap: () => _showWeightInputDialog(Get.context!, point),
+      onTap: (){}, //=> _showWeightInputDialog(Get.context!, point),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Hiển thị khối lượng nếu có
           if (controller.weightMarkers[point] != null)
             Container(
               padding: const EdgeInsets.all(4),
@@ -325,13 +365,12 @@ class MapDriverScreen extends StatelessWidget {
                 ),
               ),
             ),
-          // Marker
           Stack(
             alignment: Alignment.center,
             children: [
-              const Icon(
+              Icon(
                 Icons.location_pin,
-                color: Colors.red,
+                color: markerColor,
                 size: 40,
               ),
               Positioned(
@@ -348,14 +387,14 @@ class MapDriverScreen extends StatelessWidget {
                       ? Icon(
                           HugeIcons.strokeRoundedPackage03,
                           size: 5.w,
-                          color: Colors.red,
+                          color: markerColor,
                         )
                       : Text(
                           '$index',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
-                            color: Colors.red,
+                            color: markerColor,
                           ),
                         ),
                 ),
@@ -406,6 +445,7 @@ class MapDriverScreen extends StatelessWidget {
                     //note: destination.note,
                     isLastItem: index == controller.destinationsData.length - 1,
                     onTap: () async {
+                      handoverController.removeAllImage();
                       if (status == CollectionStatus.ended) {
                         print("object111 : $status");
                         // final canEnd = await controller.canEndTrip(
@@ -677,9 +717,10 @@ class MapDriverScreen extends StatelessWidget {
     final destinations = controller.destinationsData;
     if (destinations.isEmpty) return const SizedBox();
     return controller.optimizedRoute.isNotEmpty
-        ? Obx(
-          () => Column(
-              children: List.generate(destinations.length, (index) {
+        ? Column(
+            children: List.generate(
+              destinations.length,
+              (index) {
                 final current = destinations[index];
                 final currentStatus =
                     scheduleController.collectionStatus[current.id]?.value ??
@@ -688,7 +729,7 @@ class MapDriverScreen extends StatelessWidget {
                 final dotColor = currentStatus == CollectionStatus.ended
                     ? kPrimaryColor
                     : Colors.grey.withOpacity(0.5);
-          
+
                 final dot = Container(
                   width: 3.w,
                   height: 3.w,
@@ -697,33 +738,33 @@ class MapDriverScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(3.w),
                   ),
                 );
-          
+
                 // Nếu là điểm cuối, không có đường nối sau, chỉ trả về dot
                 if (index == destinations.length - 1) return dot;
-          
+
                 // Line color: chỉ đổi sang màu chính nếu cả 2 điểm đều đã ended
                 final next = destinations[index + 1];
                 final nextStatus =
                     scheduleController.collectionStatus[next.id]?.value ??
                         CollectionStatus.idle;
-          
+
                 final lineColor = (currentStatus == CollectionStatus.ended &&
                         nextStatus == CollectionStatus.ended)
                     ? kPrimaryColor
                     : Colors.grey;
-          
+
                 final line = Container(
                   width: 0.5.w,
                   height: 40.w,
                   color: lineColor,
                 );
-          
+
                 return Column(
                   children: [dot, line],
                 );
-              }),
+              },
             ),
-        )
+          )
         : const SizedBox();
   }
 }

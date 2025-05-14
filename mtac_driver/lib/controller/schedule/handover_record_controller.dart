@@ -90,6 +90,11 @@ class HandoverRecordController extends GetxController {
     checkDistance.value = selectedImages.isNotEmpty;
   }
 
+    // Renove all image from index
+  void removeAllImage() {
+    selectedImages.clear();
+  }
+
   /* CODE INPUT */
 
   // Create variable input
