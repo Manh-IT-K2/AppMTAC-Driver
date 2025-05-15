@@ -337,7 +337,7 @@ class MapDriverScreen extends StatelessWidget {
         status == CollectionStatus.ended ? Colors.green : Colors.red;
 
     return GestureDetector(
-      onTap: (){}, //=> _showWeightInputDialog(Get.context!, point),
+      onTap: () {}, //=> _showWeightInputDialog(Get.context!, point),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -445,7 +445,7 @@ class MapDriverScreen extends StatelessWidget {
                     //note: destination.note,
                     isLastItem: index == controller.destinationsData.length - 1,
                     onTap: () async {
-                      handoverController.removeAllImage();
+                     // handoverController.removeAllImage();
                       if (status == CollectionStatus.ended) {
                         print("object111 : $status");
                         // final canEnd = await controller.canEndTrip(
@@ -476,12 +476,16 @@ class MapDriverScreen extends StatelessWidget {
                         print("end : $status");
                         if (handoverController.numbers.isNotEmpty) {
                           handoverController.updateSelectedGoods(infoWasteData);
+                           print("Yes1 : $status");
                           if (handoverController.selectedGoods.isNotEmpty &&
                               handoverController.selectedImages.isNotEmpty) {
+                                 print("Yes : $status");
                             await scheduleController.endCollectionTrip(
                                 destination.id,
                                 handoverController.selectedGoods,
                                 handoverController.selectedImages);
+                            //
+                            handoverController.removeAllImage();
                           }
                         } else {
                           NotifySuccessDialog().showNotifyPopup(
@@ -715,7 +719,6 @@ class MapDriverScreen extends StatelessWidget {
   //
   Widget _buildRouteDots() {
     final destinations = controller.destinationsData;
-    if (destinations.isEmpty) return const SizedBox();
     return controller.optimizedRoute.isNotEmpty
         ? Column(
             children: List.generate(
@@ -725,6 +728,7 @@ class MapDriverScreen extends StatelessWidget {
                 final currentStatus =
                     scheduleController.collectionStatus[current.id]?.value ??
                         CollectionStatus.idle;
+
                 // Dot color
                 final dotColor = currentStatus == CollectionStatus.ended
                     ? kPrimaryColor
@@ -739,19 +743,19 @@ class MapDriverScreen extends StatelessWidget {
                   ),
                 );
 
-                // Nếu là điểm cuối, không có đường nối sau, chỉ trả về dot
+                // Nếu là điểm cuối, không có đường nối sau
                 if (index == destinations.length - 1) return dot;
 
-                // Line color: chỉ đổi sang màu chính nếu cả 2 điểm đều đã ended
                 final next = destinations[index + 1];
                 final nextStatus =
                     scheduleController.collectionStatus[next.id]?.value ??
                         CollectionStatus.idle;
 
+                // Line chỉ có màu kPrimaryColor khi current và next đều ended
                 final lineColor = (currentStatus == CollectionStatus.ended &&
                         nextStatus == CollectionStatus.ended)
                     ? kPrimaryColor
-                    : Colors.grey;
+                    : Colors.grey.withOpacity(0.5);
 
                 final line = Container(
                   width: 0.5.w,

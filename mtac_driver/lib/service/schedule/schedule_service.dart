@@ -52,7 +52,7 @@ class ScheduleService {
         final scheduleModel = ScheduleModel.fromJson(data);
 
         // get today
-        // final String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
+        //final String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
         const String today = "2025-05-16";
 
         // filter collection_date is today

@@ -33,9 +33,9 @@ class HomeScreen extends StatelessWidget {
                 height: 3.w,
               ),
               _BodyDriverScreen(scheduleController: _scheduleController),
-              const _BottomDriverScreen(),
+              //const _BottomDriverScreen(),
               SizedBox(
-                height: 5.w,
+                height: 3.w,
               ),
             ],
           ),
@@ -168,26 +168,34 @@ class _BodyDriverScreen extends StatelessWidget {
               ),
               SizedBox(height: 5.w),
               SizedBox(
-                  height: 42.w,
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverList(
+                height: 42.w,
+                child: CustomScrollView(
+                  slivers: [
+                    Obx(
+                      () => SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
+                            final datum = _scheduleController.todaySchedules[index];
                             return Padding(
                               padding: EdgeInsets.only(bottom: 5.w),
-                              child: _ItemTripToday(
-                                hour: _scheduleController.tripTimes[index],
-                                addressBusiness:
-                                    'Bệnh viện Nhi Đồng 1 Bệnh viện Nhi Đồng 1 Bệnh viện Nhi Đồng 1 Bệnh viện Nhi Đồng 1',
+                              child: GestureDetector(
+                                onTap: () {
+                                  Get.toNamed(AppRoutes.map, arguments: datum.wasteType);
+                                },
+                                child: _ItemTripToday(
+                                  hour: "8:00",
+                                  addressBusiness: datum.locationDetails,
+                                ),
                               ),
                             );
                           },
-                          childCount: _scheduleController.tripTimes.length,
+                          childCount: _scheduleController.todaySchedules.length,
                         ),
-                      )
-                    ],
-                  )),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -204,7 +212,6 @@ class _HeaderDriverScreen extends StatelessWidget {
   final ScheduleController scheduleController;
   @override
   Widget build(BuildContext context) {
-  
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -227,7 +234,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                           .copyWith(color: Colors.black),
                     ),
                   ],
-                ),  
+                ),
               ),
             ),
             Container(

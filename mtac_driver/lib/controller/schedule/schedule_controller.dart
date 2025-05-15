@@ -50,11 +50,21 @@ class ScheduleController extends GetxController {
   void onInit() {
     super.onInit();
     loadUsername();
+    loadScheduleTodays();
     checkAndLoadSchedule();
     getCollectionStatusesFromLocal(collectionStatus);
     daysInMonth.value = _generateDaysInMonth(currentDate.value);
     offset = calculateTodayScrollOffset(itemWidth, screenWidth);
     scrollController = ScrollController(initialScrollOffset: offset);
+  }
+
+  // load collection schedule today
+  Future<void> loadScheduleTodays() async {
+    await getGroupedScheduleFromLocal(schedulesByWasteType);
+    todaySchedules.assignAll(schedulesByWasteType.values.expand((e) => e).toList());
+    if (kDebugMode) {
+      print('✅ Loaded todaySchedules: ${todaySchedules.length}');
+    }
   }
 
   // load user name
@@ -64,12 +74,12 @@ class ScheduleController extends GetxController {
   }
 
   //
-  void removeSchedule () async {
+  void removeSchedule() async {
     removeGroupedScheduleFromLocal(schedulesByWasteType);
   }
 
-   //
-  void removeCollectionStatus () async {
+  //
+  void removeCollectionStatus() async {
     removeLocalCollectionStatus(collectionStatus);
   }
 
@@ -246,7 +256,7 @@ class ScheduleController extends GetxController {
         Get.snackbar(
           'Thành công',
           'Chuyến thu gom đã bắt đầu',
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
@@ -254,7 +264,7 @@ class ScheduleController extends GetxController {
         Get.snackbar(
           'Thất bại',
           'Không thể bắt đầu chuyến thu gom',
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -269,7 +279,7 @@ class ScheduleController extends GetxController {
         Get.snackbar(
           'Lỗi',
           'Đã xảy ra lỗi khi bắt đầu chuyến thu gom. Vui lòng thử lại.',
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -287,7 +297,7 @@ class ScheduleController extends GetxController {
       List<Map<String, dynamic>> selectedGoods,
       List<File> selectedImages) async {
     if (selectedGoods.isEmpty || selectedImages.isEmpty) {
-      //Get.snackbar("Thiếu thông tin", "Chưa ghi biên bản giao nhận");
+      Get.snackbar("Thiếu thông tin", "Chưa ghi biên bản giao nhận");
       return;
     }
 

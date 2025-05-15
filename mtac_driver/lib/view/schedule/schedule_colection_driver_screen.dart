@@ -285,7 +285,7 @@ class _ItemTripWork extends StatelessWidget {
               height: double.infinity,
               width: 8.h,
               decoration: BoxDecoration(
-                color: status.contains("Chưa thu gom")
+                color: status.contains("Đã sắp")
                     ? kPrimaryColor
                     : status.contains("Đang thu gom")
                         ? Colors.green
