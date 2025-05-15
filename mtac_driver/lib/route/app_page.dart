@@ -6,6 +6,7 @@ import 'package:mtac_driver/view/no_internet_screen.dart';
 import 'package:mtac_driver/view/schedule/handover_record_driver_screen.dart';
 import 'package:mtac_driver/view/schedule/map_driver_screen.dart';
 import 'package:mtac_driver/view/schedule/schedule_colection_driver_screen.dart';
+import 'package:mtac_driver/view/schedule/schedule_history_screen.dart';
 import 'package:mtac_driver/view/splash_screen.dart';
 import 'package:mtac_driver/view/user/login_screen.dart';
 import 'package:mtac_driver/view/user/profile_screen.dart';
@@ -49,6 +50,11 @@ class AppPages {
     GetPage(
       name: AppRoutes.profile,
       page: () => ProfileScreen(),
+      middlewares: [NetworkCheckMiddlewareController()],
+    ),
+     GetPage(
+      name: AppRoutes.scheduleHistory,
+      page: () => ScheduleHistoryScreen(),
       middlewares: [NetworkCheckMiddlewareController()],
     ),
   ];

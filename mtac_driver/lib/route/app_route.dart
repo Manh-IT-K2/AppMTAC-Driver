@@ -8,4 +8,5 @@ class AppRoutes {
   static const handoverRecord = "/handoverRecord";
   static const driver = "/driver";
   static const profile = "/profile";
+  static const scheduleHistory = "/scheduleHistory";
 }

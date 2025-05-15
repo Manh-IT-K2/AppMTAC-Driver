@@ -175,15 +175,17 @@ class MapDriverScreen extends StatelessWidget {
                 width: 10.w,
                 height: 10.w,
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          spreadRadius: 4,
-                          blurRadius: 4,
-                          offset: const Offset(1, 1))
-                    ]),
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 4,
+                      blurRadius: 4,
+                      offset: const Offset(1, 1),
+                    ),
+                  ],
+                ),
                 child: Icon(
                   HugeIcons.strokeRoundedArrowShrink,
                   size: 5.w,
@@ -445,7 +447,7 @@ class MapDriverScreen extends StatelessWidget {
                     //note: destination.note,
                     isLastItem: index == controller.destinationsData.length - 1,
                     onTap: () async {
-                     // handoverController.removeAllImage();
+                      // handoverController.removeAllImage();
                       if (status == CollectionStatus.ended) {
                         print("object111 : $status");
                         // final canEnd = await controller.canEndTrip(
@@ -476,10 +478,10 @@ class MapDriverScreen extends StatelessWidget {
                         print("end : $status");
                         if (handoverController.numbers.isNotEmpty) {
                           handoverController.updateSelectedGoods(infoWasteData);
-                           print("Yes1 : $status");
+                          print("Yes1 : $status");
                           if (handoverController.selectedGoods.isNotEmpty &&
                               handoverController.selectedImages.isNotEmpty) {
-                                 print("Yes : $status");
+                            print("Yes : $status");
                             await scheduleController.endCollectionTrip(
                                 destination.id,
                                 handoverController.selectedGoods,

@@ -325,11 +325,14 @@ class _HeaderDriverScreen extends StatelessWidget {
             const SizedBox(
               width: 16,
             ),
-            _UtilDriver(
-              color: Colors.orange.withOpacity(0.2),
-              icon: HugeIcons.strokeRoundedSmartPhone01,
-              title: txtTitleHistoryD,
-              subTitle: txtSubTitleHistoryD,
+            GestureDetector(
+              onTap: () => Get.toNamed(AppRoutes.scheduleHistory),
+              child: _UtilDriver(
+                color: Colors.orange.withOpacity(0.2),
+                icon: HugeIcons.strokeRoundedSmartPhone01,
+                title: txtTitleHistoryD,
+                subTitle: txtSubTitleHistoryD,
+              ),
             ),
           ],
         ),
