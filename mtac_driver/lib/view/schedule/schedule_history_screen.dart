@@ -57,7 +57,7 @@ class ScheduleHistoryScreen extends StatelessWidget {
                         wastype: item.wasteType,
                         collectionDate: DateFormat('yyyy-MM-dd')
                             .format(item.collectionDate),
-                        plateNumber: item.truck.plateNumber,
+                        code: item.code,
                       );
                     },
                     childCount: list.length,
@@ -79,10 +79,10 @@ class _ItemScheduleHistory extends StatelessWidget {
     required this.companyName,
     required this.wastype,
     required this.collectionDate,
-    required this.plateNumber,
+    required this.code,
   });
   Function()? onTap;
-  final String companyName, wastype, collectionDate, plateNumber;
+  final String companyName, wastype, collectionDate, code;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -104,16 +104,19 @@ class _ItemScheduleHistory extends StatelessWidget {
       child: Row(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10),
+            padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                Image.network(
-                  'http://partner.moitruongachau.vn/asset/img/truck-detail.png',
+                Image.asset(
+                  'assets/image/icon_package.png',
                   width: 100,
                   height: 80,
                 ),
+                SizedBox(
+                  height: 3.w,
+                ),
                 Text(
-                  plateNumber,
+                  code,
                   style:
                       PrimaryFont.bodyTextBold().copyWith(color: kPrimaryColor),
                 ),
@@ -131,13 +134,18 @@ class _ItemScheduleHistory extends StatelessWidget {
                     companyName,
                     style:
                         PrimaryFont.bold(3.5.w).copyWith(color: Colors.black),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
+                  //  Text(
+                  //   area,
+                  //   style:
+                  //       PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
+                  // ),
                   Text(
                     wastype,
                     style:
-                        PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
+                        PrimaryFont.bodyTextBold().copyWith(color: Colors.red),
                   ),
                   Text(
                     collectionDate,
