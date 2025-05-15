@@ -54,7 +54,6 @@ class ScheduleController extends GetxController {
     loadScheduleTodays();
     checkAndLoadSchedule();
     getCollectionStatusesFromLocal(collectionStatus);
-    getListScheduleHistory();
     daysInMonth.value = _generateDaysInMonth(currentDate.value);
     offset = calculateTodayScrollOffset(itemWidth, screenWidth);
     scrollController = ScrollController(initialScrollOffset: offset);
@@ -224,7 +223,7 @@ class ScheduleController extends GetxController {
   Future<void> getListScheduleHistory() async {
     try {
       final schedule = await _scheduleService.getListScheduleHistory();
-      historySchedules.value = schedule;
+      historySchedules.assignAll(schedule);
     } catch (e) {
       if (e.toString().contains('401')) {
         Get.snackbar(
@@ -244,11 +243,11 @@ class ScheduleController extends GetxController {
   // Start trip collection
   Future<void> startCollectionTrip(int scheduleId) async {
     // Check if any flights are "started" and not "ended"
-    bool hasUnfinishedTrip = collectionStatus.entries.any(
-      (entry) =>
-          entry.key != scheduleId &&
-          entry.value.value == CollectionStatus.started,
-    );
+    // bool hasUnfinishedTrip = collectionStatus.entries.any(
+    //   (entry) =>
+    //       entry.key != scheduleId &&
+    //       entry.value.value == CollectionStatus.started,
+    // );
     //resetLocalCollectionStatus();
     if (kDebugMode) {
       print('--- DEBUG: Danh sách trạng thái collection ---');
@@ -259,16 +258,16 @@ class ScheduleController extends GetxController {
       }
     });
 
-    if (hasUnfinishedTrip) {
-      Get.snackbar(
-        'Chưa hoàn thành',
-        'Bạn cần kết thúc chuyến thu gom trước đó trước khi bắt đầu chuyến mới.',
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
-      return;
-    }
+    // if (hasUnfinishedTrip) {
+    //   Get.snackbar(
+    //     'Chưa hoàn thành',
+    //     'Bạn cần kết thúc chuyến thu gom trước đó trước khi bắt đầu chuyến mới.',
+    //     snackPosition: SnackPosition.TOP,
+    //     backgroundColor: Colors.orange,
+    //     colorText: Colors.white,
+    //   );
+    //   return;
+    // }
 
     try {
       final success = await _scheduleService.startCollectionTrip(scheduleId);
@@ -277,13 +276,13 @@ class ScheduleController extends GetxController {
         collectionStatus[scheduleId]!.value = CollectionStatus.started;
         await setCollectionStatusesToLocal(collectionStatus);
 
-        Get.snackbar(
-          'Thành công',
-          'Chuyến thu gom đã bắt đầu',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
+        // Get.snackbar(
+        //   'Thành công',
+        //   'Chuyến thu gom đã bắt đầu',
+        //   snackPosition: SnackPosition.TOP,
+        //   backgroundColor: Colors.green,
+        //   colorText: Colors.white,
+        // );
       } else {
         Get.snackbar(
           'Thất bại',
@@ -337,7 +336,7 @@ class ScheduleController extends GetxController {
         await setCollectionStatusesToLocal(collectionStatus);
         // Get.snackbar("Thành công", "Bắt đầu thu gom thành công");
       } else {
-        Get.snackbar("Thất bại", "Không thể bắt đầu thu gom");
+        Get.snackbar("Thất bại", "Không thể kết thúc thu gom", snackPosition: SnackPosition.TOP, colorText: Colors.red);
       }
     } catch (e) {
       if (e.toString().contains('401')) {

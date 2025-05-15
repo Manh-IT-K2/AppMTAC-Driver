@@ -112,7 +112,6 @@ class MapDriverController extends GetxController {
 
   final nameWaste = Get.arguments;
 
-
   // function initial
   @override
   void onInit() {
@@ -122,6 +121,9 @@ class MapDriverController extends GetxController {
     //tripId = Get.arguments as int;
     destinationsData = _scheduleController.getSchedulesByWasteType(nameWaste);
     getOptimizedRoute();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      startTripForAllDestinations();
+    });
     formatTruckInfo();
   }
 
@@ -131,13 +133,39 @@ class MapDriverController extends GetxController {
   //       .where((destination) => destination.tripId == tripId)
   //       .toList();
   // }
+
+  Future<void> startTripForAllDestinations() async {
+    for (final destination in destinationsData) {
+      final status = _scheduleController.collectionStatus[destination.id] ??=
+          Rx(CollectionStatus.idle);
+
+      if (status.value == CollectionStatus.started ||
+          status.value == CollectionStatus.ended) {
+        continue;
+      }
+
+      await _scheduleController.startCollectionTrip(destination.id);
+    }
+    Get.snackbar(
+      'Thành công',
+      'Chuyến thu gom đã bắt đầu',
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
+    );
+  }
+
+  // add location bussiness in routeAddresses
   void fetchTodayRoutes() async {
     // await _scheduleController.getListScheduleToday();
-    routeAddresses.value = _scheduleController.getSchedulesByWasteType(nameWaste)
+    routeAddresses.value = _scheduleController
+        .getSchedulesByWasteType(nameWaste)
         .map((e) =>
             e.locationDetails) // hoặc e.area tùy bạn muốn lấy địa chỉ nào
         .toList();
-    print("add ${routeAddresses.length}");
+    if (kDebugMode) {
+      print("add ${routeAddresses.length}");
+    }
   }
 
   // move camera to currentLocation
@@ -224,7 +252,8 @@ class MapDriverController extends GetxController {
     //mainPoints.clear();
     List<LatLng> results = [];
     //final destinations = getDestinationsByTripId(tripId);
-    final routeAddress = _scheduleController.getSchedulesByWasteType(nameWaste)
+    final routeAddress = _scheduleController
+        .getSchedulesByWasteType(nameWaste)
         .map((e) => e.locationDetails)
         .toList();
 
@@ -920,5 +949,4 @@ class MapDriverController extends GetxController {
   }
 
   //
-  
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/theme_text.dart';
@@ -39,44 +40,39 @@ class ScheduleHistoryScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.all(16),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  _ItemScheduleHistory(
-                      companyName: '',
-                      wastype: '',
-                      collectionDate: '',
-                      plateNumber: ''),
-                  _ItemScheduleHistory(
-                      companyName: '',
-                      wastype: '',
-                      collectionDate: '',
-                      plateNumber: ''),
-                  _ItemScheduleHistory(
-                      companyName: '',
-                      wastype: '',
-                      collectionDate: '',
-                      plateNumber: ''),
-                  _ItemScheduleHistory(
-                      companyName: '',
-                      wastype: '',
-                      collectionDate: '',
-                      plateNumber: ''),
-                ],
+      body: Obx(
+        () {
+          final list = _scheduleController.historySchedules;
+          return CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.all(16),
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final item = list[index];
+                      return _ItemScheduleHistory(
+                        companyName: item.companyName,
+                        wastype: item.wasteType,
+                        collectionDate: DateFormat('yyyy-MM-dd')
+                            .format(item.collectionDate),
+                        plateNumber: item.truck.plateNumber,
+                      );
+                    },
+                    childCount: list.length,
+                  ),
+                ),
               ),
-            ),
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }
 }
 
+// ignore: must_be_immutable
 class _ItemScheduleHistory extends StatelessWidget {
   _ItemScheduleHistory({
     super.key,
@@ -92,7 +88,7 @@ class _ItemScheduleHistory extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: 5.w),
       width: 100.w,
-      height: 30.w,
+      height: 35.w,
       decoration: BoxDecoration(
         color: kBackgroundColor,
         borderRadius: BorderRadius.circular(5.w),
@@ -108,7 +104,7 @@ class _ItemScheduleHistory extends StatelessWidget {
       child: Row(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 10),
+            padding: const EdgeInsets.only(left: 10, right: 10),
             child: Column(
               children: [
                 Image.network(
@@ -125,46 +121,52 @@ class _ItemScheduleHistory extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  companyName,
-                  style:
-                      PrimaryFont.titleTextBold().copyWith(color: Colors.black),
-                ),
-                Text(
-                  wastype,
-                  style:
-                      PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
-                ),
-                Text(
-                  collectionDate,
-                  style:
-                      PrimaryFont.bodyTextBold().copyWith(color: Colors.grey),
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: onTap,
-                    child: Container(
-                      width: 15.w,
-                      height: 5.w,
-                      margin: EdgeInsets.only(top: 3.w, right: 5.w),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.green, width: 1),
-                        borderRadius: BorderRadius.circular(3.w),
-                      ),
-                      child: Text(
-                        "Chi tiết",
-                        textAlign: TextAlign.center,
-                        style: PrimaryFont.bodyTextMedium()
-                            .copyWith(color: Colors.green),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    companyName,
+                    style:
+                        PrimaryFont.bold(3.5.w).copyWith(color: Colors.black),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    wastype,
+                    style:
+                        PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
+                  ),
+                  Text(
+                    collectionDate,
+                    style:
+                        PrimaryFont.bodyTextBold().copyWith(color: Colors.grey),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: onTap,
+                      child: Container(
+                        width: 15.w,
+                        height: 5.w,
+                        margin: EdgeInsets.only(top: 3.w, right: 5.w),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.green, width: 1),
+                          borderRadius: BorderRadius.circular(3.w),
+                        ),
+                        child: Text(
+                          "Chi tiết",
+                          textAlign: TextAlign.center,
+                          style: PrimaryFont.bodyTextMedium()
+                              .copyWith(color: Colors.green),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

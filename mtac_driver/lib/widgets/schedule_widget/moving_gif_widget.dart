@@ -13,7 +13,7 @@ class _MovingGifWidgetState extends State<MovingGifWidget>
   late AnimationController _controller;
   late Animation<double> _animation;
 
-  final double containerWidth = 200; // tổng chiều rộng
+  final double containerWidth = 180; // tổng chiều rộng
   final double gifWidth = 8.w;        // chiều rộng của gif
 
   @override

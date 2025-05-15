@@ -448,69 +448,69 @@ class MapDriverScreen extends StatelessWidget {
                     isLastItem: index == controller.destinationsData.length - 1,
                     onTap: () async {
                       // handoverController.removeAllImage();
-                      if (status == CollectionStatus.ended) {
-                        print("object111 : $status");
-                        // final canEnd = await controller.canEndTrip(
-                        //     destination.id,
-                        //     destination.latitude!,
-                        //     destination.longitude!);
-                        // if (canEnd) {
-                        //   handoverController.updateSelectedGoods(infoWasteData);
-                        //   await scheduleController
-                        //       .endCollectionTrip(destination.id, handoverController.selectedGoods, handoverController.selectedImages);
-                        // }
-                        // // warning item end
-                        // if(scheduleController.checkTodaySchedules.isEmpty){
-                        //   scheduleController.clearScheduleLocal();
-                        // }
-                        NotifySuccessDialog().showNotifyPopup(
-                            "Chuyến gom này đã hoàn thành!", true, () {
-                          Navigator.pop(context);
-                        });
-                      }
-                      if (status == CollectionStatus.started) {
-                        print("objectmanhEnd : $status");
-                        // final canEnd = await controller.canEndTrip(
-                        //     destination.id,
-                        //     destination.latitude!,
-                        //     destination.longitude!);
-                        // if (canEnd) {
-                        print("end : $status");
-                        if (handoverController.numbers.isNotEmpty) {
-                          handoverController.updateSelectedGoods(infoWasteData);
-                          print("Yes1 : $status");
-                          if (handoverController.selectedGoods.isNotEmpty &&
-                              handoverController.selectedImages.isNotEmpty) {
-                            print("Yes : $status");
-                            await scheduleController.endCollectionTrip(
-                                destination.id,
-                                handoverController.selectedGoods,
-                                handoverController.selectedImages);
-                            //
-                            handoverController.removeAllImage();
-                          }
-                        } else {
-                          NotifySuccessDialog().showNotifyPopup(
-                              "Chưa ghi biên bản giao nhận!", false, () {
-                            Navigator.pop(context);
-                          });
-                        }
+                      // if (status == CollectionStatus.ended) {
+                      //   print("object111 : $status");
+                      //   // final canEnd = await controller.canEndTrip(
+                      //   //     destination.id,
+                      //   //     destination.latitude!,
+                      //   //     destination.longitude!);
+                      //   // if (canEnd) {
+                      //   //   handoverController.updateSelectedGoods(infoWasteData);
+                      //   //   await scheduleController
+                      //   //       .endCollectionTrip(destination.id, handoverController.selectedGoods, handoverController.selectedImages);
+                      //   // }
+                      //   // // warning item end
+                      //   // if(scheduleController.checkTodaySchedules.isEmpty){
+                      //   //   scheduleController.clearScheduleLocal();
+                      //   // }
+                      //   NotifySuccessDialog().showNotifyPopup(
+                      //       "Chuyến gom này đã hoàn thành!", true, () {
+                      //     Navigator.pop(context);
+                      //   });
+                      // }
+                      // if (status == CollectionStatus.started) {
+                      //   print("objectmanhEnd : $status");
+                      //   // final canEnd = await controller.canEndTrip(
+                      //   //     destination.id,
+                      //   //     destination.latitude!,
+                      //   //     destination.longitude!);
+                      //   // if (canEnd) {
+                      //   print("end : $status");
+                      //   if (handoverController.numbers.isNotEmpty) {
+                      //     handoverController.updateSelectedGoods(infoWasteData);
+                      //     print("Yes1 : $status");
+                      //     if (handoverController.selectedGoods.isNotEmpty &&
+                      //         handoverController.selectedImages.isNotEmpty) {
+                      //       print("Yes : $status");
+                      //       await scheduleController.endCollectionTrip(
+                      //           destination.id,
+                      //           handoverController.selectedGoods,
+                      //           handoverController.selectedImages);
+                      //       //
+                      //       handoverController.removeAllImage();
+                      //     }
+                      //   } else {
+                      //     NotifySuccessDialog().showNotifyPopup(
+                      //         "Chưa ghi biên bản giao nhận!", false, () {
+                      //       Navigator.pop(context);
+                      //     });
+                      //   }
 
-                        // }
+                      //   // }
 
-                        // warning item end
-                        // if(scheduleController.checkTodaySchedules.isEmpty){
-                        //   scheduleController.clearScheduleLocal();
-                        //  }
-                      } else {
-                        // NotifySuccessDialog()
-                        //     .showNotifyPopup("Chuyến gom đang thực hiện!", () {
-                        //   Navigator.pop(context);
-                        // });
-                        print("object111Start : $status");
-                        await scheduleController
-                            .startCollectionTrip(destination.id);
-                      }
+                      //   // warning item end
+                      //   // if(scheduleController.checkTodaySchedules.isEmpty){
+                      //   //   scheduleController.clearScheduleLocal();
+                      //   //  }
+                      // } else {
+                      //   // NotifySuccessDialog()
+                      //   //     .showNotifyPopup("Chuyến gom đang thực hiện!", () {
+                      //   //   Navigator.pop(context);
+                      //   // });
+                      //   print("object111Start : $status");
+                      //   await scheduleController
+                      //       .startCollectionTrip(destination.id);
+                      // }
                     },
                     controller: scheduleController,
                   );
@@ -805,9 +805,9 @@ class _ItemDestination extends StatelessWidget {
 
       switch (status.value) {
         case CollectionStatus.started:
-          buttonColor = Colors.red;
+          buttonColor = kPrimaryColor;
           icon = HugeIcons.strokeRoundedStop;
-          buttonText = "Kết thúc";
+          buttonText = "Đang thu gom";
           break;
         case CollectionStatus.ended:
           buttonColor = Colors.green;
@@ -831,7 +831,7 @@ class _ItemDestination extends StatelessWidget {
               GestureDetector(
                 onTap: status.value == CollectionStatus.ended ? null : onTap,
                 child: Container(
-                  width: 25.w,
+                  width: 30.w,
                   height: 8.w,
                   decoration: BoxDecoration(
                     color: buttonColor,
@@ -926,7 +926,7 @@ class _ItemDestination extends StatelessWidget {
                 onTap: status == CollectionStatus.ended
                     ? null
                     : () {
-                        Get.toNamed(AppRoutes.handoverRecord);
+                        Get.toNamed(AppRoutes.handoverRecord, arguments: scheduleId);
                       },
                 child: Text(
                   txtWriteRecordM,

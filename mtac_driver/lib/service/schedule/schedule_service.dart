@@ -81,7 +81,7 @@ class ScheduleService {
 
         // get today
         //final String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-        const String today = "2025-05-16";
+        const String today = "2025-05-17";
 
         // filter collection_date is today
         final filtered = scheduleModel.data.where((item) {

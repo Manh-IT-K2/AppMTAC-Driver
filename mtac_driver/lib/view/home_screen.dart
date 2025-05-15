@@ -175,12 +175,14 @@ class _BodyDriverScreen extends StatelessWidget {
                       () => SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
-                            final datum = _scheduleController.todaySchedules[index];
+                            final datum =
+                                _scheduleController.todaySchedules[index];
                             return Padding(
                               padding: EdgeInsets.only(bottom: 5.w),
                               child: GestureDetector(
                                 onTap: () {
-                                  Get.toNamed(AppRoutes.map, arguments: datum.wasteType);
+                                  Get.toNamed(AppRoutes.map,
+                                      arguments: datum.wasteType);
                                 },
                                 child: _ItemTripToday(
                                   hour: "8:00",
@@ -326,7 +328,10 @@ class _HeaderDriverScreen extends StatelessWidget {
               width: 16,
             ),
             GestureDetector(
-              onTap: () => Get.toNamed(AppRoutes.scheduleHistory),
+              onTap: () {
+                scheduleController.getListScheduleHistory();
+                Get.toNamed(AppRoutes.scheduleHistory);
+              },
               child: _UtilDriver(
                 color: Colors.orange.withOpacity(0.2),
                 icon: HugeIcons.strokeRoundedSmartPhone01,

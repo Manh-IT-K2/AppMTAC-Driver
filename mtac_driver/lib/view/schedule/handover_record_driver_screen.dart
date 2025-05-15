@@ -21,7 +21,7 @@ class HandoverRecordDriverScreen extends StatelessWidget {
   final _handoverRecordController = Get.find<HandoverRecordController>();
 
   final scheduleController = Get.find<ScheduleController>();
-
+  final scheduleId = Get.arguments;
   @override
   Widget build(BuildContext context) {
     //final size = context.screenSize;
@@ -75,9 +75,12 @@ class HandoverRecordDriverScreen extends StatelessWidget {
                 height: 25,
               ),
               _BottomHandoverRecordSceen(
-                  imageController: _handoverRecordController,
-                  sWidthCon: 30.w,
-                  sHeightCon: 20.h),
+                imageController: _handoverRecordController,
+                sWidthCon: 30.w,
+                sHeightCon: 20.h,
+                scheduleController: scheduleController,
+                scheduleId: scheduleId,
+              ),
               const SizedBox(
                 height: 30,
               ),
@@ -95,11 +98,15 @@ class _BottomHandoverRecordSceen extends StatelessWidget {
     required this.imageController,
     required this.sWidthCon,
     required this.sHeightCon,
+    required this.scheduleController,
+    required this.scheduleId,
   });
 
   final HandoverRecordController imageController;
+  final ScheduleController scheduleController;
   final double sWidthCon, sHeightCon;
 
+  final int scheduleId;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -229,8 +236,13 @@ class _BottomHandoverRecordSceen extends StatelessWidget {
             onPressed: () {
               if (imageController.selectedImages.isNotEmpty &&
                   imageController.allInputsValid.value) {
-                NotifySuccessDialog().showNotifyPopup("Gửi biên bản thành công", true,
-                    () {
+                imageController.updateSelectedGoods(infoWasteData);
+                NotifySuccessDialog()
+                    .showNotifyPopup("Gửi biên bản thành công", true, () {
+                  scheduleController.endCollectionTrip(
+                      scheduleId,
+                      imageController.selectedGoods,
+                      imageController.selectedImages);
                   Navigator.pop(context);
                   Get.back();
                 });
@@ -380,15 +392,17 @@ class _BodyHandoverRecordScreen extends StatelessWidget {
                           Expanded(
                             child: GestureDetector(
                               onTap: () => controller.showInputPopup(index),
-                              child: Obx(() => Text(
-                                    controller.numbers[index].value.isEmpty
-                                        ? "0 (kg)"
-                                        : "${controller.numbers[index].value} (kg)",
-                                    style: PrimaryFont.bodyTextLight()
-                                        .copyWith(color: Colors.black),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),),
+                              child: Obx(
+                                () => Text(
+                                  controller.numbers[index].value.isEmpty
+                                      ? "0 (kg)"
+                                      : "${controller.numbers[index].value} (kg)",
+                                  style: PrimaryFont.bodyTextLight()
+                                      .copyWith(color: Colors.black),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(width: 12),
