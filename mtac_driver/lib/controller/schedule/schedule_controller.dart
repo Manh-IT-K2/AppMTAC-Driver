@@ -29,6 +29,7 @@ class ScheduleController extends GetxController {
 
   // Biến observable để lưu danh sách lịch hôm nay
   RxList<Datum> todaySchedules = <Datum>[].obs;
+  RxList<Datum> historySchedules = <Datum>[].obs;
   RxList<Datum> checkTodaySchedules = <Datum>[].obs;
 
   // username
@@ -53,6 +54,7 @@ class ScheduleController extends GetxController {
     loadScheduleTodays();
     checkAndLoadSchedule();
     getCollectionStatusesFromLocal(collectionStatus);
+    getListScheduleHistory();
     daysInMonth.value = _generateDaysInMonth(currentDate.value);
     offset = calculateTodayScrollOffset(itemWidth, screenWidth);
     scrollController = ScrollController(initialScrollOffset: offset);
@@ -61,7 +63,8 @@ class ScheduleController extends GetxController {
   // load collection schedule today
   Future<void> loadScheduleTodays() async {
     await getGroupedScheduleFromLocal(schedulesByWasteType);
-    todaySchedules.assignAll(schedulesByWasteType.values.expand((e) => e).toList());
+    todaySchedules
+        .assignAll(schedulesByWasteType.values.expand((e) => e).toList());
     if (kDebugMode) {
       print('✅ Loaded todaySchedules: ${todaySchedules.length}');
     }
@@ -212,7 +215,28 @@ class ScheduleController extends GetxController {
             snackPosition: SnackPosition.TOP, colorText: Colors.red);
       }
       if (kDebugMode) {
-        print('ScheduleController Error: $e');
+        print('getListScheduleToday error: $e');
+      }
+    }
+  }
+
+  // Function getListScheduleHistory from service
+  Future<void> getListScheduleHistory() async {
+    try {
+      final schedule = await _scheduleService.getListScheduleHistory();
+      historySchedules.value = schedule;
+    } catch (e) {
+      if (e.toString().contains('401')) {
+        Get.snackbar(
+            'Lỗi', 'Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.',
+            snackPosition: SnackPosition.TOP, colorText: Colors.red);
+        Get.offAllNamed(AppRoutes.login);
+      } else {
+        Get.snackbar('Lỗi', 'Không thể tải lịch hôm nay',
+            snackPosition: SnackPosition.TOP, colorText: Colors.red);
+      }
+      if (kDebugMode) {
+        print('getListScheduleHistory error: $e');
       }
     }
   }

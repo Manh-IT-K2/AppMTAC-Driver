@@ -31,6 +31,34 @@ class ScheduleService {
     return grouped;
   }
 
+  // Call api get list schedule history
+  Future<List<Datum>> getListScheduleHistory() async {
+    final url = Uri.parse('$baseUrl/api/driver/history');
+    final token = await getToken();
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final List<dynamic> rawList = data["data"];
+        final List<Datum> scheduleList = rawList.map((item) => Datum.fromJson(item)).toList();
+        return scheduleList;
+      } else {
+        throw Exception(
+            'Failed to load schedule history. Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error getting data schedule history: $e');
+    }
+  }
+
   // Call api getListScheduleToday
   Future<Map<String, List<Datum>>> getListScheduleToday() async {
     if (kDebugMode) {
