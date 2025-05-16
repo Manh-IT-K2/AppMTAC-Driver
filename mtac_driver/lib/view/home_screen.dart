@@ -134,16 +134,16 @@ class _BodyDriverScreen extends StatelessWidget {
                     day.month == _scheduleController.currentDate.value.month &&
                     day.year == _scheduleController.currentDate.value.year;
 
-                // Danh sách ngày highlight (tùy bạn)
-                List<int> highlightedDays = [
-                  6,
-                  10,
-                  _scheduleController.currentDate.value.day,
-                  22,
-                  26,
-                  29
-                ];
-                bool isHighlight = highlightedDays.contains(day.day);
+                // // Danh sách ngày highlight (tùy bạn)
+                // List<int> highlightedDays = [
+                //   6,
+                //   10,
+                //   _scheduleController.currentDate.value.day,
+                //   22,
+                //   26,
+                //   29
+                // ];
+                bool isHighlight = _scheduleController.highlightedDays.contains(day.day);
 
                 return _ItemDayOfWeek(
                   day: day.day.toString(),

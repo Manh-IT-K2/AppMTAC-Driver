@@ -84,19 +84,20 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                       icon: HugeIcons.strokeRoundedOffice,
                       title: "Tên công ty: ",
                       content: datum.companyName,
-                       styleContent: PrimaryFont.bodyTextBold(),
+                      styleContent: PrimaryFont.bodyTextBold(),
                     ),
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedLocation04,
                       title: "Địa chỉ: ",
                       content: datum.locationDetails,
-                       styleContent: PrimaryFont.bodyTextMedium(),
+                      styleContent: PrimaryFont.bodyTextMedium(),
                     ),
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedWaste,
                       title: "Loại chất thải: ",
                       content: datum.wasteType,
-                      styleContent: PrimaryFont.bodyTextMedium().copyWith(color: Colors.green),
+                      styleContent: PrimaryFont.bodyTextMedium()
+                          .copyWith(color: Colors.green),
                     ),
                   ],
                 ),
@@ -126,7 +127,7 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                       icon: HugeIcons.strokeRoundedEdgeStyle,
                       title: "Biển số: ",
                       content: datum.truck.plateNumber,
-                       styleContent: PrimaryFont.bodyTextMedium(),
+                      styleContent: PrimaryFont.bodyTextMedium(),
                     ),
                   ],
                 ),
@@ -214,15 +215,18 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   slivers: [
                     SliverList(
-                      delegate: SliverChildBuilderDelegate((contex, index) {
-                        return Padding(
-                          padding: EdgeInsets.all(2.w),
-                          child: Image.asset(
-                            "assets/image/truck-detail.png",
-                            fit: BoxFit.cover,
-                          ),
-                        );
-                      }, childCount: 5),
+                      delegate: SliverChildBuilderDelegate(
+                        (contex, index) {
+                          return Padding(
+                            padding: EdgeInsets.all(2.w),
+                            child: Image.asset(
+                              "assets/image/truck-detail.png",
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        },
+                        childCount: 5,
+                      ),
                     ),
                   ],
                 ),

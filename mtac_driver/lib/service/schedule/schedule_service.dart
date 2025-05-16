@@ -48,7 +48,8 @@ class ScheduleService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final List<dynamic> rawList = data["data"];
-        final List<Datum> scheduleList = rawList.map((item) => Datum.fromJson(item)).toList();
+        final List<Datum> scheduleList =
+            rawList.map((item) => Datum.fromJson(item)).toList();
         return scheduleList;
       } else {
         throw Exception(
@@ -108,6 +109,32 @@ class ScheduleService {
       }
     } catch (e) {
       throw Exception('Error getting data schedule today: $e');
+    }
+  }
+
+  // Call api getListScheduleArranged
+  Future<List<Datum>> getListScheduleArranged() async {
+    final url = Uri.parse('$baseUrl/api/driver/schedules');
+    final token = await getToken();
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final scheduleModel = scheduleModelFromJson(response.body);
+        return scheduleModel.data;
+      } else {
+        throw Exception(
+            'Failed to load data schedule arranged: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error getting data schedule arranged: $e');
     }
   }
 

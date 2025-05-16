@@ -40,7 +40,7 @@ class ScheduleController extends GetxController {
       <String, List<Datum>>{}.obs;
   // initial list weekdays
   final List<String> weekdays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-
+  RxList<int> highlightedDays = <int>[].obs;
   final int totalItemCount = 9999;
   final double itemWidth = 13.w;
   double screenWidth = 100.w - 32;
@@ -51,6 +51,7 @@ class ScheduleController extends GetxController {
   void onInit() {
     super.onInit();
     loadUsername();
+    loadScheduleArranged();
     loadScheduleTodays();
     checkAndLoadSchedule();
     getCollectionStatusesFromLocal(collectionStatus);
@@ -67,6 +68,49 @@ class ScheduleController extends GetxController {
     if (kDebugMode) {
       print('✅ Loaded todaySchedules: ${todaySchedules.length}');
     }
+  }
+
+  // load schedule arranged
+  Future<void> loadScheduleArranged() async {
+    try {
+      final scheduleArranged = await _scheduleService.getListScheduleArranged();
+      highlightedDays.value = getValidCollectionDays(scheduleArranged);
+      if (kDebugMode) {
+        print('✅ Loaded Arranged Schedules: ${scheduleArranged.length}');
+      }
+    } catch (e) {
+      if (e.toString().contains('401')) {
+        Get.snackbar(
+            'Lỗi', 'Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.',
+            snackPosition: SnackPosition.TOP, colorText: Colors.red);
+        Get.offAllNamed(AppRoutes.login);
+      } else {
+        Get.snackbar('Lỗi', 'Không thể tải lịch đã sắp',
+            snackPosition: SnackPosition.TOP, colorText: Colors.red);
+      }
+      if (kDebugMode) {
+        print('Get list schedule aranged error: $e');
+      }
+    }
+  }
+
+  // get day collection schedule arranged
+  List<int> getValidCollectionDays(List<Datum> todaySchedules) {
+    final now = DateTime.now();
+    final currentDay = now.day;
+    final currentMonth = now.month;
+    final currentYear = now.year;
+
+    final days = todaySchedules
+        .where((schedule) =>
+            schedule.collectionDate.year == currentYear &&
+            schedule.collectionDate.month == currentMonth)
+        .map((schedule) => schedule.collectionDate.day)
+        .toSet();
+
+    days.add(currentDay);
+    final sortedDays = days.toList()..sort();
+    return sortedDays;
   }
 
   // load user name
@@ -336,7 +380,8 @@ class ScheduleController extends GetxController {
         await setCollectionStatusesToLocal(collectionStatus);
         // Get.snackbar("Thành công", "Bắt đầu thu gom thành công");
       } else {
-        Get.snackbar("Thất bại", "Không thể kết thúc thu gom", snackPosition: SnackPosition.TOP, colorText: Colors.red);
+        Get.snackbar("Thất bại", "Không thể kết thúc thu gom",
+            snackPosition: SnackPosition.TOP, colorText: Colors.red);
       }
     } catch (e) {
       if (e.toString().contains('401')) {
