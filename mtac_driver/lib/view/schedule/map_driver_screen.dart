@@ -97,13 +97,13 @@ class MapDriverScreen extends StatelessWidget {
                         // Current location marker
                         Marker(
                           point: controller.currentLocation.value!,
-                          width: 15.w,
-                          height: 15.w,
+                          width: 10.w,
+                          height: 10.w,
                           child: Image.asset(
-                            "assets/image/current_location.gif",
-                            width: 15.w,
-                            height: 15.w,
-                            fit: BoxFit.cover,
+                            "assets/image/truck-detail.png",
+                            width: 10.w,
+                            height: 10.w,
+                            
                           ),
                         ),
 

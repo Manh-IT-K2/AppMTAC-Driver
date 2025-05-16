@@ -143,16 +143,17 @@ class MapDriverController extends GetxController {
           status.value == CollectionStatus.ended) {
         continue;
       }
-
+      if (status.value == CollectionStatus.idle) {
+        Get.snackbar(
+          'Thành công',
+          'Chuyến thu gom đã bắt đầu',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.green.withOpacity(0.6),
+          colorText: Colors.white,
+        );
+      }
       await _scheduleController.startCollectionTrip(destination.id);
     }
-    Get.snackbar(
-      'Thành công',
-      'Chuyến thu gom đã bắt đầu',
-      snackPosition: SnackPosition.TOP,
-      backgroundColor: Colors.green,
-      colorText: Colors.white,
-    );
   }
 
   // add location bussiness in routeAddresses

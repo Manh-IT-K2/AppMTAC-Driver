@@ -9,4 +9,5 @@ class AppRoutes {
   static const driver = "/driver";
   static const profile = "/profile";
   static const scheduleHistory = "/scheduleHistory";
+   static const detailScheduleHistory = "/detailScheduleHistory";
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
+import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/theme_text.dart';
 import 'package:sizer/sizer.dart';
@@ -58,6 +59,9 @@ class ScheduleHistoryScreen extends StatelessWidget {
                         collectionDate: DateFormat('yyyy-MM-dd')
                             .format(item.collectionDate),
                         code: item.code,
+                        onTap: () {
+                          Get.toNamed(AppRoutes.detailScheduleHistory);
+                        },
                       );
                     },
                     childCount: list.length,
@@ -80,6 +84,7 @@ class _ItemScheduleHistory extends StatelessWidget {
     required this.wastype,
     required this.collectionDate,
     required this.code,
+    this.onTap,
   });
   Function()? onTap;
   final String companyName, wastype, collectionDate, code;
@@ -95,8 +100,8 @@ class _ItemScheduleHistory extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
-            spreadRadius: 4,
-            blurRadius: 4,
+            spreadRadius: 2,
+            blurRadius: 2,
             offset: const Offset(1, 1),
           ),
         ],
