@@ -142,7 +142,8 @@ class MapDriverScreen extends StatelessWidget {
                               status: '',
                               goods: [],
                               latitude: 0.0,
-                              longitude: 0.0,
+                              longitude: 0.0, 
+                              images: [],
                             ),
                           );
                           return Marker(

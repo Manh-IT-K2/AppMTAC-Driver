@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:intl/intl.dart';
+import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/theme_text.dart';
 import 'package:sizer/sizer.dart';
@@ -10,6 +12,7 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Datum datum = Get.arguments;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -52,12 +55,12 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    "Ngày: 2025-05-16",
-                    style: PrimaryFont.bodyTextBold(),
+                    "Ngày: ${DateFormat('yyyy-MM-dd').format(datum.collectionDate)}",
+                    style: PrimaryFont.bodyTextThin(),
                   ),
                   const Spacer(),
                   Text(
-                    "Mã: TG-017",
+                    "Mã: ${datum.code}",
                     style:
                         PrimaryFont.bodyTextBold().copyWith(color: Colors.red),
                   ),
@@ -75,25 +78,25 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                   border: Border.all(width: 1, color: Colors.grey),
                   borderRadius: BorderRadius.circular(3.w),
                 ),
-                child: const Column(
+                child: Column(
                   children: [
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedOffice,
                       title: "Tên công ty: ",
-                      content: "Bệnh viện Xanh Pôn",
-                      colorContent: Colors.black,
+                      content: datum.companyName,
+                       styleContent: PrimaryFont.bodyTextBold(),
                     ),
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedLocation04,
                       title: "Địa chỉ: ",
-                      content: "Quận Ba Đình, Hà Nội",
-                      colorContent: Colors.black,
+                      content: datum.locationDetails,
+                       styleContent: PrimaryFont.bodyTextMedium(),
                     ),
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedWaste,
                       title: "Loại chất thải: ",
-                      content: "Chất thải y tế",
-                      colorContent: Colors.green,
+                      content: datum.wasteType,
+                      styleContent: PrimaryFont.bodyTextMedium().copyWith(color: Colors.green),
                     ),
                   ],
                 ),
@@ -111,19 +114,19 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                   border: Border.all(width: 1, color: Colors.grey),
                   borderRadius: BorderRadius.circular(3.w),
                 ),
-                child: const Column(
+                child: Column(
                   children: [
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedShippingTruck01,
                       title: "Tên xe: ",
-                      content: "Hyundai-0123",
-                      colorContent: Colors.black,
+                      content: datum.truck.name,
+                      styleContent: PrimaryFont.bodyTextMedium(),
                     ),
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedEdgeStyle,
                       title: "Biển số: ",
-                      content: "29H1-12345",
-                      colorContent: Colors.black,
+                      content: datum.truck.plateNumber,
+                       styleContent: PrimaryFont.bodyTextMedium(),
                     ),
                   ],
                 ),
@@ -135,55 +138,66 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
               SizedBox(
                 height: 5.w,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    "Tên loại rác",
-                    style: PrimaryFont.bodyTextBold(),
-                  ),
-                  Text(
-                    "Số lượng",
-                    style: PrimaryFont.bodyTextBold(),
-                  ),
-                ],
+              Padding(
+                padding: EdgeInsets.only(left: 10.w, right: 10.w),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        "Tên loại rác",
+                        style: PrimaryFont.bodyTextBold(),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        "Số lượng",
+                        style: PrimaryFont.bodyTextBold(),
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(
-                height: 3.w,
-              ),
+              SizedBox(height: 3.w),
               SizedBox(
                 width: 100.w,
                 height: 20.h,
-                child: ListView(
-                  children: List.generate(
-                    4,
-                    (index) {
-                      return Container(
-                        width: 100.w,
-                        height: 10.w,
-                        margin:
-                            EdgeInsets.only(left: 5.w, right: 5.w, bottom: 2.w),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                              color: kPrimaryColor.withOpacity(0.3), width: 1),
-                          borderRadius: BorderRadius.circular(10.w),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                              "Tên loại rác",
-                              style: PrimaryFont.bodyTextBold(),
+                child: ListView.builder(
+                  itemCount: datum.goods.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin:
+                          EdgeInsets.only(left: 5.w, right: 5.w, bottom: 2.w),
+                      padding: EdgeInsets.symmetric(horizontal: 5.w),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: kPrimaryColor.withOpacity(0.3), width: 1),
+                        borderRadius: BorderRadius.circular(10.w),
+                      ),
+                      height: 10.w,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              datum.goods[index].name,
+                              style: PrimaryFont.bodyTextMedium(),
                             ),
-                            Text(
-                              "Số lượng",
-                              style: PrimaryFont.bodyTextBold(),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              datum.goods[index].quantity,
+                              style: PrimaryFont.bodyTextMedium(),
+                              textAlign: TextAlign.right,
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
               SizedBox(
@@ -227,10 +241,10 @@ class _itemCollectionDetail extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.content,
-    this.colorContent,
+    this.styleContent,
   });
   final IconData icon;
-  final Color? colorContent;
+  final TextStyle? styleContent;
   final String title, content;
   @override
   Widget build(BuildContext context) {
@@ -253,7 +267,7 @@ class _itemCollectionDetail extends StatelessWidget {
           Expanded(
             child: Text(
               content,
-              style: PrimaryFont.bodyTextMedium().copyWith(color: colorContent),
+              style: styleContent,
             ),
           ),
         ],

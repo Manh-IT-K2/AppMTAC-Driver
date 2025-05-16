@@ -80,24 +80,25 @@ class Datum {
   Truck truck;
   String status;
   List<Good> goods;
-
-  //
+  List<String> images;
   double? latitude;
   double? longitude;
 
-  Datum(
-      {required this.id,
-      required this.code,
-      required this.companyName,
-      required this.locationDetails,
-      required this.wasteType,
-      required this.collectionDate,
-      required this.area,
-      required this.truck,
-      required this.status,
-      required this.goods,
-      this.latitude,
-      this.longitude});
+  Datum({
+    required this.id,
+    required this.code,
+    required this.companyName,
+    required this.locationDetails,
+    required this.wasteType,
+    required this.collectionDate,
+    required this.area,
+    required this.truck,
+    required this.status,
+    required this.goods,
+    required this.images,
+    this.latitude,
+    this.longitude,
+  });
 
   factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         id: json["id"],
@@ -110,7 +111,9 @@ class Datum {
         truck: Truck.fromJson(json["truck"]),
         status: json["status"],
         goods: List<Good>.from(json["goods"].map((x) => Good.fromJson(x))),
-        //
+        images: json["images"] != null
+            ? List<String>.from(json["images"].map((x) => x))
+            : [],
         latitude: 0.0,
         longitude: 0.0,
       );
@@ -127,7 +130,7 @@ class Datum {
         "truck": truck.toJson(),
         "status": status,
         "goods": List<dynamic>.from(goods.map((x) => x.toJson())),
-        //
+        "images": List<dynamic>.from(images.map((x) => x)),
         "latitude": latitude,
         "longitude": longitude,
       };

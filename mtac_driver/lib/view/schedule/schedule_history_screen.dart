@@ -60,7 +60,7 @@ class ScheduleHistoryScreen extends StatelessWidget {
                             .format(item.collectionDate),
                         code: item.code,
                         onTap: () {
-                          Get.toNamed(AppRoutes.detailScheduleHistory);
+                          Get.toNamed(AppRoutes.detailScheduleHistory, arguments: item);
                         },
                       );
                     },

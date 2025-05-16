@@ -539,7 +539,7 @@ final List<Datum> mockScheduleData = [
     status: "Đã sắp",
     goods: [],
     latitude: 0.0,
-    longitude: 0.0,
+    longitude: 0.0, images: [],
   ),
   Datum(
     id: 2,
@@ -553,7 +553,7 @@ final List<Datum> mockScheduleData = [
     status: "Đã sắp",
     goods: [],
     latitude: 0.0,
-    longitude: 0.0,
+    longitude: 0.0, images: [],
   ),
   Datum(
     id: 3,
@@ -567,7 +567,7 @@ final List<Datum> mockScheduleData = [
     status: "Đã sắp",
     goods: [],
     latitude: 0.0,
-    longitude: 0.0,
+    longitude: 0.0, images: [],
   ),
   Datum(
     id: 4,
@@ -581,7 +581,7 @@ final List<Datum> mockScheduleData = [
     status: "Đã sắp",
     goods: [],
     latitude: 0.0,
-    longitude: 0.0,
+    longitude: 0.0, images: [],
   ),
   Datum(
     id: 5,
@@ -595,7 +595,7 @@ final List<Datum> mockScheduleData = [
     status: "Đã sắp",
     goods: [],
     latitude: 0.0,
-    longitude: 0.0,
+    longitude: 0.0, images: [],
   ),
   Datum(
     id: 6,
@@ -609,7 +609,7 @@ final List<Datum> mockScheduleData = [
     status: "Đã sắp",
     goods: [],
     latitude: 0.0,
-    longitude: 0.0,
+    longitude: 0.0, images: [],
   ),
   Datum(
     id: 7,
@@ -623,7 +623,7 @@ final List<Datum> mockScheduleData = [
     status: "Đã sắp",
     goods: [],
     latitude: 0.0,
-    longitude: 0.0,
+    longitude: 0.0, images: [],
   ),
   Datum(
     id: 8,
@@ -637,7 +637,7 @@ final List<Datum> mockScheduleData = [
     status: "Đã sắp",
     goods: [],
     latitude: 0.0,
-    longitude: 0.0,
+    longitude: 0.0, images: [],
   ),
   Datum(
     id: 9,
@@ -651,7 +651,7 @@ final List<Datum> mockScheduleData = [
     status: "Đã sắp",
     goods: [],
     latitude: 0.0,
-    longitude: 0.0,
+    longitude: 0.0, images: [],
   ),
   Datum(
     id: 10,
@@ -665,6 +665,6 @@ final List<Datum> mockScheduleData = [
     status: "Đã sắp",
     goods: [],
     latitude: 0.0,
-    longitude: 0.0,
+    longitude: 0.0, images: [],
   ),
 ];
