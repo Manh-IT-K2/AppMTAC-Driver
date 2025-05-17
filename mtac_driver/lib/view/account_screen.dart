@@ -85,9 +85,12 @@ class AccountScreen extends StatelessWidget {
                 icon: HugeIcons.strokeRoundedCreditCardValidation,
               ),
               const Divider(),
-              const _ItemFuncAccount(
+              _ItemFuncAccount(
                 title: "Contact Us",
                 arrowRight: true,
+                onTap: () {
+                  Get.toNamed(AppRoutes.contactUs);
+                },
                 color: kPrimaryColor,
                 icon: HugeIcons.strokeRoundedCalling02,
               ),

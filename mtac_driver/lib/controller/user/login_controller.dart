@@ -12,12 +12,22 @@ class LoginController extends GetxController {
 
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
-  final passwordNewController = TextEditingController();
-  final passwordNewConfirmController = TextEditingController();
   final isLoading = false.obs;
   final obscurePassword = true.obs;
-   final obscurePasswordNew = true.obs;
-    final obscurePasswordNewConfirm = true.obs;
+
+  // inital variable manager password
+  final passwordNewController = TextEditingController();
+  final passwordNewConfirmController = TextEditingController();
+  final obscurePasswordNew = true.obs;
+  final obscurePasswordNewConfirm = true.obs;
+
+  // initial variable contact us
+  final arrowDownService = false.obs;
+   final arrowDownWhatsApp = false.obs;
+    final arrowDownWebsite = false.obs;
+     final arrowDownTwitter = false.obs;
+      final arrowDownFacebook = false.obs;
+       final arrowDownInstagram = false.obs;
 
   // infor user
   final Rxn<UserModel> infoUser = Rxn<UserModel>();
@@ -37,17 +47,44 @@ class LoginController extends GetxController {
     }
   }
 
+  // arrow down service visibility
+  void toggleArrowDownServiceVisibility() {
+    arrowDownService.value = !arrowDownService.value;
+  }
+
+  // arrow down website visibility
+  void toggleArrowDownWebsiteVisibility() {
+    arrowDownWebsite.value = !arrowDownWebsite.value;
+  }
+
+  // arrow down whatsApp visibility
+  void toggleArrowDownWhatsAppVisibility() {
+    arrowDownWhatsApp.value = !arrowDownWhatsApp.value;
+  }
+  // arrow down twitter visibility
+  void toggleArrowDownTwitterVisibility() {
+    arrowDownTwitter.value = !arrowDownTwitter.value;
+  }
+  // arrow down facebook visibility
+  void toggleArrowDownFacebookVisibility() {
+    arrowDownFacebook.value = !arrowDownFacebook.value;
+  }
+  // arrow down instagram visibility
+  void toggleArrowDownInstagramVisibility() {
+    arrowDownInstagram.value = !arrowDownInstagram.value;
+  }
+
   // password visibility
   void togglePasswordVisibility() {
     obscurePassword.value = !obscurePassword.value;
   }
 
-   // password new visibility
+  // password new visibility
   void togglePasswordNewVisibility() {
     obscurePasswordNew.value = !obscurePasswordNew.value;
   }
 
-   // password new confirm visibility
+  // password new confirm visibility
   void togglePasswordNewConfirmVisibility() {
     obscurePasswordNewConfirm.value = !obscurePasswordNewConfirm.value;
   }

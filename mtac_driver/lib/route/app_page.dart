@@ -9,6 +9,7 @@ import 'package:mtac_driver/view/schedule/map_driver_screen.dart';
 import 'package:mtac_driver/view/schedule/schedule_colection_driver_screen.dart';
 import 'package:mtac_driver/view/schedule/schedule_history_screen.dart';
 import 'package:mtac_driver/view/splash_screen.dart';
+import 'package:mtac_driver/view/user/contact_us_screen.dart';
 import 'package:mtac_driver/view/user/login_screen.dart';
 import 'package:mtac_driver/view/user/profile_screen.dart';
 import 'package:mtac_driver/view/user/setting_user/manager_password_screen.dart';
@@ -63,6 +64,11 @@ class AppPages {
     GetPage(
       name: AppRoutes.managerPassword,
       page: () => ManagerPasswordScreen(),
+      middlewares: [NetworkCheckMiddlewareController()],
+    ),
+     GetPage(
+      name: AppRoutes.contactUs,
+      page: () => ContactUsScreen(),
       middlewares: [NetworkCheckMiddlewareController()],
     ),
     GetPage(
