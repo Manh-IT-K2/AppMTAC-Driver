@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/utils/theme_text.dart';
 import 'package:sizer/sizer.dart';
 
@@ -47,16 +48,24 @@ class SettingScreen extends StatelessWidget {
           children: [
             _itemSettingAccount(
               title: "Cài đặt thông báo",
+              arrowRight: true,
+              color: Colors.black,
               icon: HugeIcons.strokeRoundedNotification03,
               ontap: () {},
             ),
             _itemSettingAccount(
               title: "Quản lý mật khẩu",
+              arrowRight: true,
+              color: Colors.black,
               icon: HugeIcons.strokeRoundedForgotPassword,
-              ontap: () {},
+              ontap: () {
+                Get.toNamed(AppRoutes.managerPassword);
+              },
             ),
             _itemSettingAccount(
               title: "Xoá tài khoản",
+              arrowRight: false,
+              color: Colors.red,
               icon: HugeIcons.strokeRoundedUserRemove01,
               ontap: () {},
             ),
@@ -72,11 +81,13 @@ class _itemSettingAccount extends StatelessWidget {
     super.key,
     required this.title,
     this.ontap,
-    required this.icon,
+    required this.icon, this.color, required this.arrowRight,
   });
   final String title;
   final Function()? ontap;
   final IconData icon;
+  final Color? color;
+  final bool arrowRight;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -86,7 +97,7 @@ class _itemSettingAccount extends StatelessWidget {
           Icon(
             icon,
             size: 5.w,
-            color: Colors.black,
+            color: color,
           ),
           SizedBox(
             width: 3.w,
@@ -94,17 +105,17 @@ class _itemSettingAccount extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: PrimaryFont.bodyTextMedium(),
+              style: PrimaryFont.bodyTextMedium().copyWith(color: color),
             ),
           ),
-          GestureDetector(
+          arrowRight ? GestureDetector(
             onTap: ontap,
             child: Icon(
               HugeIcons.strokeRoundedArrowRight01,
               size: 5.w,
-              color: Colors.black,
+              color: color,
             ),
-          ),
+          ) : const SizedBox(),
         ],
       ),
     );

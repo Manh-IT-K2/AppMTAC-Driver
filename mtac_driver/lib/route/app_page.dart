@@ -11,7 +11,8 @@ import 'package:mtac_driver/view/schedule/schedule_history_screen.dart';
 import 'package:mtac_driver/view/splash_screen.dart';
 import 'package:mtac_driver/view/user/login_screen.dart';
 import 'package:mtac_driver/view/user/profile_screen.dart';
-import 'package:mtac_driver/view/user/setting_screen.dart';
+import 'package:mtac_driver/view/user/setting_user/manager_password_screen.dart';
+import 'package:mtac_driver/view/user/setting_user/setting_screen.dart';
 
 class AppPages {
   static final routes = [
@@ -54,9 +55,14 @@ class AppPages {
       page: () => ProfileScreen(),
       middlewares: [NetworkCheckMiddlewareController()],
     ),
-     GetPage(
+    GetPage(
       name: AppRoutes.setting,
-      page: () => SettingScreen(),
+      page: () => const SettingScreen(),
+      middlewares: [NetworkCheckMiddlewareController()],
+    ),
+    GetPage(
+      name: AppRoutes.managerPassword,
+      page: () => ManagerPasswordScreen(),
       middlewares: [NetworkCheckMiddlewareController()],
     ),
     GetPage(

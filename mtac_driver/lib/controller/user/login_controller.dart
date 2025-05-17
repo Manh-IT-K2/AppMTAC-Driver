@@ -12,8 +12,12 @@ class LoginController extends GetxController {
 
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  final passwordNewController = TextEditingController();
+  final passwordNewConfirmController = TextEditingController();
   final isLoading = false.obs;
   final obscurePassword = true.obs;
+   final obscurePasswordNew = true.obs;
+    final obscurePasswordNewConfirm = true.obs;
 
   // infor user
   final Rxn<UserModel> infoUser = Rxn<UserModel>();
@@ -36,6 +40,16 @@ class LoginController extends GetxController {
   // password visibility
   void togglePasswordVisibility() {
     obscurePassword.value = !obscurePassword.value;
+  }
+
+   // password new visibility
+  void togglePasswordNewVisibility() {
+    obscurePasswordNew.value = !obscurePasswordNew.value;
+  }
+
+   // password new confirm visibility
+  void togglePasswordNewConfirmVisibility() {
+    obscurePasswordNewConfirm.value = !obscurePasswordNewConfirm.value;
   }
 
   // clear input email
