@@ -13,7 +13,7 @@ const String txtNumberMoney = "100,000,000 đ";
 
 // text schedule screen
 const String txtTitleS = "Danh sách chuyến";
-const String txtHelloS = "Xin chào,";
+const String txtHelloS = "Xin chào, ";
 const String txtScheduleTodayS =  "Lịch thu gom hôm nay: ";
 
 // text schedule collection screen

@@ -11,7 +11,7 @@ import 'package:sizer/sizer.dart';
 class ScheduleColectionDriverScreen extends StatelessWidget {
   ScheduleColectionDriverScreen({super.key});
 
-  final ScheduleController controller = Get.put(ScheduleController());
+  final ScheduleController _scheduleController = Get.put(ScheduleController());
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +45,8 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                controller.removeCollectionStatus();
-                controller.removeSchedule();
+                _scheduleController.removeCollectionStatus();
+                _scheduleController.removeSchedule();
               },
               child: Container(
                 width: 10.w,
@@ -87,7 +87,7 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
                         .copyWith(color: Colors.grey),
                   ),
                   TextSpan(
-                    text: " Quan Văn Mạnh",
+                    text: _scheduleController.username.value,
                     style: PrimaryFont.bodyTextBold()
                         .copyWith(color: Colors.black),
                   ),
@@ -122,7 +122,7 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: controller.items
+                children: _scheduleController.items
                     .map(
                       (title) => _ItemListTrip(title: title),
                     )
@@ -131,13 +131,13 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
             ),
             Expanded(
               child: PageView(
-                controller: controller.pageController,
-                onPageChanged: controller.onPageChanged,
-                children: controller.items.map(
+                controller: _scheduleController.pageController,
+                onPageChanged: _scheduleController.onPageChanged,
+                children: _scheduleController.items.map(
                   (title) {
                     //final data = controller.todaySchedules[0];
                     return Obx(() {
-                      final scheduleMap = controller.schedulesByWasteType;
+                      final scheduleMap = _scheduleController.schedulesByWasteType;
 
                       if (scheduleMap.isEmpty) {
                         return const Text("Không có lịch hôm nay");

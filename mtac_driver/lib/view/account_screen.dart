@@ -38,14 +38,12 @@ class AccountScreen extends StatelessWidget {
                         height: 15.w,
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: kPrimaryColor.withOpacity(0.3),
-                            width: 1,
+                            color: kPrimaryColor.withOpacity(0.6),
+                            width: 2,
                           ),
                           shape: BoxShape.circle,
                         ),
-                        child: ClipOval(
-                          child: buildAvatar(user)
-                        ),
+                        child: ClipOval(child: buildAvatar(user)),
                       ),
                       SizedBox(
                         width: 5.w,
@@ -74,6 +72,7 @@ class AccountScreen extends StatelessWidget {
               ),
               _ItemFuncAccount(
                 title: "My Profile",
+                arrowRight: true,
                 color: kPrimaryColor,
                 onTap: () => Get.toNamed(AppRoutes.profile),
                 icon: HugeIcons.strokeRoundedUser,
@@ -81,30 +80,38 @@ class AccountScreen extends StatelessWidget {
               const Divider(),
               const _ItemFuncAccount(
                 title: "Payment Methods",
+                arrowRight: true,
                 color: kPrimaryColor,
                 icon: HugeIcons.strokeRoundedCreditCardValidation,
               ),
               const Divider(),
               const _ItemFuncAccount(
                 title: "Contact Us",
+                arrowRight: true,
                 color: kPrimaryColor,
                 icon: HugeIcons.strokeRoundedCalling02,
               ),
               const Divider(),
               const _ItemFuncAccount(
                 title: "Help & FAQs",
+                arrowRight: true,
                 color: kPrimaryColor,
                 icon: HugeIcons.strokeRoundedBot,
               ),
               const Divider(),
-               const _ItemFuncAccount(
+              _ItemFuncAccount(
                 title: "Settings",
+                arrowRight: true,
+                onTap: () {
+                  Get.toNamed(AppRoutes.setting);
+                },
                 color: kPrimaryColor,
                 icon: HugeIcons.strokeRoundedSetting07,
               ),
               const Divider(),
               _ItemFuncAccount(
                 title: "Logout",
+                arrowRight: false,
                 color: Colors.red,
                 icon: HugeIcons.strokeRoundedLogin03,
                 onTap: () => loginController.logOut(),
@@ -122,18 +129,21 @@ class _ItemFuncAccount extends StatelessWidget {
     super.key,
     required this.title,
     required this.icon,
-    this.onTap, required this.color,
+    this.onTap,
+    required this.color,
+    required this.arrowRight,
   });
   final String title;
   final IconData icon;
   final Color color;
   final Function()? onTap;
+  final bool arrowRight;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 5.w),
+        padding: EdgeInsets.symmetric(vertical: 2.w),
         child: Row(
           children: [
             Container(
@@ -151,10 +161,20 @@ class _ItemFuncAccount extends StatelessWidget {
             SizedBox(
               width: 5.w,
             ),
-            Text(
-              title,
-              style: PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
+            Expanded(
+              child: Text(
+                title,
+                style:
+                    PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
+              ),
             ),
+            arrowRight
+                ? Icon(
+                    HugeIcons.strokeRoundedArrowRight01,
+                    size: 5.w,
+                    color: Colors.black,
+                  )
+                : const SizedBox(),
           ],
         ),
       ),
