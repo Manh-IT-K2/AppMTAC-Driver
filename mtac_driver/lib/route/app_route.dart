@@ -9,7 +9,8 @@ class AppRoutes {
   static const driver = "/driver";
   static const profile = "/profile";
   static const setting = "/setting";
-    static const contactUs = "/contactUs";
+  static const contactUs = "/contactUs";
+  static const helpFaqs = "/helpFaqs";
   static const managerPassword = "/managerPassword";
   static const scheduleHistory = "/scheduleHistory";
   static const detailScheduleHistory = "/detailScheduleHistory";

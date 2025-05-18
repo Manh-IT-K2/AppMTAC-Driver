@@ -15,6 +15,11 @@ class LoginController extends GetxController {
   final isLoading = false.obs;
   final obscurePassword = true.obs;
 
+  // initial varialbe search help & FQAs
+  List<String> helpTitles = ['Tất cả', 'Tổng quan', 'Dịch vụ', 'Tài khoản'];
+  final searchHelpFqas = TextEditingController();
+  final isSelectedHelp = 0.obs;
+
   // inital variable manager password
   final passwordNewController = TextEditingController();
   final passwordNewConfirmController = TextEditingController();
@@ -23,11 +28,11 @@ class LoginController extends GetxController {
 
   // initial variable contact us
   final arrowDownService = false.obs;
-   final arrowDownWhatsApp = false.obs;
-    final arrowDownWebsite = false.obs;
-     final arrowDownTwitter = false.obs;
-      final arrowDownFacebook = false.obs;
-       final arrowDownInstagram = false.obs;
+  final arrowDownWhatsApp = false.obs;
+  final arrowDownWebsite = false.obs;
+  final arrowDownTwitter = false.obs;
+  final arrowDownFacebook = false.obs;
+  final arrowDownInstagram = false.obs;
 
   // infor user
   final Rxn<UserModel> infoUser = Rxn<UserModel>();
@@ -47,6 +52,11 @@ class LoginController extends GetxController {
     }
   }
 
+  // selected item help & FQAs
+  void selectedItemHelpFQA(int index) {
+    isSelectedHelp.value = index;
+  }
+
   // arrow down service visibility
   void toggleArrowDownServiceVisibility() {
     arrowDownService.value = !arrowDownService.value;
@@ -61,14 +71,17 @@ class LoginController extends GetxController {
   void toggleArrowDownWhatsAppVisibility() {
     arrowDownWhatsApp.value = !arrowDownWhatsApp.value;
   }
+
   // arrow down twitter visibility
   void toggleArrowDownTwitterVisibility() {
     arrowDownTwitter.value = !arrowDownTwitter.value;
   }
+
   // arrow down facebook visibility
   void toggleArrowDownFacebookVisibility() {
     arrowDownFacebook.value = !arrowDownFacebook.value;
   }
+
   // arrow down instagram visibility
   void toggleArrowDownInstagramVisibility() {
     arrowDownInstagram.value = !arrowDownInstagram.value;

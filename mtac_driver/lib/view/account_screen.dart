@@ -95,9 +95,12 @@ class AccountScreen extends StatelessWidget {
                 icon: HugeIcons.strokeRoundedCalling02,
               ),
               const Divider(),
-              const _ItemFuncAccount(
+              _ItemFuncAccount(
                 title: "Help & FAQs",
                 arrowRight: true,
+                onTap: () {
+                  Get.toNamed(AppRoutes.helpFaqs);
+                },
                 color: kPrimaryColor,
                 icon: HugeIcons.strokeRoundedBot,
               ),
