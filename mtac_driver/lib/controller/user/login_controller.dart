@@ -52,11 +52,6 @@ class LoginController extends GetxController {
     }
   }
 
-  // selected item help & FQAs
-  void selectedItemHelpFQA(int index) {
-    isSelectedHelp.value = index;
-  }
-
   // arrow down service visibility
   void toggleArrowDownServiceVisibility() {
     arrowDownService.value = !arrowDownService.value;

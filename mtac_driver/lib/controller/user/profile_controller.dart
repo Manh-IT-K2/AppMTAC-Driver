@@ -8,7 +8,6 @@ import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/model/user_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/service/user/user_service.dart';
-import 'package:mtac_driver/shared/user/user_shared.dart';
 
 class ProfileController extends GetxController {
   //

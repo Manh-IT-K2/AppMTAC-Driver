@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:mtac_driver/controller/user/login_controller.dart';
+import 'package:mtac_driver/controller/user/help_faqs_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/theme_text.dart';
 import 'package:sizer/sizer.dart';
@@ -9,7 +9,7 @@ import 'package:sizer/sizer.dart';
 class HelpFaqsScreen extends StatelessWidget {
   HelpFaqsScreen({super.key});
 
-  final _loginController = Get.find<LoginController>();
+  final HelpFAQController _helpFAQController = Get.put(HelpFAQController());
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class HelpFaqsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextField(
-                controller: _loginController.searchHelpFqas,
+                controller: _helpFAQController.searchHelpFqas,
                 cursorColor: kPrimaryColor.withOpacity(0.6),
                 decoration: InputDecoration(
                   hintText: 'Tìm kiếm...',
@@ -82,11 +82,11 @@ class HelpFaqsScreen extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: List.generate(
-                      _loginController.helpTitles.length,
+                      _helpFAQController.helpTitles.length,
                       (index) {
-                        final title = _loginController.helpTitles[index];
+                        final title = _helpFAQController.helpTitles[index];
                         final isSelected =
-                            _loginController.isSelectedHelp.value == index;
+                            _helpFAQController.isSelectedHelp.value == index;
 
                         return Padding(
                           padding: EdgeInsets.only(right: 3.w),
@@ -94,7 +94,7 @@ class HelpFaqsScreen extends StatelessWidget {
                             title: title,
                             isSelectedHelp: isSelected,
                             onTap: () {
-                              _loginController.selectedItemHelpFQA(index);
+                              _helpFAQController.selectedItemHelpFQA(index);
                             },
                           ),
                         );
@@ -103,12 +103,28 @@ class HelpFaqsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              _itemHelpFQAsAccount(
-                arrowDownContactUs: _loginController.arrowDownFacebook.value,
-                title: "How do I contact customer support?",
-                subTitle:
-                    "How do I contact customer support How do I contact customer support How do I contact customer support",
+              Obx(
+                () => SizedBox(
+                  width: 100.w,
+                  height: 70.h,
+                  child: ListView.builder(
+                    padding: EdgeInsets.only(bottom: 10.h),
+                    itemCount: _helpFAQController.faqList.length,
+                    itemBuilder: (context, index) {
+                      final item = _helpFAQController.faqList[index];
+                      return Obx(
+                        () => _itemHelpFQAsAccount(
+                          arrowDownPrivew: item.isExpanded.value,
+                          title: item.title,
+                          subTitle: item.subTitle,
+                          ontap: () => _helpFAQController.toggleExpand(index),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
+              
             ],
           ),
         ),
@@ -142,8 +158,9 @@ class _itemTitleHelpFQAs extends StatelessWidget {
         child: Center(
           child: Text(
             title,
-            style: PrimaryFont.bodyTextMedium()
-                .copyWith(color: isSelectedHelp ? Colors.white : Colors.black),
+            style: PrimaryFont.bodyTextMedium().copyWith(
+              color: isSelectedHelp ? Colors.white : Colors.black,
+            ),
           ),
         ),
       ),
@@ -154,13 +171,13 @@ class _itemTitleHelpFQAs extends StatelessWidget {
 class _itemHelpFQAsAccount extends StatelessWidget {
   const _itemHelpFQAsAccount({
     super.key,
-    required this.arrowDownContactUs,
+    required this.arrowDownPrivew,
     required this.title,
     required this.subTitle,
     this.ontap,
   });
 
-  final bool arrowDownContactUs;
+  final bool arrowDownPrivew;
   final String title, subTitle;
   final Function()? ontap;
 
@@ -168,15 +185,15 @@ class _itemHelpFQAsAccount extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 100.w,
-      height: arrowDownContactUs ? 25.w : 12.w,
+      //height: arrowDownPrivew ? 40.w : 12.w,
       margin: EdgeInsets.only(bottom: 3.w),
-      decoration: BoxDecoration(
-        border: Border.all(
-          width: 1,
-          color: kPrimaryColor.withOpacity(0.4),
-        ),
-        borderRadius: BorderRadius.circular(3.w),
-      ),
+      // decoration: BoxDecoration(
+      //   border: Border.all(
+      //     width: 1,
+      //     color: kPrimaryColor.withOpacity(0.4),
+      //   ),
+      //   borderRadius: BorderRadius.circular(3.w),
+      // ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.w),
         child: Column(
@@ -193,7 +210,7 @@ class _itemHelpFQAsAccount extends StatelessWidget {
                 GestureDetector(
                   onTap: ontap,
                   child: Icon(
-                    arrowDownContactUs
+                    arrowDownPrivew
                         ? HugeIcons.strokeRoundedArrowUp01
                         : HugeIcons.strokeRoundedArrowDown01,
                     size: 5.w,
@@ -202,7 +219,7 @@ class _itemHelpFQAsAccount extends StatelessWidget {
                 ),
               ],
             ),
-            arrowDownContactUs
+            arrowDownPrivew
                 ? Container(
                     width: 100.w,
                     height: 0.2,
@@ -210,7 +227,7 @@ class _itemHelpFQAsAccount extends StatelessWidget {
                     margin: EdgeInsets.symmetric(vertical: 3.w),
                   )
                 : const SizedBox(),
-            arrowDownContactUs
+            arrowDownPrivew
                 ? Row(
                     children: [
                       Expanded(
@@ -218,8 +235,8 @@ class _itemHelpFQAsAccount extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             subTitle,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            // maxLines: 4,
+                            // overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
                             style: PrimaryFont.bodyTextThin().copyWith(
                               color: Colors.black.withOpacity(0.6),
