@@ -31,53 +31,122 @@ class AccountScreen extends StatelessWidget {
                       fit: BoxFit.cover,
                     );
                   }
-                  return Row(
-                    children: [
-                      Container(
-                        width: 15.w,
-                        height: 15.w,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: kPrimaryColor.withOpacity(0.6),
-                            width: 2,
+                  return SizedBox(
+                    width: 100.w - 32,
+                    height: 20.h,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          bottom: 0,
+                          child: Container(
+                            width: 100.w - 32,
+                            height: 15.h,
+                            decoration: BoxDecoration(
+                                color: const Color.fromRGBO(238, 238, 238, 1),
+                                borderRadius: BorderRadius.circular(3.w)),
                           ),
-                          shape: BoxShape.circle,
                         ),
-                        child: ClipOval(child: buildAvatar(user)),
-                      ),
-                      SizedBox(
-                        width: 5.w,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            user.user.name,
-                            style: PrimaryFont.titleTextBold()
-                                .copyWith(color: Colors.black),
+                        Center(
+                          child: Positioned(
+                            top: 3.w,
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 18.w,
+                                  height: 18.w,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color:
+                                          const Color.fromRGBO(238, 238, 238, 1),
+                                      width: 4,
+                                    ),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: ClipOval(child: buildAvatar(user)),
+                                ),
+                                Text(
+                                  user.user.name,
+                                  style: PrimaryFont.titleTextBold()
+                                      .copyWith(color: Colors.black),
+                                ),
+                                Text(
+                                  user.user.email,
+                                  style: PrimaryFont.bodyTextBold()
+                                      .copyWith(color: Colors.black),
+                                ),
+                              ],
+                            ),
                           ),
-                          Text(
-                            user.user.email,
-                            style: PrimaryFont.bodyTextBold()
-                                .copyWith(color: Colors.black),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          child: Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () => Get.toNamed(AppRoutes.profile),
+                                child: Container(
+                                  width: 50.w - 16,
+                                  height: 10.w,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(30.w),
+                                      topRight: Radius.circular(100.w),
+                                      // bottomRight: Radius.circular(3.w),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "MY PROFILE",
+                                      style: PrimaryFont.bodyTextBold()
+                                          .copyWith(color: kPrimaryColor),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            
+                              GestureDetector(
+                                onTap: () => loginController.logOut(),
+                                child: Container(
+                                  width: 50.w - 16,
+                                  height: 10.w,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.only(
+                                      bottomRight: Radius.circular(30.w),
+                                      //topLeft: Radius.circular(3.w),
+                                      bottomLeft: Radius.circular(100.w),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "LOGOUT",
+                                      textAlign: TextAlign.center,
+                                      style: PrimaryFont.bodyTextBold()
+                                          .copyWith(color: Colors.red),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
+                        )
+                      ],
+                    ),
                   );
                 },
               ),
               SizedBox(
                 height: 5.w,
               ),
-              _ItemFuncAccount(
-                title: "My Profile",
-                arrowRight: true,
-                color: kPrimaryColor,
-                onTap: () => Get.toNamed(AppRoutes.profile),
-                icon: HugeIcons.strokeRoundedUser,
-              ),
-              const Divider(),
+              // _ItemFuncAccount(
+              //   title: "My Profile",
+              //   arrowRight: true,
+              //   color: kPrimaryColor,
+              //   onTap: () => Get.toNamed(AppRoutes.profile),
+              //   icon: HugeIcons.strokeRoundedUser,
+              // ),
+              //const Divider(),
               const _ItemFuncAccount(
                 title: "Payment Methods",
                 arrowRight: true,
@@ -115,13 +184,21 @@ class AccountScreen extends StatelessWidget {
                 icon: HugeIcons.strokeRoundedSetting07,
               ),
               const Divider(),
-              _ItemFuncAccount(
-                title: "Logout",
-                arrowRight: false,
-                color: Colors.red,
-                icon: HugeIcons.strokeRoundedLogin03,
-                onTap: () => loginController.logOut(),
+              // _ItemFuncAccount(
+              //   title: "Logout",
+              //   arrowRight: false,
+              //   color: Colors.red,
+              //   icon: HugeIcons.strokeRoundedLogin03,
+              //   onTap: () => loginController.logOut(),
+              // ),
+              SizedBox(
+                height: 10.w,
               ),
+              Text(
+                "Phiên bản 1.1.1 build 1110",
+                style:
+                    PrimaryFont.bodyTextMedium().copyWith(color: Colors.grey),
+              )
             ],
           ),
         ),

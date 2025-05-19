@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mtac_driver/theme/color.dart';
+import 'package:mtac_driver/utils/theme_text.dart';
 import 'package:sizer/sizer.dart';
 import 'package:mtac_driver/controller/network_check_middleware_controller.dart';
 
@@ -8,10 +10,10 @@ class NoInternetScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5.w),
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
               "assets/image/no_internet.gif",
@@ -26,12 +28,17 @@ class NoInternetScreen extends StatelessWidget {
                     .checkConnectionAndRedirect();
               },
               style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
+                backgroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.w),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: const Text("Thử lại"),
+              child: Text(
+                "Thử lại",
+                style:
+                    PrimaryFont.bodyTextMedium().copyWith(color: kPrimaryColor),
+              ),
             ),
           ],
         ),
