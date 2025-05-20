@@ -95,7 +95,7 @@ class _ItemScheduleHistory extends StatelessWidget {
       width: 100.w,
       height: 35.w,
       decoration: BoxDecoration(
-        color: kBackgroundColor,
+        color: Colors.grey[100],
         borderRadius: BorderRadius.circular(5.w),
         boxShadow: [
           BoxShadow(

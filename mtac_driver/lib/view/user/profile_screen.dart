@@ -19,7 +19,7 @@ class ProfileScreen extends StatelessWidget {
   final taxCodeController = TextEditingController();
   final addressController = TextEditingController();
 
-  final  ProfileController _profileController = Get.put(ProfileController());
+  final ProfileController _profileController = Get.put(ProfileController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,6 +76,15 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+            ),
+            Positioned(
+              right: 5.w,
+              top: 34.w,
+              child: Image.asset(
+                'assets/image/icon_change_color.png',
+                width: 8.w,
+                height: 8.w,
               ),
             ),
             Positioned(
@@ -219,7 +228,6 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            
                             _profileController.updateUser({
                               "name": nameController.text.trim(),
                               "email": emailController.text.trim(),

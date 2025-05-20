@@ -56,9 +56,9 @@ class AccountScreen extends StatelessWidget {
                                   height: 18.w,
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      color:
-                                          const Color.fromRGBO(238, 238, 238, 1),
-                                      width: 4,
+                                      color: const Color.fromRGBO(
+                                          238, 238, 238, 1),
+                                      width: 5,
                                     ),
                                     shape: BoxShape.circle,
                                   ),
@@ -104,7 +104,6 @@ class AccountScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            
                               GestureDetector(
                                 onTap: () => loginController.logOut(),
                                 child: Container(
@@ -191,6 +190,59 @@ class AccountScreen extends StatelessWidget {
               //   icon: HugeIcons.strokeRoundedLogin03,
               //   onTap: () => loginController.logOut(),
               // ),
+              Row(
+                children: [
+                  Container(
+                    width: 10.w,
+                    height: 10.w,
+                    decoration: BoxDecoration(
+                        color: kBackgroundColor,
+                        borderRadius: BorderRadius.circular(2.w)),
+                    child: Icon(
+                      HugeIcons.strokeRoundedLanguageSkill,
+                      size: 5.w,
+                      color: kPrimaryColor,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5.w,
+                  ),
+                  Expanded(
+                    child: Text(
+                      "Language",
+                      style: PrimaryFont.bodyTextMedium()
+                          .copyWith(color: Colors.black),
+                    ),
+                  ),
+                  Container(
+                    width: 10.w,
+                    height: 5.w,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[400],
+                      borderRadius: BorderRadius.circular(5.w),
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        width: 5.w,
+                        height: 4.w,
+                        alignment: Alignment.centerLeft,
+                        decoration: const BoxDecoration(
+                            color: kPrimaryColor, shape: BoxShape.circle),
+                        child: Center(
+                          child: Text(
+                            "vi",
+                            textAlign: TextAlign.center,
+                            style: PrimaryFont.bodyTextMedium()
+                                .copyWith(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              const Divider(),
               SizedBox(
                 height: 10.w,
               ),

@@ -163,16 +163,20 @@ class ScheduleController extends GetxController {
   // initial scroll to Today in center screen
   void scrollToTodayWithContext(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // double offset = calculateTodayScrollOffset(itemWidth, screenWidth);
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          offset,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
 
-      scrollController.animateTo(
-        offset,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeInOut,
-      );
-
-      if (kDebugMode) {
-        print('>> Scroll to today offset: $offset');
+        if (kDebugMode) {
+          print('>> Scroll to today offset: $offset');
+        }
+      } else {
+        if (kDebugMode) {
+          print('>> ScrollController not attached yet');
+        }
       }
     });
   }

@@ -185,15 +185,15 @@ class _itemHelpFQAsAccount extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 100.w,
-      //height: arrowDownPrivew ? 40.w : 12.w,
+      height: arrowDownPrivew ? 40.w : 12.w,
       margin: EdgeInsets.only(bottom: 3.w),
-      // decoration: BoxDecoration(
-      //   border: Border.all(
-      //     width: 1,
-      //     color: kPrimaryColor.withOpacity(0.4),
-      //   ),
-      //   borderRadius: BorderRadius.circular(3.w),
-      // ),
+      decoration: BoxDecoration(
+        border: Border.all(
+          width: 1,
+          color: kPrimaryColor.withOpacity(0.4),
+        ),
+        borderRadius: BorderRadius.circular(3.w),
+      ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.w),
         child: Column(
