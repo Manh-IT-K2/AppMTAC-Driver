@@ -7,6 +7,7 @@ import 'package:mtac_driver/configs/api_config.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
+import 'package:mtac_driver/utils/text_util.dart';
 import 'package:mtac_driver/widgets/user_widget/input_form_widget.dart';
 import 'package:sizer/sizer.dart';
 
@@ -52,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   SizedBox(height: 20.w),
                   Text(
-                    "Welcom to",
+                    txtWelcomToL,
                     style: PrimaryFont.bold(10.w).copyWith(
                       color: kPrimaryColor,
                     ),
@@ -66,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 5.w),
                   InputFormWidget(
                     readOnly: false,
-                    title: 'Phone number',
+                    title: txtPhone,
                     obscureText: false,
                     controller: controller.usernameController,
                     iconStart: HugeIcons.strokeRoundedCall02,
@@ -96,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Obx(
                     () => InputFormWidget(
                       readOnly: false,
-                      title: 'Password',
+                      title: txtPasswordL,
                       controller: controller.passwordController,
                       obscureText: controller.obscurePassword.value,
                       iconStart: HugeIcons.strokeRoundedLockPassword,
@@ -107,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: controller.togglePasswordVisibility,
                       ),
                       validator: (value) => value == null || value.isEmpty
-                          ? 'Vui lòng nhập password'
+                          ? txtPleaseEnPassL
                           : null,
                     ),
                   ),
@@ -117,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: GestureDetector(
                       onTap: () {},
                       child: Text(
-                        "Forgot password?",
+                       txtForgotPassL,
                         style: PrimaryFont.bodyTextMedium()
                             .copyWith(color: kPrimaryColor),
                       ),
@@ -140,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 shadowColor: Colors.black.withOpacity(0.3),
                               ),
                               child: Text(
-                                "Sign in",
+                                txtSignInL,
                                 style: PrimaryFont.bodyTextMedium().copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -151,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 10.w),
                   Text(
-                    "----- Or register by call -----",
+                    "----- $txtOrRegisterByCallL -----",
                     style: PrimaryFont.bodyTextMedium()
                         .copyWith(color: Colors.black),
                   ),
@@ -172,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "By logging in, you accept",
+                        txtByLoggingInYouAcceptL,
                         style: PrimaryFont.bodyTextMedium()
                             .copyWith(color: Colors.black),
                       ),
@@ -180,7 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       GestureDetector(
                         onTap: () {},
                         child: Text(
-                          "terms of use",
+                          txtTermsOfUseL,
                           style: PrimaryFont.bodyTextMedium()
                               .copyWith(color: kPrimaryColor),
                         ),

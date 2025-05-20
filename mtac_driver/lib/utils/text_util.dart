@@ -66,8 +66,8 @@ const String txtImageHR = "Hình ảnh Biên Bản Giao Nhận";
 const String txtButSendHR = "Gửi Biên bản giao nhận";
 
 // text bottom sheet
-const String txtCamera = "Camera";
-const String txtLibrary = "Library";
+const String txtCamera = "Máy ảnh";
+const String txtLibrary = "Thư viện";
 
 // text driver screen
 const String txtHelloD = "Xin chào bác tài\n";
@@ -85,4 +85,49 @@ const String txtTripColectionTodayD = "Chuyến thu gom hôm nay";
 const String txtTitleNoteImportantD =  "Ghi chú quan trọng";
 const String txtSubTitleNoteImportantD = "Đừng quên mình có ghi chú quan trọng nhé bác tài";
 
-// text 
+// text bottom bar
+const String txtHomeNB = "Trang chủ";
+const String txtPaymentNB ="Thanh toán";
+const String txtNotificationNB = "Hộp thư";
+const String txtAccountNB = "Tài khoản";
+
+// text account user screen
+const String txtMyProfileAU = "Hồ sơ của tôi";
+const String txtLogoutAU ="Đăng xuất";
+const String txtPaymentMedthodAU = "Phương thức thanh toán";
+const String txtContactAU = "Liên hệ với chúng tôi";
+const String txtHelpAU = "Trợ giúp & Câu hỏi";
+const String txtSettingAU ="Cài đặt";
+const String txtLanguageAU = "Ngôn ngữ";
+const String txtVersionAU = "Phiên bản";
+
+// text profile user screen
+const String txtNamePU ="Tên";
+const String txtPhone = "Điện thoại";
+const String txtEmailPU = "E-mail";
+const String txtAddressPU = "Địa chỉ";
+const String txtCarIDPU ="Số CCCD";
+const String txtTaxCodePU = "Mã số thuế";
+const String txtVehicleLicensePU = "Giấy phép lái xe";
+const String txtUpdateProfilePU = "Cập nhật thông tin";
+
+// text login screen
+const String txtWelcomToL ="Tên";
+const String txtPasswordL = "Mật khẩu";
+const String txtPleaseEnPassL = 'Vui lòng nhập password';
+const String txtForgotPassL = "Quên mật khẩu?";
+const String txtSignInL ="Đăng kí";
+const String txtOrRegisterByCallL = "Hoặc đăng kí bằng cách gọi";
+const String txtTermsOfUseL = "Điều khoản sử dụng";
+const String txtByLoggingInYouAcceptL = "Bằng cách đăng nhập, bạn chấp nhận";
+
+// text setting user screen
+const String txtSettingNotifiSU = "Cài đặt thông báo";
+const String txtPasswordManagementSU = "Quản lý mật khẩu";
+const String txtDeleteAcountSU = "Xoá tài khoản";
+
+// text manager password screen
+const String txtCurrentPasswordMP = "Mật khẩu hiện tại";
+const String txtNewPasswordMP = "Mật khẩu mới";
+const String txtConfirmPasswordMP = "Xác nhận mật khẩu mới";
+const String txtChangePasswordMP = "Đổi mật khẩu";

@@ -72,6 +72,9 @@ dependencies:
   intl: ^0.19.0
   # 
   flutter_image_compress: ^2.4.0
+  # change language
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
@@ -89,7 +92,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  generate: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

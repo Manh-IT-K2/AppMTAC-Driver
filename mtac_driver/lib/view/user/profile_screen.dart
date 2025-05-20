@@ -4,6 +4,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/controller/user/profile_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
+import 'package:mtac_driver/utils/text_util.dart';
 import 'package:mtac_driver/widgets/user_widget/build_avatar_widget.dart';
 import 'package:mtac_driver/widgets/user_widget/input_form_widget.dart';
 import 'package:sizer/sizer.dart';
@@ -64,7 +65,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        "My Profile",
+                        txtMyProfileAU,
                         textAlign: TextAlign.center,
                         style: PrimaryFont.headerTextBold().copyWith(
                           color: Colors.white,
@@ -148,7 +149,7 @@ class ProfileScreen extends StatelessWidget {
                         InputFormWidget(
                           readOnly: false,
                           controller: nameController,
-                          title: "Name",
+                          title: txtNamePU,
                           obscureText: false,
                         ),
                         SizedBox(
@@ -157,7 +158,7 @@ class ProfileScreen extends StatelessWidget {
                         InputFormWidget(
                           readOnly: false,
                           controller: phoneController,
-                          title: "Phone",
+                          title: txtPhone,
                           obscureText: false,
                         ),
                         SizedBox(
@@ -166,7 +167,7 @@ class ProfileScreen extends StatelessWidget {
                         InputFormWidget(
                           readOnly: false,
                           controller: emailController,
-                          title: "Email",
+                          title: txtEmailPU,
                           obscureText: false,
                           suffixIcon: IconButton(
                             onPressed: () {},
@@ -183,7 +184,7 @@ class ProfileScreen extends StatelessWidget {
                         InputFormWidget(
                           readOnly: false,
                           controller: addressController,
-                          title: "Address",
+                          title: txtAddressPU,
                           obscureText: false,
                         ),
                         SizedBox(
@@ -192,7 +193,7 @@ class ProfileScreen extends StatelessWidget {
                         InputFormWidget(
                           readOnly: false,
                           controller: nummberIDController,
-                          title: "Card ID",
+                          title: txtCarIDPU,
                           obscureText: false,
                         ),
                         SizedBox(
@@ -202,7 +203,7 @@ class ProfileScreen extends StatelessWidget {
                           readOnly: true,
                           showCursor: false,
                           controller: taxCodeController,
-                          title: "Tax Code",
+                          title: txtTaxCodePU,
                           colorText: Colors.grey,
                           obscureText: false,
                           suffixIcon: IconButton(
@@ -220,7 +221,7 @@ class ProfileScreen extends StatelessWidget {
                         InputFormWidget(
                           readOnly: false,
                           controller: numberVehicleController,
-                          title: "Vehicle License",
+                          title: txtVehicleLicensePU,
                           obscureText: false,
                         ),
                         SizedBox(
@@ -247,7 +248,7 @@ class ProfileScreen extends StatelessWidget {
                             shadowColor: Colors.black.withOpacity(0.3),
                           ),
                           child: Text(
-                            "Update profile",
+                           txtUpdateProfilePU,
                             style: PrimaryFont.bodyTextMedium().copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,

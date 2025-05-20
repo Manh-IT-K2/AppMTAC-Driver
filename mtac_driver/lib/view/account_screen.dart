@@ -5,14 +5,18 @@ import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
+import 'package:mtac_driver/utils/text_util.dart';
 import 'package:mtac_driver/widgets/user_widget/build_avatar_widget.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AccountScreen extends StatelessWidget {
   AccountScreen({super.key});
-  final LoginController loginController = Get.put(LoginController());
+  final loginController = Get.find<LoginController>();
   @override
   Widget build(BuildContext context) {
+    //
+    final l10n = AppLocalizations.of(context)!;
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -58,8 +62,8 @@ class AccountScreen extends StatelessWidget {
                                 height: 18.w,
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    color: const Color.fromRGBO(
-                                        238, 238, 238, 1),
+                                    color:
+                                        const Color.fromRGBO(238, 238, 238, 1),
                                     width: 5,
                                   ),
                                   shape: BoxShape.circle,
@@ -97,7 +101,7 @@ class AccountScreen extends StatelessWidget {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      "MY PROFILE",
+                                     txtMyProfileAU,
                                       style: PrimaryFont.bodyTextBold()
                                           .copyWith(color: kPrimaryColor),
                                     ),
@@ -118,7 +122,7 @@ class AccountScreen extends StatelessWidget {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      "LOGOUT",
+                                      txtLogoutAU,
                                       textAlign: TextAlign.center,
                                       style: PrimaryFont.bodyTextBold()
                                           .copyWith(color: Colors.red),
@@ -138,14 +142,14 @@ class AccountScreen extends StatelessWidget {
                 height: 5.w,
               ),
               const _ItemFuncAccount(
-                title: "Payment Methods",
+                title: txtPaymentMedthodAU,
                 arrowRight: true,
                 color: kPrimaryColor,
                 icon: HugeIcons.strokeRoundedCreditCardValidation,
               ),
               const Divider(),
               _ItemFuncAccount(
-                title: "Contact Us",
+                title: txtContactAU,
                 arrowRight: true,
                 onTap: () {
                   Get.toNamed(AppRoutes.contactUs);
@@ -155,7 +159,7 @@ class AccountScreen extends StatelessWidget {
               ),
               const Divider(),
               _ItemFuncAccount(
-                title: "Help & FAQs",
+                title: txtHelpAU,
                 arrowRight: true,
                 onTap: () {
                   Get.toNamed(AppRoutes.helpFaqs);
@@ -165,7 +169,7 @@ class AccountScreen extends StatelessWidget {
               ),
               const Divider(),
               _ItemFuncAccount(
-                title: "Settings",
+                title: txtSettingAU,
                 arrowRight: true,
                 onTap: () {
                   Get.toNamed(AppRoutes.setting);
@@ -193,32 +197,43 @@ class AccountScreen extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      "Language",
+                      txtLanguageAU,
                       style: PrimaryFont.bodyTextMedium()
                           .copyWith(color: Colors.black),
                     ),
                   ),
-                  Container(
-                    width: 10.w,
-                    height: 5.w,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[400],
-                      borderRadius: BorderRadius.circular(5.w),
-                    ),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        width: 5.w,
-                        height: 4.w,
-                        alignment: Alignment.centerLeft,
-                        decoration: const BoxDecoration(
-                            color: kPrimaryColor, shape: BoxShape.circle),
-                        child: Center(
-                          child: Text(
-                            "vi",
-                            textAlign: TextAlign.center,
-                            style: PrimaryFont.bodyTextMedium()
-                                .copyWith(color: Colors.white),
+                  GestureDetector(
+                    onTap: () {
+                      final newLang = loginController.isEnglish ? 'vi' : 'en';
+                      loginController.changeLanguage(newLang);
+                      //print(newLang);
+                    },
+                    child: Container(
+                      width: 10.w,
+                      height: 5.w,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[400],
+                        borderRadius: BorderRadius.circular(5.w),
+                      ),
+                      child: Obx(
+                        () => Align(
+                          alignment: loginController.isEnglish
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                          child: Container(
+                            width: 5.w,
+                            height: 4.w,
+                            //alignment: Alignment.centerLeft,
+                            decoration: const BoxDecoration(
+                                color: kPrimaryColor, shape: BoxShape.circle),
+                            child: Center(
+                              child: Text(
+                                loginController.isEnglish ? "en" : "vi",
+                                textAlign: TextAlign.center,
+                                style: PrimaryFont.bold(2.w)
+                                    .copyWith(color: Colors.white),
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -231,7 +246,7 @@ class AccountScreen extends StatelessWidget {
                 height: 10.w,
               ),
               Text(
-                "Phiên bản 1.1.1 build 1110",
+                "$txtVersionAU 1.1.1 build 1110",
                 style:
                     PrimaryFont.bodyTextMedium().copyWith(color: Colors.grey),
               )

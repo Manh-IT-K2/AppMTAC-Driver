@@ -8,6 +8,7 @@ import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/text_util.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -17,6 +18,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -27,12 +29,15 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _HeaderDriverScreen(
+                l10n: l10n,
                 scheduleController: _scheduleController,
               ),
               SizedBox(
                 height: 3.w,
               ),
-              _BodyDriverScreen(scheduleController: _scheduleController),
+              _BodyDriverScreen(
+                l10n: l10n,
+                scheduleController: _scheduleController),
               //const _BottomDriverScreen(),
               SizedBox(
                 height: 3.w,
@@ -47,20 +52,21 @@ class HomeScreen extends StatelessWidget {
 
 class _BottomDriverScreen extends StatelessWidget {
   const _BottomDriverScreen({
-    super.key,
+    super.key, required this.l10n,
   });
-
+  
+  final AppLocalizations l10n; 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          txtTitleNoteImportantD,
+          l10n.txtTitleNoteImportantD,
           style: PrimaryFont.titleTextMedium().copyWith(color: Colors.red),
         ),
         Text(
-          txtSubTitleNoteImportantD,
+          l10n.txtSubTitleNoteImportantD,
           style: PrimaryFont.bodyTextMedium().copyWith(
             color: Colors.black.withOpacity(0.8),
           ),
@@ -96,10 +102,11 @@ class _BottomDriverScreen extends StatelessWidget {
 class _BodyDriverScreen extends StatelessWidget {
   const _BodyDriverScreen({
     super.key,
-    required ScheduleController scheduleController,
+    required ScheduleController scheduleController, required this.l10n,
   }) : _scheduleController = scheduleController;
 
   final ScheduleController _scheduleController;
+  final AppLocalizations l10n; 
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +116,7 @@ class _BodyDriverScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          txtScheduleHighlightD,
+          l10n.txtScheduleHighlightD,
           style: PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
         ),
         SizedBox(
@@ -162,7 +169,7 @@ class _BodyDriverScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                txtTripColectionTodayD,
+                l10n.txtTripColectionTodayD,
                 style:
                     PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
               ),
@@ -209,9 +216,10 @@ class _BodyDriverScreen extends StatelessWidget {
 class _HeaderDriverScreen extends StatelessWidget {
   const _HeaderDriverScreen({
     super.key,
-    required this.scheduleController,
+    required this.scheduleController, required this.l10n,
   });
   final ScheduleController scheduleController;
+  final AppLocalizations l10n; 
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -226,7 +234,7 @@ class _HeaderDriverScreen extends StatelessWidget {
             Obx(
               () => Text.rich(
                 TextSpan(
-                  text: txtHelloD,
+                  text: l10n.txtHelloD,
                   style: PrimaryFont.bodyTextMedium()
                       .copyWith(color: Colors.grey, height: 1.5),
                   children: <TextSpan>[
@@ -286,7 +294,7 @@ class _HeaderDriverScreen extends StatelessWidget {
           height: 3.w,
         ),
         Text(
-          txtUtilDriverD,
+          l10n.txtUtilDriverD,
           style: PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
         ),
         Row(
@@ -298,8 +306,8 @@ class _HeaderDriverScreen extends StatelessWidget {
               child: _UtilDriver(
                 color: Colors.purple.withOpacity(0.2),
                 icon: HugeIcons.strokeRoundedCalendar03,
-                title: txtTitleScheduleColectionD,
-                subTitle: txtSubTitleScheduleColectionD,
+                title: l10n.txtTitleScheduleColectionD,
+                subTitle: l10n.txtSubTitleScheduleColectionD,
               ),
             ),
             const SizedBox(
@@ -308,8 +316,8 @@ class _HeaderDriverScreen extends StatelessWidget {
             _UtilDriver(
               color: Colors.greenAccent.withOpacity(0.2),
               icon: Icons.trending_down,
-              title: txtTitleStatisticalD,
-              subTitle: txtSubTitleStatisticalD,
+              title: l10n.txtTitleStatisticalD,
+              subTitle: l10n.txtSubTitleStatisticalD,
             ),
           ],
         ),
@@ -321,8 +329,8 @@ class _HeaderDriverScreen extends StatelessWidget {
             _UtilDriver(
               color: Colors.green.withOpacity(0.1),
               icon: HugeIcons.strokeRoundedCustomerService01,
-              title: txtTitleHelpD,
-              subTitle: txtSubTitleHelpD,
+              title: l10n.txtTitleHelpD,
+              subTitle: l10n.txtSubTitleHelpD,
             ),
             const SizedBox(
               width: 16,
@@ -335,8 +343,8 @@ class _HeaderDriverScreen extends StatelessWidget {
               child: _UtilDriver(
                 color: Colors.orange.withOpacity(0.2),
                 icon: HugeIcons.strokeRoundedSmartPhone01,
-                title: txtTitleHistoryD,
-                subTitle: txtSubTitleHistoryD,
+                title: l10n.txtTitleHistoryD,
+                subTitle: l10n.txtSubTitleHistoryD,
               ),
             ),
           ],

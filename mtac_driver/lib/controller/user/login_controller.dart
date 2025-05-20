@@ -4,6 +4,7 @@ import 'package:mtac_driver/common/show_notify_snackbar.dart';
 import 'package:mtac_driver/model/user_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/service/user/login_service.dart';
+import 'package:mtac_driver/shared/language_shared.dart';
 import 'package:mtac_driver/shared/user/user_shared.dart';
 
 class LoginController extends GetxController {
@@ -34,6 +35,10 @@ class LoginController extends GetxController {
   final arrowDownFacebook = false.obs;
   final arrowDownInstagram = false.obs;
 
+  // initial variable change language
+  bool get isEnglish => currentLocale.value.languageCode == 'en';
+  Rx<Locale> currentLocale = const Locale('vi').obs;
+
   // infor user
   final Rxn<UserModel> infoUser = Rxn<UserModel>();
 
@@ -42,6 +47,19 @@ class LoginController extends GetxController {
   void onInit() {
     super.onInit();
     loadUserModel();
+  }
+
+  //
+  Future<void> changeLanguage(String langCode) async {
+    await setLanguage(langCode);
+    currentLocale.value = Locale(langCode);
+    Get.updateLocale(currentLocale.value);
+  }
+  //
+  Future<void> loadSavedLanguage() async {
+    final langCode = await getLanguage();
+    currentLocale.value = Locale(langCode);
+    Get.updateLocale(currentLocale.value);
   }
 
   // load user model
@@ -126,7 +144,7 @@ class LoginController extends GetxController {
   Future<void> logOut() async {
     final success = await LoginService().logout();
     if (success) {
-    showSuccess("Đăng xuất thành công!.");
+      showSuccess("Đăng xuất thành công!.");
       Get.offAllNamed(AppRoutes.login);
     } else {
       showError("Đăng xuất thất bại!.");

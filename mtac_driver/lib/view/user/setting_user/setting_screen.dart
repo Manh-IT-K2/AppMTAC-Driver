@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
+import 'package:mtac_driver/utils/text_util.dart';
 import 'package:sizer/sizer.dart';
 
 class SettingScreen extends StatelessWidget {
@@ -29,7 +30,7 @@ class SettingScreen extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  "Cài đặt",
+                  txtSettingAU,
                   textAlign: TextAlign.center,
                   style: PrimaryFont.headerTextBold()
                       .copyWith(color: Colors.black),
@@ -47,14 +48,14 @@ class SettingScreen extends StatelessWidget {
         child: Column(
           children: [
             _itemSettingAccount(
-              title: "Cài đặt thông báo",
+              title: txtSettingNotifiSU,
               arrowRight: true,
               color: Colors.black,
               icon: HugeIcons.strokeRoundedNotification03,
               ontap: () {},
             ),
             _itemSettingAccount(
-              title: "Quản lý mật khẩu",
+              title: txtPasswordManagementSU,
               arrowRight: true,
               color: Colors.black,
               icon: HugeIcons.strokeRoundedForgotPassword,
@@ -63,7 +64,7 @@ class SettingScreen extends StatelessWidget {
               },
             ),
             _itemSettingAccount(
-              title: "Xoá tài khoản",
+              title: txtDeleteAcountSU,
               arrowRight: false,
               color: Colors.red,
               icon: HugeIcons.strokeRoundedUserRemove01,

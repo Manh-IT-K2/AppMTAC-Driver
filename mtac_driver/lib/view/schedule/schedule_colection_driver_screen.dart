@@ -4,9 +4,9 @@ import 'package:intl/intl.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/text_util.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScheduleColectionDriverScreen extends StatelessWidget {
   ScheduleColectionDriverScreen({super.key});
@@ -15,6 +15,8 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //
+    final l10n = AppLocalizations.of(context)!;
     // Get day ToDay
     DateTime now = DateTime.now();
     String day = now.day.toString().padLeft(2, '0');
@@ -40,7 +42,7 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
               ),
             ),
             Text(
-              txtTitleS,
+              l10n.txtTitleS,
               style: PrimaryFont.headerTextBold().copyWith(color: Colors.black),
             ),
             GestureDetector(
@@ -82,7 +84,7 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
               child: Text.rich(
                 TextSpan(children: [
                   TextSpan(
-                    text: txtHelloS,
+                    text: l10n.txtHelloS,
                     style: PrimaryFont.bodyTextMedium()
                         .copyWith(color: Colors.grey),
                   ),
@@ -100,7 +102,7 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    txtScheduleTodayS,
+                    l10n.txtScheduleTodayS,
                     style: PrimaryFont.headerTextBold()
                         .copyWith(color: Colors.black),
                   ),

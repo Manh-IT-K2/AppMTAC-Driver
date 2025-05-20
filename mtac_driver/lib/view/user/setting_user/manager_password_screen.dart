@@ -4,6 +4,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
+import 'package:mtac_driver/utils/text_util.dart';
 import 'package:mtac_driver/widgets/user_widget/input_form_widget.dart';
 import 'package:sizer/sizer.dart';
 
@@ -30,7 +31,7 @@ class ManagerPasswordScreen extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  "Quản lí mật khẩu",
+                  txtPasswordManagementSU,
                   textAlign: TextAlign.center,
                   style: PrimaryFont.headerTextBold()
                       .copyWith(color: Colors.black),
@@ -51,7 +52,7 @@ class ManagerPasswordScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Mật khẩu hiện tại",
+                txtCurrentPasswordMP,
                 style:
                     PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
               ),
@@ -61,7 +62,7 @@ class ManagerPasswordScreen extends StatelessWidget {
               Obx(
                 () => InputFormWidget(
                   readOnly: false,
-                  title: 'Password',
+                  title: txtPasswordL,
                   controller: _loginController.passwordController,
                   obscureText: _loginController.obscurePassword.value,
                   iconStart: HugeIcons.strokeRoundedLockPassword,
@@ -72,7 +73,7 @@ class ManagerPasswordScreen extends StatelessWidget {
                     onPressed: _loginController.togglePasswordVisibility,
                   ),
                   validator: (value) => value == null || value.isEmpty
-                      ? 'Vui lòng nhập password'
+                      ? txtPleaseEnPassL
                       : null,
                 ),
               ),
@@ -82,7 +83,7 @@ class ManagerPasswordScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "Quên mật khẩu?",
+                  txtForgotPassL,
                   style: PrimaryFont.bodyTextMedium()
                       .copyWith(color: kPrimaryColor),
                 ),
@@ -91,7 +92,7 @@ class ManagerPasswordScreen extends StatelessWidget {
                 height: 3.w,
               ),
               Text(
-                "Mật khẩu mới",
+                txtNewPasswordMP,
                 style:
                     PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
               ),
@@ -101,7 +102,7 @@ class ManagerPasswordScreen extends StatelessWidget {
               Obx(
                 () => InputFormWidget(
                   readOnly: false,
-                  title: 'Password',
+                  title: txtPasswordL,
                   controller: _loginController.passwordNewController,
                   obscureText: _loginController.obscurePasswordNew.value,
                   iconStart: HugeIcons.strokeRoundedLockPassword,
@@ -112,7 +113,7 @@ class ManagerPasswordScreen extends StatelessWidget {
                     onPressed: _loginController.togglePasswordNewVisibility,
                   ),
                   validator: (value) => value == null || value.isEmpty
-                      ? 'Vui lòng nhập password'
+                      ? txtPleaseEnPassL
                       : null,
                 ),
               ),
@@ -120,7 +121,7 @@ class ManagerPasswordScreen extends StatelessWidget {
                 height: 3.w,
               ),
               Text(
-                "Xác nhận mật khẩu mới",
+                txtConfirmPasswordMP,
                 style:
                     PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
               ),
@@ -130,7 +131,7 @@ class ManagerPasswordScreen extends StatelessWidget {
               Obx(
                 () => InputFormWidget(
                   readOnly: false,
-                  title: 'Password',
+                  title: txtPasswordL,
                   controller: _loginController.passwordNewConfirmController,
                   obscureText: _loginController.obscurePasswordNewConfirm.value,
                   iconStart: HugeIcons.strokeRoundedLockPassword,
@@ -142,7 +143,7 @@ class ManagerPasswordScreen extends StatelessWidget {
                         _loginController.togglePasswordNewConfirmVisibility,
                   ),
                   validator: (value) => value == null || value.isEmpty
-                      ? 'Vui lòng nhập password'
+                      ? txtPleaseEnPassL
                       : null,
                 ),
               ),
@@ -163,7 +164,7 @@ class ManagerPasswordScreen extends StatelessWidget {
                     shadowColor: Colors.black.withOpacity(0.3),
                   ),
                   child: Text(
-                    "Đổi mật khẩu",
+                    txtChangePasswordMP,
                     style: PrimaryFont.bodyTextMedium().copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
