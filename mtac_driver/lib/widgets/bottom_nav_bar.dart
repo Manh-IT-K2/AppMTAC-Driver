@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/theme_text.dart';
+import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
 
 class BottomNavBar extends StatelessWidget {

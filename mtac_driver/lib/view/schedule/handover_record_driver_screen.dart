@@ -7,8 +7,8 @@ import 'package:mtac_driver/controller/schedule/handover_record_controller.dart'
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/data/map_screen/item_info_waste.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/text.dart';
-import 'package:mtac_driver/utils/theme_text.dart';
+import 'package:mtac_driver/utils/text_util.dart';
+import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:mtac_driver/widgets/bottom_image_source_sheet.dart';
 import 'package:mtac_driver/widgets/schedule_widget/bottom_preview_image_sheet.dart';
 import 'package:sizer/sizer.dart';

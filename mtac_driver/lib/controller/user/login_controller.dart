@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mtac_driver/common/show_notify_snackbar.dart';
 import 'package:mtac_driver/model/user_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/service/user/login_service.dart';
 import 'package:mtac_driver/shared/user/user_shared.dart';
-import 'package:mtac_driver/theme/color.dart';
 
 class LoginController extends GetxController {
   // inital variable
@@ -118,8 +118,7 @@ class LoginController extends GetxController {
     if (success) {
       Get.offAllNamed(AppRoutes.main);
     } else {
-      Get.snackbar("Lỗi", "Đăng nhập thất bại. Kiểm tra lại thông tin.",
-          snackPosition: SnackPosition.TOP, colorText: Colors.red);
+      showError("Đăng nhập thất bại. Kiểm tra lại thông tin.");
     }
   }
 
@@ -127,21 +126,10 @@ class LoginController extends GetxController {
   Future<void> logOut() async {
     final success = await LoginService().logout();
     if (success) {
-      Get.snackbar(
-        "OK",
-        "Đăng xuất thành công!.",
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: kPrimaryColor.withOpacity(0.1),
-        colorText: Colors.green,
-      );
+    showSuccess("Đăng xuất thành công!.");
       Get.offAllNamed(AppRoutes.login);
     } else {
-      Get.snackbar(
-        "Lỗi",
-        "Đăng xuất thất bại!.",
-        snackPosition: SnackPosition.TOP,
-        colorText: Colors.red,
-      );
+      showError("Đăng xuất thất bại!.");
     }
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mtac_driver/common/show_notify_snackbar.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/model/user_model.dart';
@@ -49,15 +50,10 @@ class ProfileController extends GetxController {
       await UserService().updateUser(updateUser);
       loginController.loadUserModel();
       scheduleController.loadUsername();
-      Get.snackbar('Thành công', 'Thông tin của bạn đã được cập nhật.',
-          snackPosition: SnackPosition.TOP,
-          colorText: Colors.white,
-          backgroundColor: Colors.green.withOpacity(0.6));
+      showSuccess('Thông tin của bạn đã được cập nhật.');
     } catch (e) {
       if (e.toString().contains('401')) {
-        Get.snackbar(
-            'Lỗi', 'Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.',
-            snackPosition: SnackPosition.TOP, colorText: Colors.red);
+       showError('Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
         Get.offAllNamed(AppRoutes.login);
       }
       if (kDebugMode) {

@@ -4,7 +4,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/theme_text.dart';
+import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:mtac_driver/widgets/user_widget/build_avatar_widget.dart';
 import 'package:sizer/sizer.dart';
 
@@ -46,36 +46,37 @@ class AccountScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(3.w)),
                           ),
                         ),
-                        Center(
-                          child: Positioned(
-                            top: 3.w,
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: 18.w,
-                                  height: 18.w,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: const Color.fromRGBO(
-                                          238, 238, 238, 1),
-                                      width: 5,
-                                    ),
-                                    shape: BoxShape.circle,
+                        Positioned(
+                          top: 3.w,
+                          left: 0,
+                          right: 0,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 18.w,
+                                height: 18.w,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: const Color.fromRGBO(
+                                        238, 238, 238, 1),
+                                    width: 5,
                                   ),
-                                  child: ClipOval(child: buildAvatar(user)),
+                                  shape: BoxShape.circle,
                                 ),
-                                Text(
-                                  user.user.name,
-                                  style: PrimaryFont.titleTextBold()
-                                      .copyWith(color: Colors.black),
-                                ),
-                                Text(
-                                  user.user.email,
-                                  style: PrimaryFont.bodyTextBold()
-                                      .copyWith(color: Colors.black),
-                                ),
-                              ],
-                            ),
+                                child: ClipOval(child: buildAvatar(user)),
+                              ),
+                              Text(
+                                user.user.name,
+                                style: PrimaryFont.titleTextBold()
+                                    .copyWith(color: Colors.black),
+                              ),
+                              Text(
+                                user.user.email,
+                                style: PrimaryFont.bodyTextBold()
+                                    .copyWith(color: Colors.black),
+                              ),
+                            ],
                           ),
                         ),
                         Positioned(
@@ -92,7 +93,6 @@ class AccountScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.only(
                                       bottomLeft: Radius.circular(30.w),
                                       topRight: Radius.circular(100.w),
-                                      // bottomRight: Radius.circular(3.w),
                                     ),
                                   ),
                                   child: Center(
@@ -113,7 +113,6 @@ class AccountScreen extends StatelessWidget {
                                     color: Colors.grey[100],
                                     borderRadius: BorderRadius.only(
                                       bottomRight: Radius.circular(30.w),
-                                      //topLeft: Radius.circular(3.w),
                                       bottomLeft: Radius.circular(100.w),
                                     ),
                                   ),
@@ -129,7 +128,7 @@ class AccountScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                        )
+                        ),
                       ],
                     ),
                   );
@@ -138,14 +137,6 @@ class AccountScreen extends StatelessWidget {
               SizedBox(
                 height: 5.w,
               ),
-              // _ItemFuncAccount(
-              //   title: "My Profile",
-              //   arrowRight: true,
-              //   color: kPrimaryColor,
-              //   onTap: () => Get.toNamed(AppRoutes.profile),
-              //   icon: HugeIcons.strokeRoundedUser,
-              // ),
-              //const Divider(),
               const _ItemFuncAccount(
                 title: "Payment Methods",
                 arrowRight: true,
@@ -183,13 +174,6 @@ class AccountScreen extends StatelessWidget {
                 icon: HugeIcons.strokeRoundedSetting07,
               ),
               const Divider(),
-              // _ItemFuncAccount(
-              //   title: "Logout",
-              //   arrowRight: false,
-              //   color: Colors.red,
-              //   icon: HugeIcons.strokeRoundedLogin03,
-              //   onTap: () => loginController.logOut(),
-              // ),
               Row(
                 children: [
                   Container(
@@ -239,7 +223,7 @@ class AccountScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
               const Divider(),

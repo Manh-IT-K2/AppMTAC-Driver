@@ -6,7 +6,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/configs/api_config.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/theme_text.dart';
+import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:mtac_driver/widgets/user_widget/input_form_widget.dart';
 import 'package:sizer/sizer.dart';
 

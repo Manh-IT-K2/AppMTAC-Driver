@@ -16,6 +16,25 @@ const String txtTitleS = "Danh sách chuyến";
 const String txtHelloS = "Xin chào, ";
 const String txtScheduleTodayS =  "Lịch thu gom hôm nay: ";
 
+// text schedule history screen
+const String txtTitleSH = "Lịch sử thu gom";
+const String txtDetailSH = "Chi tiết";
+
+// text detail schedule history screen
+const String txtTitleDSH = "Chi tiết lịch gom";
+const String txtDayDSH = "Ngày: ";
+const String txtCodeDSH = "Mã: ";
+const String txtNameCompanyDSH = "Tên công ty: ";
+const String txtAddressDSH ="Địa chỉ: ";
+const String txtWasteTypeDSH = "Loại chất thải: ";
+const String txtDetailTruckDSH = "Chi tiết xe tải";
+const String txtNameTruckDSH = "Tên xe: ";
+const String txtPlateNumberDSH = "Biển số: ";
+const String txtDetailGoodsDSH = "Chi tiết hàng hoá";
+const String txtNameWasteDSH = "Tên loại rác";
+const String txtNumberWasteDSH = "Số lượng";
+const String txtDetailImageDSH = "Chi tiết hình ảnh";
+
 // text schedule collection screen
 const String txtTitleSC = "Sắp lịch gom";
 const String txtSubTitleSC = "Danh sách lịch gom chưa sắp trong ngày";
@@ -65,3 +84,5 @@ const String txtScheduleHighlightD = "Lịch gom nổi bật";
 const String txtTripColectionTodayD = "Chuyến thu gom hôm nay";
 const String txtTitleNoteImportantD =  "Ghi chú quan trọng";
 const String txtSubTitleNoteImportantD = "Đừng quên mình có ghi chú quan trọng nhé bác tài";
+
+// text 

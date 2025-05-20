@@ -4,7 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/theme_text.dart';
+import 'package:mtac_driver/utils/text_util.dart';
+import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
 
 class ScheduleHistoryScreen extends StatelessWidget {
@@ -28,7 +29,7 @@ class ScheduleHistoryScreen extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  "Lịch sử thu gom",
+                  txtTitleSH,
                   textAlign: TextAlign.center,
                   style: PrimaryFont.headerTextBold()
                       .copyWith(color: Colors.black),
@@ -170,7 +171,7 @@ class _ItemScheduleHistory extends StatelessWidget {
                           borderRadius: BorderRadius.circular(3.w),
                         ),
                         child: Text(
-                          "Chi tiết",
+                          txtDetailSH,
                           textAlign: TextAlign.center,
                           style: PrimaryFont.bodyTextMedium()
                               .copyWith(color: Colors.green),

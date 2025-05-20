@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:mtac_driver/configs/api_config.dart';
 import 'package:http/http.dart' as http;
@@ -13,6 +12,11 @@ import 'package:mtac_driver/shared/token_shared.dart';
 class ScheduleService {
   // initial url
   final String baseUrl = ApiConfig.baseUrl;
+  //
+  Map<String, String> _headers(String token) => {
+        'Authorization': 'Bearer $token',
+        'Accept': 'application/json',
+      };
 
   // offline
   Future<Map<String, List<Datum>>> getMockListScheduleToday() async {
@@ -39,10 +43,7 @@ class ScheduleService {
     try {
       final response = await http.get(
         url,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Accept': 'application/json',
-        },
+        headers: _headers(token),
       );
 
       if (response.statusCode == 200) {
@@ -70,10 +71,7 @@ class ScheduleService {
     try {
       final response = await http.get(
         url,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Accept': 'application/json',
-        },
+        headers: _headers(token),
       );
 
       if (response.statusCode == 200) {
@@ -120,10 +118,7 @@ class ScheduleService {
     try {
       final response = await http.get(
         url,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Accept': 'application/json',
-        },
+        headers: _headers(token),
       );
 
       if (response.statusCode == 200) {
@@ -146,10 +141,7 @@ class ScheduleService {
     try {
       final response = await http.post(
         url,
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Accept': 'application/json',
-        },
+        headers: _headers(token),
       );
 
       if (response.statusCode == 200) {

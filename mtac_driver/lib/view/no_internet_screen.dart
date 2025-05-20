@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/theme_text.dart';
+import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
 import 'package:mtac_driver/controller/network_check_middleware_controller.dart';
 

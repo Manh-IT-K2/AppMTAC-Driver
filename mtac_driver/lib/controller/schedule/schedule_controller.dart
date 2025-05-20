@@ -1,374 +1,165 @@
 import 'dart:io';
 import 'package:get/get.dart';
+import 'package:mtac_driver/common/show_notify_snackbar.dart';
 import 'package:mtac_driver/shared/user/user_shared.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:mtac_driver/service/schedule/schedule_service.dart';
 import 'package:mtac_driver/shared/schedule/schedule_shared.dart';
 
-// status collection
 enum CollectionStatus { idle, started, ended }
 
 class ScheduleController extends GetxController {
-  // initial variable for time
-  var currentDate = DateTime.now().obs;
-  var daysInMonth = <DateTime>[].obs;
-  late final ScrollController scrollController;
-
-  // status collection
-  Map<int, Rx<CollectionStatus>> collectionStatus = {};
-
-  // initial tripStartTimes
-  final Map<int, DateTime> tripStartTimes = {}; // key: scheduleId
-
-  // initial ScheduleService
+  // Services
   final ScheduleService _scheduleService = ScheduleService();
 
-  // Biến observable để lưu danh sách lịch hôm nay
-  RxList<Datum> todaySchedules = <Datum>[].obs;
-  RxList<Datum> historySchedules = <Datum>[].obs;
-  RxList<Datum> checkTodaySchedules = <Datum>[].obs;
+  // Controllers
+  late final ScrollController scrollController;
+  final PageController pageController = PageController();
 
-  // username
-  var username = ''.obs;
+  // Constants
+  static const List<String> _weekdays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+  static const List<String> _wasteTypes = ["Tất cả", "Nguy hại", "Tái chế", "Công nghiệp"];
+  static const int _totalItemCount = 9999;
+  static double _itemWidth = 13.w;
 
-  // initial variable schedulesByWasteType
-  final RxMap<String, List<Datum>> schedulesByWasteType =
-      <String, List<Datum>>{}.obs;
-  // initial list weekdays
-  final List<String> weekdays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-  RxList<int> highlightedDays = <int>[].obs;
-  final int totalItemCount = 9999;
-  final double itemWidth = 13.w;
-  double screenWidth = 100.w - 32;
-  late final double offset;
+  // Observables
+  final currentDate = DateTime.now().obs;
+  final daysInMonth = <DateTime>[].obs;
+  final username = ''.obs;
+  final selectedWasteType = "Tất cả".obs;
+  final schedulesByWasteType = <String, List<Datum>>{}.obs;
+  final todaySchedules = <Datum>[].obs;
+  final historySchedules = <Datum>[].obs;
+  final checkTodaySchedules = <Datum>[].obs;
+  final highlightedDays = <int>[].obs;
+  final tripTimes = List.generate(12, (index) => '${(index * 2).toString().padLeft(2, '0')}:00');
 
-  // function initial
+  // State
+  final collectionStatus = <int, Rx<CollectionStatus>>{};
+  final tripStartTimes = <int, DateTime>{};
+  late final double _scrollOffset;
+
   @override
   void onInit() {
     super.onInit();
-    loadUsername();
-    loadScheduleArranged();
-    loadScheduleTodays();
-    checkAndLoadSchedule();
-    getCollectionStatusesFromLocal(collectionStatus);
+    _initialize();
+  }
+
+  @override
+  void onClose() {
+    pageController.dispose();
+    scrollController.dispose();
+    super.onClose();
+  }
+
+  // Initialization
+  void _initialize() {
+    _setupScrollController();
+    _loadInitialData();
+  }
+
+  void _setupScrollController() {
     daysInMonth.value = _generateDaysInMonth(currentDate.value);
-    offset = calculateTodayScrollOffset(itemWidth, screenWidth);
-    scrollController = ScrollController(initialScrollOffset: offset);
+    _scrollOffset = _calculateScrollOffset();
+    scrollController = ScrollController(initialScrollOffset: _scrollOffset);
   }
 
-  // load collection schedule today
-  Future<void> loadScheduleTodays() async {
+  Future<void> _loadInitialData() async {
+    await Future.wait([
+      loadUsername(),
+      _loadTodaySchedules(),
+      _loadArrangedSchedules(),
+      _checkAndLoadSchedule(),
+      _loadCollectionStatuses(),
+    ]);
+  }
+
+  // Data loading methods
+  Future<void> loadUsername() async {
+    username.value = await getUsername() ?? "Unknown";
+  }
+
+  Future<void> _loadTodaySchedules() async {
     await getGroupedScheduleFromLocal(schedulesByWasteType);
-    todaySchedules
-        .assignAll(schedulesByWasteType.values.expand((e) => e).toList());
-    if (kDebugMode) {
-      print('✅ Loaded todaySchedules: ${todaySchedules.length}');
-    }
+    todaySchedules.assignAll(schedulesByWasteType.values.expand((e) => e).toList());
+    debugPrint('✅ Today schedules loaded: ${todaySchedules.length}');
   }
 
-  // load schedule arranged
-  Future<void> loadScheduleArranged() async {
+  Future<void> _loadArrangedSchedules() async {
     try {
-      final scheduleArranged = await _scheduleService.getListScheduleArranged();
-      highlightedDays.value = getValidCollectionDays(scheduleArranged);
-      if (kDebugMode) {
-        print('✅ Loaded Arranged Schedules: ${scheduleArranged.length}');
-      }
+      final schedules = await _scheduleService.getListScheduleArranged();
+      highlightedDays.value = _getValidCollectionDays(schedules);
+      debugPrint('✅ Arranged schedules loaded: ${schedules.length}');
     } catch (e) {
-      if (e.toString().contains('401')) {
-        Get.snackbar(
-            'Lỗi', 'Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.',
-            snackPosition: SnackPosition.TOP, colorText: Colors.red);
-        Get.offAllNamed(AppRoutes.login);
-      } else {
-        Get.snackbar('Lỗi', 'Không thể tải lịch đã sắp',
-            snackPosition: SnackPosition.TOP, colorText: Colors.red);
-      }
-      if (kDebugMode) {
-        print('Get list schedule aranged error: $e');
-      }
+      _handleApiError(e, 'Không thể tải lịch đã sắp');
     }
   }
 
-  // get day collection schedule arranged
-  List<int> getValidCollectionDays(List<Datum> todaySchedules) {
-    final now = DateTime.now();
-    final currentDay = now.day;
-    final currentMonth = now.month;
-    final currentYear = now.year;
-
-    final days = todaySchedules
-        .where((schedule) =>
-            schedule.collectionDate.year == currentYear &&
-            schedule.collectionDate.month == currentMonth)
-        .map((schedule) => schedule.collectionDate.day)
-        .toSet();
-
-    days.add(currentDay);
-    final sortedDays = days.toList()..sort();
-    return sortedDays;
-  }
-
-  // load user name
-  void loadUsername() async {
-    final result = await getUsername();
-    username.value = result ?? "Unknown";
-  }
-
-  //
-  void removeSchedule() async {
-    removeGroupedScheduleFromLocal(schedulesByWasteType);
-  }
-
-  //
-  void removeCollectionStatus() async {
-    removeLocalCollectionStatus(collectionStatus);
-  }
-
-  // calculateTodayScrollOffset
-  double calculateTodayScrollOffset(double itemWidth, double screenWidth) {
-    int todayIndex = daysInMonth.indexWhere((day) =>
-        day.day == currentDate.value.day &&
-        day.month == currentDate.value.month &&
-        day.year == currentDate.value.year);
-
-    int middle = totalItemCount ~/ 2;
-    int targetIndex = middle - (middle % daysInMonth.length) + todayIndex;
-
-    double scrollOffset =
-        (targetIndex * itemWidth) - (screenWidth / 2) + (itemWidth / 2);
-
-    return scrollOffset;
-  }
-
-  // initial list hour away two hour
-  List<String> tripTimes = List.generate(12, (index) {
-    int hour = index * 2;
-    return '${hour.toString().padLeft(2, '0')}:00';
-  });
-
-  // initial list day in month
-  List<DateTime> _generateDaysInMonth(DateTime date) {
-    int daysInMonth = DateTime(date.year, date.month + 1, 0).day;
-    return List.generate(
-      daysInMonth,
-      (index) => DateTime(date.year, date.month, index + 1),
-    );
-  }
-
-  // initial scroll to Today in center screen
-  void scrollToTodayWithContext(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (scrollController.hasClients) {
-        scrollController.animateTo(
-          offset,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-        );
-
-        if (kDebugMode) {
-          print('>> Scroll to today offset: $offset');
-        }
-      } else {
-        if (kDebugMode) {
-          print('>> ScrollController not attached yet');
-        }
-      }
-    });
-  }
-
-  // get weekday name
-  String getWeekdayShortName(DateTime date) {
-    return weekdays[date.weekday - 1];
-  }
-
-  // initial variable
-  var selectedTitle = "Tất cả".obs;
-  var pageController = PageController();
-
-  // list item
-  final List<String> items = ["Tất cả", "Nguy hại", "Tái chế", "Công nghiệp"];
-
-  // function chose item
-  void selectItem(String title) {
-    int index = items.indexOf(title);
-    if (index != -1) {
-      selectedTitle.value = title;
-      if (pageController.hasClients) {
-        pageController.animateToPage(
-          index,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      }
-    }
-  }
-
-  // Update status on swipe
-  void onPageChanged(int index) {
-    if (index >= 0 && index < items.length) {
-      selectedTitle.value = items[index];
-    }
-  }
-
-  // Function checkAndLoadSchedule
-  Future<void> checkAndLoadSchedule() async {
+  Future<void> _checkAndLoadSchedule() async {
     final hasLocal = await hasLocalGroupedSchedule();
     if (hasLocal) {
       await getGroupedScheduleFromLocal(schedulesByWasteType);
-      if (kDebugMode) {
-        print("✅ Loaded local grouped schedule");
-      }
+      debugPrint("✅ Loaded local grouped schedule");
     } else {
-      if (kDebugMode) {
-        print("🚨 Local schedule not found, calling API");
-      }
-      await getListScheduleToday();
+      debugPrint("🚨 Local schedule not found, calling API");
+      await _getListScheduleToday();
     }
   }
 
-  // function getSchedulesByWasteType
-  List<Datum> getSchedulesByWasteType(String wasteType) {
-    final list = schedulesByWasteType[wasteType] ?? [];
-    // final ids = list.map((e) => e.id).toList();
-    // initStartingStatus(ids);
-    return list;
+  Future<void> _loadCollectionStatuses() async {
+    await getCollectionStatusesFromLocal(collectionStatus);
   }
 
-  // Function getListScheduleToday from service
-  Future<void> getListScheduleToday() async {
+  // API operations
+  Future<void> _getListScheduleToday() async {
     try {
-      if (kDebugMode) {
-        print(">>> GỌI getListScheduleToday từ Controller");
-      }
+      debugPrint(">>> GỌI getListScheduleToday từ Controller");
       final schedule = await _scheduleService.getListScheduleToday();
       schedulesByWasteType.value = schedule;
-      if (kDebugMode) {
-        print(
-            "Các loại chất thải hôm nay: ${schedulesByWasteType.keys.toList()}");
-      }
+      debugPrint("Các loại chất thải hôm nay: ${schedulesByWasteType.keys.toList()}");
     } catch (e) {
-      if (e.toString().contains('401')) {
-        Get.snackbar(
-            'Lỗi', 'Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.',
-            snackPosition: SnackPosition.TOP, colorText: Colors.red);
-        Get.offAllNamed(AppRoutes.login);
-      } else {
-        Get.snackbar('Lỗi', 'Không thể tải lịch hôm nay',
-            snackPosition: SnackPosition.TOP, colorText: Colors.red);
-      }
-      if (kDebugMode) {
-        print('getListScheduleToday error: $e');
-      }
+      _handleApiError(e, 'Không thể tải lịch hôm nay');
     }
   }
 
-  // Function getListScheduleHistory from service
   Future<void> getListScheduleHistory() async {
     try {
       final schedule = await _scheduleService.getListScheduleHistory();
       historySchedules.assignAll(schedule);
     } catch (e) {
-      if (e.toString().contains('401')) {
-        Get.snackbar(
-            'Lỗi', 'Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.',
-            snackPosition: SnackPosition.TOP, colorText: Colors.red);
-        Get.offAllNamed(AppRoutes.login);
-      } else {
-        Get.snackbar('Lỗi', 'Không thể tải lịch hôm nay',
-            snackPosition: SnackPosition.TOP, colorText: Colors.red);
-      }
-      if (kDebugMode) {
-        print('getListScheduleHistory error: $e');
-      }
+      _handleApiError(e, 'Không thể tải lịch sử');
     }
   }
 
-  // Start trip collection
+  // Collection operations
   Future<void> startCollectionTrip(int scheduleId) async {
-    // Check if any flights are "started" and not "ended"
-    // bool hasUnfinishedTrip = collectionStatus.entries.any(
-    //   (entry) =>
-    //       entry.key != scheduleId &&
-    //       entry.value.value == CollectionStatus.started,
-    // );
-    //resetLocalCollectionStatus();
-    if (kDebugMode) {
-      print('--- DEBUG: Danh sách trạng thái collection ---');
-    }
-    collectionStatus.forEach((key, value) {
-      if (kDebugMode) {
-        print('🟡 scheduleId: $key, status: ${value.value}');
-      }
-    });
-
-    // if (hasUnfinishedTrip) {
-    //   Get.snackbar(
-    //     'Chưa hoàn thành',
-    //     'Bạn cần kết thúc chuyến thu gom trước đó trước khi bắt đầu chuyến mới.',
-    //     snackPosition: SnackPosition.TOP,
-    //     backgroundColor: Colors.orange,
-    //     colorText: Colors.white,
-    //   );
-    //   return;
-    // }
+    debugPrint('--- DEBUG: Danh sách trạng thái collection ---');
+    collectionStatus.forEach((key, value) => debugPrint('🟡 scheduleId: $key, status: ${value.value}'));
 
     try {
       final success = await _scheduleService.startCollectionTrip(scheduleId);
       if (success) {
-        collectionStatus[scheduleId] ??= Rx(CollectionStatus.idle);
+        collectionStatus[scheduleId] ??= CollectionStatus.idle.obs;
         collectionStatus[scheduleId]!.value = CollectionStatus.started;
         await setCollectionStatusesToLocal(collectionStatus);
-
-        // Get.snackbar(
-        //   'Thành công',
-        //   'Chuyến thu gom đã bắt đầu',
-        //   snackPosition: SnackPosition.TOP,
-        //   backgroundColor: Colors.green,
-        //   colorText: Colors.white,
-        // );
       } else {
-        Get.snackbar(
-          'Thất bại',
-          'Không thể bắt đầu chuyến thu gom',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
+        showError('Không thể bắt đầu chuyến thu gom');
       }
     } catch (e) {
-      if (e.toString().contains('401')) {
-        Get.snackbar(
-            'Lỗi', 'Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.',
-            snackPosition: SnackPosition.TOP, colorText: Colors.red);
-        Get.offAllNamed(AppRoutes.login);
-      } else {
-        Get.snackbar(
-          'Lỗi',
-          'Đã xảy ra lỗi khi bắt đầu chuyến thu gom. Vui lòng thử lại.',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
-      }
-
-      if (kDebugMode) {
-        print('startCollectionTrip Error: $e');
-      }
+      _handleApiError(e, 'Đã xảy ra lỗi khi bắt đầu chuyến thu gom. Vui lòng thử lại.');
     }
   }
 
-  // Function endCollectionTrip from service
   Future<void> endCollectionTrip(
-      int scheduleId,
-      List<Map<String, dynamic>> selectedGoods,
-      List<File> selectedImages) async {
+    int scheduleId,
+    List<Map<String, dynamic>> selectedGoods,
+    List<File> selectedImages,
+  ) async {
     if (selectedGoods.isEmpty || selectedImages.isEmpty) {
-      Get.snackbar("Thiếu thông tin", "Chưa ghi biên bản giao nhận");
+      showError("Chưa ghi biên bản giao nhận");
       return;
     }
 
@@ -382,29 +173,87 @@ class ScheduleController extends GetxController {
       if (success) {
         collectionStatus[scheduleId]?.value = CollectionStatus.ended;
         await setCollectionStatusesToLocal(collectionStatus);
-        // Get.snackbar("Thành công", "Bắt đầu thu gom thành công");
       } else {
-        Get.snackbar("Thất bại", "Không thể kết thúc thu gom",
-            snackPosition: SnackPosition.TOP, colorText: Colors.red);
+        showError("Không thể kết thúc thu gom");
       }
     } catch (e) {
-      if (e.toString().contains('401')) {
-        Get.snackbar(
-            'Lỗi', 'Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.',
-            snackPosition: SnackPosition.TOP, colorText: Colors.red);
-        Get.offAllNamed(AppRoutes.login);
-      } else {
-        Get.snackbar("Lỗi", "Đã có lỗi xảy ra",
-            snackPosition: SnackPosition.TOP, colorText: Colors.red);
-      }
-      if (kDebugMode) print("❌ startCollection error: $e");
+      _handleApiError(e, "Đã có lỗi xảy ra khi kết thúc thu gom");
     }
   }
 
-  // memory leak
-  @override
-  void onClose() {
-    pageController.dispose();
-    super.onClose();
+  // Helper methods
+  List<int> _getValidCollectionDays(List<Datum> schedules) {
+    final now = DateTime.now();
+    final days = schedules
+        .where((s) => s.collectionDate.isSameMonthAndYear(now))
+        .map((s) => s.collectionDate.day)
+        .toSet()
+      ..add(now.day);
+    return days.toList()..sort();
   }
+
+  double _calculateScrollOffset() {
+    final todayIndex = daysInMonth.indexWhere((day) => day.isSameDate(currentDate.value));
+    final middleItem = _totalItemCount ~/ 2;
+    final targetIndex = middleItem - (middleItem % daysInMonth.length) + todayIndex;
+    return (targetIndex * _itemWidth) - ((100.w - 32) / 2) + (_itemWidth / 2);
+  }
+
+  List<DateTime> _generateDaysInMonth(DateTime date) {
+    final daysCount = DateTime(date.year, date.month + 1, 0).day;
+    return List.generate(daysCount, (i) => DateTime(date.year, date.month, i + 1));
+  }
+
+  void _handleApiError(dynamic error, String defaultMessage) {
+    if (error.toString().contains('401')) {
+      showError('Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
+      Get.offAllNamed(AppRoutes.login);
+    } else {
+      showError(defaultMessage);
+    }
+    debugPrint('Error: $error');
+  }
+
+  // UI methods
+  void scrollToToday() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          _scrollOffset,
+          duration: 500.milliseconds,
+          curve: Curves.easeInOut,
+        );
+        debugPrint('>> Scroll to today offset: $_scrollOffset');
+      }
+    });
+  }
+
+  void selectWasteType(String type) {
+    final index = _wasteTypes.indexOf(type);
+    if (index != -1) {
+      selectedWasteType.value = type;
+      pageController.animateToPage(
+        index,
+        duration: 300.milliseconds,
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void onPageChanged(int index) {
+    if (index >= 0 && index < _wasteTypes.length) {
+      selectedWasteType.value = _wasteTypes[index];
+    }
+  }
+
+  // Getters
+  String getWeekdayShortName(DateTime date) => _weekdays[date.weekday - 1];
+  List<Datum> getSchedulesByWasteType(String wasteType) => schedulesByWasteType[wasteType] ?? [];
+  List<String> get wasteTypes => _wasteTypes;
+}
+
+// Extensions
+extension DateUtils on DateTime {
+  bool isSameDate(DateTime other) => year == other.year && month == other.month && day == other.day;
+  bool isSameMonthAndYear(DateTime other) => year == other.year && month == other.month;
 }

@@ -11,8 +11,8 @@ import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/text.dart';
-import 'package:mtac_driver/utils/theme_text.dart';
+import 'package:mtac_driver/utils/text_util.dart';
+import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:mtac_driver/widgets/schedule_widget/moving_gif_widget.dart';
 import 'package:sizer/sizer.dart';
 
@@ -76,7 +76,12 @@ class MapDriverScreen extends StatelessWidget {
                   children: [
                     TileLayer(
                       urlTemplate:
-                          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                          'https://api.mapbox.com/styles/v1/{styleUrl}/tiles/{z}/{x}/{y}?access_token={accessToken}',
+                      additionalOptions: {
+                        'accessToken': MapDriverController.mapboxAccessToken,
+                        'styleUrl': controller.mapboxStyleUrl
+                            .replaceFirst('mapbox://styles/', ''),
+                      },
                       userAgentPackageName: 'com.example.app',
                       subdomains: const ['a', 'b', 'c'],
                     ),
@@ -101,7 +106,6 @@ class MapDriverScreen extends StatelessWidget {
                             "assets/image/truck-detail.png",
                             width: 10.w,
                             height: 10.w,
-                            
                           ),
                         ),
 
@@ -140,7 +144,7 @@ class MapDriverScreen extends StatelessWidget {
                               status: '',
                               goods: [],
                               latitude: 0.0,
-                              longitude: 0.0, 
+                              longitude: 0.0,
                               images: [],
                             ),
                           );
@@ -925,7 +929,8 @@ class _ItemDestination extends StatelessWidget {
                 onTap: status == CollectionStatus.ended
                     ? null
                     : () {
-                        Get.toNamed(AppRoutes.handoverRecord, arguments: scheduleId);
+                        Get.toNamed(AppRoutes.handoverRecord,
+                            arguments: scheduleId);
                       },
                 child: Text(
                   txtWriteRecordM,

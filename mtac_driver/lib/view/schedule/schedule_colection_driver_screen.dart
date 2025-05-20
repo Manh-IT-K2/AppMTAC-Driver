@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/text.dart';
-import 'package:mtac_driver/utils/theme_text.dart';
+import 'package:mtac_driver/utils/text_util.dart';
+import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
 
 class ScheduleColectionDriverScreen extends StatelessWidget {
@@ -45,8 +45,8 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                _scheduleController.removeCollectionStatus();
-                _scheduleController.removeSchedule();
+                // _scheduleController.removeCollectionStatus();
+                // _scheduleController.removeSchedule();
               },
               child: Container(
                 width: 10.w,
@@ -122,7 +122,7 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: _scheduleController.items
+                children: _scheduleController.wasteTypes
                     .map(
                       (title) => _ItemListTrip(title: title),
                     )
@@ -133,14 +133,20 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
               child: PageView(
                 controller: _scheduleController.pageController,
                 onPageChanged: _scheduleController.onPageChanged,
-                children: _scheduleController.items.map(
+                children: _scheduleController.wasteTypes.map(
                   (title) {
                     //final data = controller.todaySchedules[0];
                     return Obx(() {
-                      final scheduleMap = _scheduleController.schedulesByWasteType;
+                      final scheduleMap =
+                          _scheduleController.schedulesByWasteType;
 
                       if (scheduleMap.isEmpty) {
-                        return const Text("Không có lịch hôm nay");
+                        return Center(
+                            child: Text(
+                          "Không có lịch hôm nay",
+                          style: PrimaryFont.bodyTextBold()
+                              .copyWith(color: Colors.black),
+                        ));
                       }
 
                       final entries = scheduleMap.entries.toList();
@@ -162,7 +168,6 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
                                   day: DateFormat('yyyy-MM-dd')
                                       .format(datum.collectionDate),
                                   status: datum.status,
-                                  
                                 );
                               },
                               childCount: entries.length,
@@ -190,7 +195,6 @@ class _ItemTripWork extends StatelessWidget {
     required this.addressBusiness,
     required this.day,
     required this.status,
-   
   });
 
   final String nameWaste, addressBusiness, day, status;
@@ -330,9 +334,9 @@ class _ItemListTrip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => controller.selectItem(title),
+      onTap: () => controller.selectWasteType(title),
       child: Obx(() {
-        bool isSelected = controller.selectedTitle.value == title;
+        bool isSelected = controller.selectedWasteType.value == title;
         return IntrinsicWidth(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -5,8 +5,8 @@ import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/data/driver_screen/item_note_important.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/text.dart';
-import 'package:mtac_driver/utils/theme_text.dart';
+import 'package:mtac_driver/utils/text_util.dart';
+import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -104,7 +104,7 @@ class _BodyDriverScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //
-    _scheduleController.scrollToTodayWithContext(context);
+    _scheduleController.scrollToToday();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -120,7 +120,7 @@ class _BodyDriverScreen extends StatelessWidget {
           child: ListView.builder(
             controller: _scheduleController.scrollController,
             scrollDirection: Axis.horizontal,
-            itemCount: _scheduleController.totalItemCount,
+            itemCount: 9999,
             itemExtent: 13.w, // rất quan trọng để tối ưu!
             itemBuilder: (context, index) {
               return Obx(() {

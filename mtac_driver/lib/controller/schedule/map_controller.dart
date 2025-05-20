@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:mtac_driver/common/show_notify_snackbar.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,7 +33,7 @@ class MapDriverController extends GetxController {
   }
 
   // Token Mapbox Direction API
-  final String mapboxAccessToken =
+  static String mapboxAccessToken =
       'pk.eyJ1IjoicW1hbmgiLCJhIjoiY205NWNzcmlhMHZoajJycjBibnR5dW9rbiJ9.VEIUO9PSzCRKncGhIscUMw';
   final String mapboxStyleUrl = 'mapbox://styles/mapbox/streets-v11';
   //hcm
@@ -144,13 +145,7 @@ class MapDriverController extends GetxController {
         continue;
       }
       if (status.value == CollectionStatus.idle) {
-        Get.snackbar(
-          'Thành công',
-          'Chuyến thu gom đã bắt đầu',
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Colors.green.withOpacity(0.6),
-          colorText: Colors.white,
-        );
+        showSuccess('Chuyến thu gom đã bắt đầu');
       }
       await _scheduleController.startCollectionTrip(destination.id);
     }
@@ -210,7 +205,7 @@ class MapDriverController extends GetxController {
     try {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        Get.snackbar("Lỗi", "Vui lòng bật dịch vụ định vị (GPS) để tiếp tục");
+        showError("Vui lòng bật dịch vụ định vị (GPS) để tiếp tục");
         return;
       }
 

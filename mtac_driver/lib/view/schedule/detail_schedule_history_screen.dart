@@ -4,7 +4,8 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/theme_text.dart';
+import 'package:mtac_driver/utils/text_util.dart';
+import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
 
 class DetailScheduleHistoryScreen extends StatelessWidget {
@@ -32,7 +33,7 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  "Chi tiết lịch gom",
+                  txtTitleDSH,
                   textAlign: TextAlign.center,
                   style: PrimaryFont.headerTextBold()
                       .copyWith(color: Colors.black),
@@ -55,12 +56,12 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    "Ngày: ${DateFormat('yyyy-MM-dd').format(datum.collectionDate)}",
+                    "$txtDayDSH ${DateFormat('yyyy-MM-dd').format(datum.collectionDate)}",
                     style: PrimaryFont.bodyTextThin(),
                   ),
                   const Spacer(),
                   Text(
-                    "Mã: ${datum.code}",
+                    "$txtCodeDSH ${datum.code}",
                     style:
                         PrimaryFont.bodyTextBold().copyWith(color: Colors.red),
                   ),
@@ -82,19 +83,19 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                   children: [
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedOffice,
-                      title: "Tên công ty: ",
+                      title: txtNameCompanyDSH,
                       content: datum.companyName,
                       styleContent: PrimaryFont.bodyTextBold(),
                     ),
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedLocation04,
-                      title: "Địa chỉ: ",
+                      title: txtAddressDSH,
                       content: datum.locationDetails,
                       styleContent: PrimaryFont.bodyTextMedium(),
                     ),
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedWaste,
-                      title: "Loại chất thải: ",
+                      title: txtWasteTypeDSH,
                       content: datum.wasteType,
                       styleContent: PrimaryFont.bodyTextMedium()
                           .copyWith(color: Colors.green),
@@ -103,7 +104,7 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                "Chi tiết xe tải",
+                txtDetailTruckDSH,
                 style: PrimaryFont.titleTextBold(),
               ),
               Container(
@@ -119,13 +120,13 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                   children: [
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedShippingTruck01,
-                      title: "Tên xe: ",
+                      title: txtNameTruckDSH,
                       content: datum.truck.name,
                       styleContent: PrimaryFont.bodyTextMedium(),
                     ),
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedEdgeStyle,
-                      title: "Biển số: ",
+                      title: txtPlateNumberDSH,
                       content: datum.truck.plateNumber,
                       styleContent: PrimaryFont.bodyTextMedium(),
                     ),
@@ -133,7 +134,7 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                "Chi tiết hàng hoá",
+                txtDetailGoodsDSH,
                 style: PrimaryFont.titleTextBold(),
               ),
               SizedBox(
@@ -146,14 +147,14 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: Text(
-                        "Tên loại rác",
+                        txtNameWasteDSH,
                         style: PrimaryFont.bodyTextBold(),
                       ),
                     ),
                     Expanded(
                       flex: 1,
                       child: Text(
-                        "Số lượng",
+                        txtNumberWasteDSH,
                         style: PrimaryFont.bodyTextBold(),
                         textAlign: TextAlign.right,
                       ),
@@ -205,7 +206,7 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                 height: 5.w,
               ),
               Text(
-                "Chi tiết hình ảnh",
+                txtDetailImageDSH,
                 style: PrimaryFont.titleTextBold(),
               ),
               SizedBox(
