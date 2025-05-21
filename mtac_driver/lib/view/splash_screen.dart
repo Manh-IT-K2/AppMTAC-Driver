@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mtac_driver/configs/api_config.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
-import 'package:sizer/sizer.dart';
+import 'package:mtac_driver/utils/text_util.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,7 +14,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   final ApiConfig _apiConfig = ApiConfig();
   final LoginController _loginController = LoginController();
-
+  //
   @override
   void initState() {
     super.initState();
@@ -32,19 +33,19 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _showServerError() {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text("Lỗi kết nối"),
-        content: const Text(
-            "Không thể kết nối đến máy chủ. Vui lòng kiểm tra mạng hoặc thử lại sau."),
+        title: Text(l10n.txtErrConnectSP),
+        content: const Text(txtSubErrConnectSP),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               _initializeApp();
             },
-            child: const Text("Thử lại"),
+            child: Text(l10n.txtRetryNI),
           ),
         ],
       ),

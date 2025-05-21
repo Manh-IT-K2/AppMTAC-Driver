@@ -5,6 +5,7 @@ import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ContactUsScreen extends StatelessWidget {
   ContactUsScreen({super.key});
@@ -14,6 +15,10 @@ class ContactUsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    //
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -32,7 +37,7 @@ class ContactUsScreen extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  "Contact Us",
+                  l10n.txtContactAU,
                   textAlign: TextAlign.center,
                   style: PrimaryFont.headerTextBold()
                       .copyWith(color: Colors.black),

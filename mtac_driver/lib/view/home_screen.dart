@@ -5,7 +5,6 @@ import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/data/driver_screen/item_note_important.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/text_util.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

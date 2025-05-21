@@ -5,6 +5,7 @@ import 'package:mtac_driver/controller/user/help_faqs_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HelpFaqsScreen extends StatelessWidget {
   HelpFaqsScreen({super.key});
@@ -13,6 +14,7 @@ class HelpFaqsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -31,7 +33,7 @@ class HelpFaqsScreen extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  "Help & FAQs",
+                 l10n.txtHelpAU,
                   textAlign: TextAlign.center,
                   style: PrimaryFont.headerTextBold()
                       .copyWith(color: Colors.black),
@@ -55,7 +57,7 @@ class HelpFaqsScreen extends StatelessWidget {
                 controller: _helpFAQController.searchHelpFqas,
                 cursorColor: kPrimaryColor.withOpacity(0.6),
                 decoration: InputDecoration(
-                  hintText: 'Tìm kiếm...',
+                  hintText: l10n.txtSearch,
                   hintStyle: PrimaryFont.bodyTextMedium(),
                   prefixIcon: Icon(
                     HugeIcons.strokeRoundedSearch01,

@@ -4,15 +4,17 @@ import 'package:intl/intl.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/text_util.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScheduleHistoryScreen extends StatelessWidget {
   ScheduleHistoryScreen({super.key});
   final _scheduleController = Get.find<ScheduleController>();
   @override
   Widget build(BuildContext context) {
+    //
+    final l10n = AppLocalizations.of(context)!; 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -29,7 +31,7 @@ class ScheduleHistoryScreen extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  txtTitleSH,
+                  l10n.txtTitleSH,
                   textAlign: TextAlign.center,
                   style: PrimaryFont.headerTextBold()
                       .copyWith(color: Colors.black),
@@ -55,6 +57,7 @@ class ScheduleHistoryScreen extends StatelessWidget {
                     (context, index) {
                       final item = list[index];
                       return _ItemScheduleHistory(
+                        l10n: l10n,
                         companyName: item.companyName,
                         wastype: item.wasteType,
                         collectionDate: DateFormat('yyyy-MM-dd')
@@ -85,8 +88,9 @@ class _ItemScheduleHistory extends StatelessWidget {
     required this.wastype,
     required this.collectionDate,
     required this.code,
-    this.onTap,
+    this.onTap, required this.l10n,
   });
+  final AppLocalizations l10n;
   Function()? onTap;
   final String companyName, wastype, collectionDate, code;
   @override
@@ -171,7 +175,7 @@ class _ItemScheduleHistory extends StatelessWidget {
                           borderRadius: BorderRadius.circular(3.w),
                         ),
                         child: Text(
-                          txtDetailSH,
+                          l10n.txtDetailSH,
                           textAlign: TextAlign.center,
                           style: PrimaryFont.bodyTextMedium()
                               .copyWith(color: Colors.green),

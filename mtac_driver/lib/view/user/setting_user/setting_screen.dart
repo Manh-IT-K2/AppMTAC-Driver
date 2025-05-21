@@ -3,14 +3,17 @@ import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
-import 'package:mtac_driver/utils/text_util.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    //
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -30,7 +33,7 @@ class SettingScreen extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  txtSettingAU,
+                  l10n.txtSettingAU,
                   textAlign: TextAlign.center,
                   style: PrimaryFont.headerTextBold()
                       .copyWith(color: Colors.black),
@@ -48,14 +51,14 @@ class SettingScreen extends StatelessWidget {
         child: Column(
           children: [
             _itemSettingAccount(
-              title: txtSettingNotifiSU,
+              title: l10n.txtSettingNotifiSU,
               arrowRight: true,
               color: Colors.black,
               icon: HugeIcons.strokeRoundedNotification03,
               ontap: () {},
             ),
             _itemSettingAccount(
-              title: txtPasswordManagementSU,
+              title: l10n.txtPasswordManagementSU,
               arrowRight: true,
               color: Colors.black,
               icon: HugeIcons.strokeRoundedForgotPassword,
@@ -64,7 +67,7 @@ class SettingScreen extends StatelessWidget {
               },
             ),
             _itemSettingAccount(
-              title: txtDeleteAcountSU,
+              title: l10n.txtDeleteAcountSU,
               arrowRight: false,
               color: Colors.red,
               icon: HugeIcons.strokeRoundedUserRemove01,

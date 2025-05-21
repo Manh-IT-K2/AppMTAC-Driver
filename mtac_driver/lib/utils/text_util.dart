@@ -10,6 +10,7 @@ const String txtNumberInfoSchedule2 = "12.2k";
 const String txtInfoSchedule2 = "lịch đã sắp";
 const String txtInviteTransport = "Mời thầu vận chuyển";
 const String txtNumberMoney = "100,000,000 đ";
+const String txtSearch = "Tìm kiếm...";
 
 // text schedule screen
 const String txtTitleS = "Danh sách chuyến";
@@ -45,10 +46,16 @@ const String txtDaySC = "Ngày thu gom:";
 const String txtPriceSC = "Đơn giá:";
 const String txtButDetailSC = "Chi tiết";
 const String txtButScheduleSC = "Sắp lịch";
+const String txtWhenFinishSC= "Không có lịch hôm nay";
 
 // text map screen
 const String txtTitleBottomM = "Theo dõi điểm đến";
 const String txtWriteRecordM =  "Ghi biên bản";
+const String txtCollectingM = "Đang thu gom";
+const String txtFinishCollectionM =  "Hoàn thành";
+const String txtStartCollectionM = "Bắt đầu";
+const String txtOptimizingM  = "Đang tối ưu tuyến đường....";
+
 
 // text handover record sceen (bien ban giao nhan)
 const String txtTitleHR = "Biên bản giao nhận";
@@ -64,6 +71,9 @@ const String txtTotalStatuWasteHR = "Trạng thái:";
 const String txtNumberWasteHR = "Số lượng";
 const String txtImageHR = "Hình ảnh Biên Bản Giao Nhận";
 const String txtButSendHR = "Gửi Biên bản giao nhận";
+const String txtTypeSolidHR = "rắn";
+const String txtTypeLiquidHR = "lỏng";
+const String txtSuccessNotiHR = "Gửi biên bản thành công";
 
 // text bottom sheet
 const String txtCamera = "Máy ảnh";
@@ -120,6 +130,10 @@ const String txtSignInL ="Đăng kí";
 const String txtOrRegisterByCallL = "Hoặc đăng kí bằng cách gọi";
 const String txtTermsOfUseL = "Điều khoản sử dụng";
 const String txtByLoggingInYouAcceptL = "Bằng cách đăng nhập, bạn chấp nhận";
+const String txtPleaseEnPhoneL = 'Vui lòng nhập số điện thoại';
+const String txtErrOnlyNumberL = 'Số điện thoại chỉ được chứa số';
+const String txtErrNotValidPhoneL = 'Số điện thoại không hợp lệ';
+
 
 // text setting user screen
 const String txtSettingNotifiSU = "Cài đặt thông báo";
@@ -131,3 +145,11 @@ const String txtCurrentPasswordMP = "Mật khẩu hiện tại";
 const String txtNewPasswordMP = "Mật khẩu mới";
 const String txtConfirmPasswordMP = "Xác nhận mật khẩu mới";
 const String txtChangePasswordMP = "Đổi mật khẩu";
+
+// text no internet screen
+const String txtRetryNI = "Thử lại";
+
+// txt splash screen
+const String txtErrConnectSP = "Lỗi kết nối"; 
+const String txtSubErrConnectSP = "Không thể kết nối đến máy chủ. Vui lòng kiểm tra mạng hoặc thử lại sau.";
+

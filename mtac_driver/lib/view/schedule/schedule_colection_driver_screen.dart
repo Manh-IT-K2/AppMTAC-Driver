@@ -145,7 +145,7 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
                       if (scheduleMap.isEmpty) {
                         return Center(
                             child: Text(
-                          "Không có lịch hôm nay",
+                          l10n.txtWhenFinishSC,
                           style: PrimaryFont.bodyTextBold()
                               .copyWith(color: Colors.black),
                         ));

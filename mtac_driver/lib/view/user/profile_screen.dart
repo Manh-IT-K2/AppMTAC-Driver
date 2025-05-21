@@ -4,10 +4,10 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/controller/user/profile_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
-import 'package:mtac_driver/utils/text_util.dart';
 import 'package:mtac_driver/widgets/user_widget/build_avatar_widget.dart';
 import 'package:mtac_driver/widgets/user_widget/input_form_widget.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
@@ -23,6 +23,8 @@ class ProfileScreen extends StatelessWidget {
   final ProfileController _profileController = Get.put(ProfileController());
   @override
   Widget build(BuildContext context) {
+    //
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: kPrimaryColor.withOpacity(0.8),
       body: Obx(() {
@@ -65,7 +67,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        txtMyProfileAU,
+                        l10n.txtMyProfileAU,
                         textAlign: TextAlign.center,
                         style: PrimaryFont.headerTextBold().copyWith(
                           color: Colors.white,
@@ -149,7 +151,7 @@ class ProfileScreen extends StatelessWidget {
                         InputFormWidget(
                           readOnly: false,
                           controller: nameController,
-                          title: txtNamePU,
+                          title: l10n.txtNamePU,
                           obscureText: false,
                         ),
                         SizedBox(
@@ -158,7 +160,7 @@ class ProfileScreen extends StatelessWidget {
                         InputFormWidget(
                           readOnly: false,
                           controller: phoneController,
-                          title: txtPhone,
+                          title: l10n.txtPhone,
                           obscureText: false,
                         ),
                         SizedBox(
@@ -167,7 +169,7 @@ class ProfileScreen extends StatelessWidget {
                         InputFormWidget(
                           readOnly: false,
                           controller: emailController,
-                          title: txtEmailPU,
+                          title: l10n.txtEmailPU,
                           obscureText: false,
                           suffixIcon: IconButton(
                             onPressed: () {},
@@ -184,7 +186,7 @@ class ProfileScreen extends StatelessWidget {
                         InputFormWidget(
                           readOnly: false,
                           controller: addressController,
-                          title: txtAddressPU,
+                          title: l10n.txtAddressPU,
                           obscureText: false,
                         ),
                         SizedBox(
@@ -193,7 +195,7 @@ class ProfileScreen extends StatelessWidget {
                         InputFormWidget(
                           readOnly: false,
                           controller: nummberIDController,
-                          title: txtCarIDPU,
+                          title: l10n.txtCarIDPU,
                           obscureText: false,
                         ),
                         SizedBox(
@@ -203,7 +205,7 @@ class ProfileScreen extends StatelessWidget {
                           readOnly: true,
                           showCursor: false,
                           controller: taxCodeController,
-                          title: txtTaxCodePU,
+                          title: l10n.txtTaxCodePU,
                           colorText: Colors.grey,
                           obscureText: false,
                           suffixIcon: IconButton(
@@ -221,7 +223,7 @@ class ProfileScreen extends StatelessWidget {
                         InputFormWidget(
                           readOnly: false,
                           controller: numberVehicleController,
-                          title: txtVehicleLicensePU,
+                          title: l10n.txtVehicleLicensePU,
                           obscureText: false,
                         ),
                         SizedBox(
@@ -248,7 +250,7 @@ class ProfileScreen extends StatelessWidget {
                             shadowColor: Colors.black.withOpacity(0.3),
                           ),
                           child: Text(
-                           txtUpdateProfilePU,
+                            l10n.txtUpdateProfilePU,
                             style: PrimaryFont.bodyTextMedium().copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,

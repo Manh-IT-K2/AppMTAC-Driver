@@ -6,6 +6,7 @@ import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/service/user/login_service.dart';
 import 'package:mtac_driver/shared/language_shared.dart';
 import 'package:mtac_driver/shared/user/user_shared.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginController extends GetxController {
   // inital variable

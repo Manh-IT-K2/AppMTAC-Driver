@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:mtac_driver/controller/network_check_middleware_controller.dart';
 
 class NoInternetScreen extends StatelessWidget {
@@ -9,6 +10,8 @@ class NoInternetScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Center(
         child: Column(
@@ -35,7 +38,7 @@ class NoInternetScreen extends StatelessWidget {
                 ),
               ),
               child: Text(
-                "Thử lại",
+                l10n.txtRetryNI,
                 style:
                     PrimaryFont.bodyTextMedium().copyWith(color: kPrimaryColor),
               ),

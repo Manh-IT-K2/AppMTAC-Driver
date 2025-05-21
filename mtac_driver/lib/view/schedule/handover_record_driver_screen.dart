@@ -7,11 +7,11 @@ import 'package:mtac_driver/controller/schedule/handover_record_controller.dart'
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/data/map_screen/item_info_waste.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/text_util.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:mtac_driver/widgets/bottom_image_source_sheet.dart';
 import 'package:mtac_driver/widgets/schedule_widget/bottom_preview_image_sheet.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // ignore: must_be_immutable
 class HandoverRecordDriverScreen extends StatelessWidget {
@@ -22,8 +22,11 @@ class HandoverRecordDriverScreen extends StatelessWidget {
 
   final scheduleController = Get.find<ScheduleController>();
   final scheduleId = Get.arguments;
+
   @override
   Widget build(BuildContext context) {
+    //
+    final l10n = AppLocalizations.of(context)!;
     //final size = context.screenSize;
     return Scaffold(
       appBar: AppBar(
@@ -43,7 +46,7 @@ class HandoverRecordDriverScreen extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                txtTitleHR,
+                l10n.txtTitleHR,
                 style: PrimaryFont.headerTextBold().copyWith(
                   color: const Color(0xFF0A4564),
                 ),
@@ -61,8 +64,12 @@ class HandoverRecordDriverScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const _HeaderHandoverRecordScreen(),
+              _HeaderHandoverRecordScreen(
+                l10n: l10n,
+                controller: _handoverRecordController,
+              ),
               _BodyHandoverRecordScreen(
+                l10n: l10n,
                 sHeightBody: 20.h,
                 sHeightItem: 5.h,
                 sWidthSizeBox: 4.w,
@@ -75,6 +82,7 @@ class HandoverRecordDriverScreen extends StatelessWidget {
                 height: 25,
               ),
               _BottomHandoverRecordSceen(
+                l10n: l10n,
                 imageController: _handoverRecordController,
                 sWidthCon: 30.w,
                 sHeightCon: 20.h,
@@ -99,7 +107,7 @@ class _BottomHandoverRecordSceen extends StatelessWidget {
     required this.sWidthCon,
     required this.sHeightCon,
     required this.scheduleController,
-    required this.scheduleId,
+    required this.scheduleId, required this.l10n,
   });
 
   final HandoverRecordController imageController;
@@ -107,20 +115,21 @@ class _BottomHandoverRecordSceen extends StatelessWidget {
   final double sWidthCon, sHeightCon;
 
   final int scheduleId;
+  final AppLocalizations l10n;
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "• $txtTotalStatuWasteHR R(rắn); L(lỏng)",
+          "• ${l10n.txtTotalStatuWasteHR} R(${l10n.txtTypeSolidHR}); L(${l10n.txtTypeLiquidHR})",
           style: PrimaryFont.bodyTextThin().copyWith(color: Colors.black),
         ),
         const SizedBox(
           height: 5,
         ),
         Text(
-          txtImageHR,
+          l10n.txtImageHR,
           style: PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
         ),
         const SizedBox(
@@ -238,7 +247,7 @@ class _BottomHandoverRecordSceen extends StatelessWidget {
                   imageController.allInputsValid.value) {
                 imageController.updateSelectedGoods(infoWasteData);
                 NotifySuccessDialog()
-                    .showNotifyPopup("Gửi biên bản thành công", true, () {
+                    .showNotifyPopup(l10n.txtSuccessNotiHR, true, () {
                   scheduleController.endCollectionTrip(
                       scheduleId,
                       imageController.selectedGoods,
@@ -256,7 +265,7 @@ class _BottomHandoverRecordSceen extends StatelessWidget {
                 elevation: 5,
                 minimumSize: Size(30.h, 5.h)),
             child: Text(
-              txtButSendHR,
+              l10n.txtButSendHR,
               style: PrimaryFont.bodyTextBold().copyWith(color: Colors.white),
             ),
           ),
@@ -276,8 +285,10 @@ class _BodyHandoverRecordScreen extends StatelessWidget {
     required this.sHeightBody,
     required this.sWidthSizeBox,
     required this.controller,
+    required this.l10n,
   });
 
+  final AppLocalizations l10n;
   final HandoverRecordController controller;
   final double sHeightBody,
       sHeightItem,
@@ -296,19 +307,19 @@ class _BodyHandoverRecordScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
-              txtNameWasteHR,
+              l10n.txtNameWasteHR,
               style: PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
             ),
             Text(
-              txtCodeWasteHR,
+              l10n.txtCodeWasteHR,
               style: PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
             ),
             Text(
-              txtStatusWasteHR,
+              l10n.txtStatusWasteHR,
               style: PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
             ),
             Text(
-              txtNumberWasteHR,
+              l10n.txtNumberWasteHR,
               style: PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
             ),
           ],
@@ -424,8 +435,12 @@ class _BodyHandoverRecordScreen extends StatelessWidget {
 class _HeaderHandoverRecordScreen extends StatelessWidget {
   const _HeaderHandoverRecordScreen({
     super.key,
+    required this.controller,
+    required this.l10n,
   });
 
+  final HandoverRecordController controller;
+  final AppLocalizations l10n;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -433,7 +448,7 @@ class _HeaderHandoverRecordScreen extends StatelessWidget {
         Align(
           alignment: Alignment.center,
           child: Text(
-            "$txtCodeHR 003437",
+            "${l10n.txtCodeHR} 003437",
             style: PrimaryFont.bodyTextLight().copyWith(color: Colors.black),
             textAlign: TextAlign.center,
           ),
@@ -444,7 +459,7 @@ class _HeaderHandoverRecordScreen extends StatelessWidget {
         Align(
           alignment: Alignment.center,
           child: Text(
-            txtNoteHR,
+            l10n.txtNoteHR,
             style: PrimaryFont.bodyTextLight().copyWith(color: Colors.black),
           ),
         ),
@@ -454,7 +469,7 @@ class _HeaderHandoverRecordScreen extends StatelessWidget {
         Align(
           alignment: Alignment.center,
           child: Text(
-            "$txtTimeHR 9 giờ 30, ngày 21/02/2025",
+            "${l10n.txtTimeHR} ${controller.getFormattedCurrentTime()}",
             style: PrimaryFont.bodyTextLight().copyWith(color: kPrimaryColor),
           ),
         ),
@@ -465,7 +480,7 @@ class _HeaderHandoverRecordScreen extends StatelessWidget {
             TextSpan(
               children: [
                 TextSpan(
-                  text: txtAddress1HR,
+                  text: l10n.txtAddress1HR,
                   style:
                       PrimaryFont.bodyTextLight().copyWith(color: Colors.black),
                 ),
@@ -488,7 +503,7 @@ class _HeaderHandoverRecordScreen extends StatelessWidget {
             TextSpan(
               children: [
                 TextSpan(
-                  text: txtAddress2HR,
+                  text: l10n.txtAddress2HR,
                   style:
                       PrimaryFont.bodyTextLight().copyWith(color: Colors.black),
                 ),

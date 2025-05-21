@@ -4,15 +4,16 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
-import 'package:mtac_driver/utils/text_util.dart';
 import 'package:mtac_driver/widgets/user_widget/input_form_widget.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ManagerPasswordScreen extends StatelessWidget {
   ManagerPasswordScreen({super.key});
   final _loginController = Get.find<LoginController>();
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -31,7 +32,7 @@ class ManagerPasswordScreen extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  txtPasswordManagementSU,
+                  l10n.txtPasswordManagementSU,
                   textAlign: TextAlign.center,
                   style: PrimaryFont.headerTextBold()
                       .copyWith(color: Colors.black),
@@ -52,7 +53,7 @@ class ManagerPasswordScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                txtCurrentPasswordMP,
+                l10n.txtCurrentPasswordMP,
                 style:
                     PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
               ),
@@ -62,7 +63,7 @@ class ManagerPasswordScreen extends StatelessWidget {
               Obx(
                 () => InputFormWidget(
                   readOnly: false,
-                  title: txtPasswordL,
+                  title: l10n.txtPasswordL,
                   controller: _loginController.passwordController,
                   obscureText: _loginController.obscurePassword.value,
                   iconStart: HugeIcons.strokeRoundedLockPassword,
@@ -73,7 +74,7 @@ class ManagerPasswordScreen extends StatelessWidget {
                     onPressed: _loginController.togglePasswordVisibility,
                   ),
                   validator: (value) => value == null || value.isEmpty
-                      ? txtPleaseEnPassL
+                      ? l10n.txtPleaseEnPassL
                       : null,
                 ),
               ),
@@ -83,7 +84,7 @@ class ManagerPasswordScreen extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  txtForgotPassL,
+                  l10n.txtForgotPassL,
                   style: PrimaryFont.bodyTextMedium()
                       .copyWith(color: kPrimaryColor),
                 ),
@@ -92,7 +93,7 @@ class ManagerPasswordScreen extends StatelessWidget {
                 height: 3.w,
               ),
               Text(
-                txtNewPasswordMP,
+                l10n.txtNewPasswordMP,
                 style:
                     PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
               ),
@@ -102,7 +103,7 @@ class ManagerPasswordScreen extends StatelessWidget {
               Obx(
                 () => InputFormWidget(
                   readOnly: false,
-                  title: txtPasswordL,
+                  title: l10n.txtPasswordL,
                   controller: _loginController.passwordNewController,
                   obscureText: _loginController.obscurePasswordNew.value,
                   iconStart: HugeIcons.strokeRoundedLockPassword,
@@ -113,7 +114,7 @@ class ManagerPasswordScreen extends StatelessWidget {
                     onPressed: _loginController.togglePasswordNewVisibility,
                   ),
                   validator: (value) => value == null || value.isEmpty
-                      ? txtPleaseEnPassL
+                      ? l10n.txtPleaseEnPassL
                       : null,
                 ),
               ),
@@ -121,7 +122,7 @@ class ManagerPasswordScreen extends StatelessWidget {
                 height: 3.w,
               ),
               Text(
-                txtConfirmPasswordMP,
+                l10n.txtConfirmPasswordMP,
                 style:
                     PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
               ),
@@ -131,7 +132,7 @@ class ManagerPasswordScreen extends StatelessWidget {
               Obx(
                 () => InputFormWidget(
                   readOnly: false,
-                  title: txtPasswordL,
+                  title: l10n.txtPasswordL,
                   controller: _loginController.passwordNewConfirmController,
                   obscureText: _loginController.obscurePasswordNewConfirm.value,
                   iconStart: HugeIcons.strokeRoundedLockPassword,
@@ -143,7 +144,7 @@ class ManagerPasswordScreen extends StatelessWidget {
                         _loginController.togglePasswordNewConfirmVisibility,
                   ),
                   validator: (value) => value == null || value.isEmpty
-                      ? txtPleaseEnPassL
+                      ? l10n.txtPleaseEnPassL
                       : null,
                 ),
               ),
@@ -153,8 +154,7 @@ class ManagerPasswordScreen extends StatelessWidget {
               SizedBox(
                 width: 100.w,
                 child: ElevatedButton(
-                  onPressed: () {
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kPrimaryColor,
                     shape: RoundedRectangleBorder(
@@ -164,7 +164,7 @@ class ManagerPasswordScreen extends StatelessWidget {
                     shadowColor: Colors.black.withOpacity(0.3),
                   ),
                   child: Text(
-                    txtChangePasswordMP,
+                    l10n.txtChangePasswordMP,
                     style: PrimaryFont.bodyTextMedium().copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

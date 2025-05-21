@@ -31,6 +31,19 @@ class HandoverRecordController extends GetxController {
   // );
   //}
 
+  // format now time
+  String getFormattedCurrentTime() {
+  final now = DateTime.now();
+  final hour = now.hour;
+  final minute = now.minute.toString().padLeft(2, '0');
+  final day = now.day.toString().padLeft(2, '0');
+  final month = now.month.toString().padLeft(2, '0');
+  final year = now.year;
+
+  return "$hour giờ $minute, ngày $day/$month/$year";
+}
+
+
   /* CODE CHOSE IMAGE */
   // Create variable image
   final ImagePicker _picker = ImagePicker();
@@ -110,6 +123,7 @@ class HandoverRecordController extends GetxController {
           element.value.trim().isNotEmpty && element.value.trim() != "0",
     );
   }
+
   //
   Future<void> calculateAndSaveTotalKg() async {
     double totalKg = 0;

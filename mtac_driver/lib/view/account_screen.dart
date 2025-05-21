@@ -5,7 +5,6 @@ import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
-import 'package:mtac_driver/utils/text_util.dart';
 import 'package:mtac_driver/widgets/user_widget/build_avatar_widget.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -101,7 +100,7 @@ class AccountScreen extends StatelessWidget {
                                   ),
                                   child: Center(
                                     child: Text(
-                                     txtMyProfileAU,
+                                      l10n.txtMyProfileAU,
                                       style: PrimaryFont.bodyTextBold()
                                           .copyWith(color: kPrimaryColor),
                                     ),
@@ -122,7 +121,7 @@ class AccountScreen extends StatelessWidget {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      txtLogoutAU,
+                                      l10n.txtLogoutAU,
                                       textAlign: TextAlign.center,
                                       style: PrimaryFont.bodyTextBold()
                                           .copyWith(color: Colors.red),
@@ -141,15 +140,15 @@ class AccountScreen extends StatelessWidget {
               SizedBox(
                 height: 5.w,
               ),
-              const _ItemFuncAccount(
-                title: txtPaymentMedthodAU,
+              _ItemFuncAccount(
+                title: l10n.txtPaymentMedthodAU,
                 arrowRight: true,
                 color: kPrimaryColor,
                 icon: HugeIcons.strokeRoundedCreditCardValidation,
               ),
               const Divider(),
               _ItemFuncAccount(
-                title: txtContactAU,
+                title: l10n.txtContactAU,
                 arrowRight: true,
                 onTap: () {
                   Get.toNamed(AppRoutes.contactUs);
@@ -159,7 +158,7 @@ class AccountScreen extends StatelessWidget {
               ),
               const Divider(),
               _ItemFuncAccount(
-                title: txtHelpAU,
+                title: l10n.txtHelpAU,
                 arrowRight: true,
                 onTap: () {
                   Get.toNamed(AppRoutes.helpFaqs);
@@ -169,7 +168,7 @@ class AccountScreen extends StatelessWidget {
               ),
               const Divider(),
               _ItemFuncAccount(
-                title: txtSettingAU,
+                title: l10n.txtSettingAU,
                 arrowRight: true,
                 onTap: () {
                   Get.toNamed(AppRoutes.setting);
@@ -197,7 +196,7 @@ class AccountScreen extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      txtLanguageAU,
+                      l10n.txtLanguageAU,
                       style: PrimaryFont.bodyTextMedium()
                           .copyWith(color: Colors.black),
                     ),
@@ -246,7 +245,7 @@ class AccountScreen extends StatelessWidget {
                 height: 10.w,
               ),
               Text(
-                "$txtVersionAU 1.1.1 build 1110",
+                "${l10n.txtVersionAU} 1.1.1 build 1110",
                 style:
                     PrimaryFont.bodyTextMedium().copyWith(color: Colors.grey),
               )

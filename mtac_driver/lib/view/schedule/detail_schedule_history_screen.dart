@@ -4,15 +4,18 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/text_util.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DetailScheduleHistoryScreen extends StatelessWidget {
   const DetailScheduleHistoryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+     //
+    final l10n = AppLocalizations.of(context)!;
+
     final Datum datum = Get.arguments;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -33,7 +36,7 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  txtTitleDSH,
+                  l10n.txtTitleDSH,
                   textAlign: TextAlign.center,
                   style: PrimaryFont.headerTextBold()
                       .copyWith(color: Colors.black),
@@ -56,12 +59,12 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    "$txtDayDSH ${DateFormat('yyyy-MM-dd').format(datum.collectionDate)}",
+                    "${l10n.txtDayDSH} ${DateFormat('yyyy-MM-dd').format(datum.collectionDate)}",
                     style: PrimaryFont.bodyTextThin(),
                   ),
                   const Spacer(),
                   Text(
-                    "$txtCodeDSH ${datum.code}",
+                    "${l10n.txtCodeDSH} ${datum.code}",
                     style:
                         PrimaryFont.bodyTextBold().copyWith(color: Colors.red),
                   ),
@@ -83,19 +86,19 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                   children: [
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedOffice,
-                      title: txtNameCompanyDSH,
+                      title: l10n.txtNameCompanyDSH,
                       content: datum.companyName,
                       styleContent: PrimaryFont.bodyTextBold(),
                     ),
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedLocation04,
-                      title: txtAddressDSH,
+                      title: l10n.txtAddressDSH,
                       content: datum.locationDetails,
                       styleContent: PrimaryFont.bodyTextMedium(),
                     ),
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedWaste,
-                      title: txtWasteTypeDSH,
+                      title: l10n.txtWasteTypeDSH,
                       content: datum.wasteType,
                       styleContent: PrimaryFont.bodyTextMedium()
                           .copyWith(color: Colors.green),
@@ -104,7 +107,7 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                txtDetailTruckDSH,
+                l10n.txtDetailTruckDSH,
                 style: PrimaryFont.titleTextBold(),
               ),
               Container(
@@ -120,13 +123,13 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                   children: [
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedShippingTruck01,
-                      title: txtNameTruckDSH,
+                      title: l10n.txtNameTruckDSH,
                       content: datum.truck.name,
                       styleContent: PrimaryFont.bodyTextMedium(),
                     ),
                     _itemCollectionDetail(
                       icon: HugeIcons.strokeRoundedEdgeStyle,
-                      title: txtPlateNumberDSH,
+                      title: l10n.txtPlateNumberDSH,
                       content: datum.truck.plateNumber,
                       styleContent: PrimaryFont.bodyTextMedium(),
                     ),
@@ -134,7 +137,7 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                 ),
               ),
               Text(
-                txtDetailGoodsDSH,
+                l10n.txtDetailGoodsDSH,
                 style: PrimaryFont.titleTextBold(),
               ),
               SizedBox(
@@ -147,14 +150,14 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: Text(
-                        txtNameWasteDSH,
+                        l10n.txtNameWasteDSH,
                         style: PrimaryFont.bodyTextBold(),
                       ),
                     ),
                     Expanded(
                       flex: 1,
                       child: Text(
-                        txtNumberWasteDSH,
+                        l10n.txtNumberWasteDSH,
                         style: PrimaryFont.bodyTextBold(),
                         textAlign: TextAlign.right,
                       ),
@@ -206,7 +209,7 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                 height: 5.w,
               ),
               Text(
-                txtDetailImageDSH,
+                l10n.txtDetailImageDSH,
                 style: PrimaryFont.titleTextBold(),
               ),
               SizedBox(

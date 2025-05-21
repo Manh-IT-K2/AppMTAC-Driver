@@ -7,9 +7,9 @@ import 'package:mtac_driver/configs/api_config.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
-import 'package:mtac_driver/utils/text_util.dart';
 import 'package:mtac_driver/widgets/user_widget/input_form_widget.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -41,6 +41,9 @@ final controller = Get.put(LoginController(), permanent: true);
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
+
+    //
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -53,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   SizedBox(height: 20.w),
                   Text(
-                    txtWelcomToL,
+                    l10n.txtWelcomToL,
                     style: PrimaryFont.bold(10.w).copyWith(
                       color: kPrimaryColor,
                     ),
@@ -67,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 5.w),
                   InputFormWidget(
                     readOnly: false,
-                    title: txtPhone,
+                    title: l10n.txtPhone,
                     obscureText: false,
                     controller: controller.usernameController,
                     iconStart: HugeIcons.strokeRoundedCall02,
@@ -82,13 +85,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Vui lòng nhập số điện thoại';
+                        return l10n.txtPleaseEnPhoneL;
                       }
                       if (!RegExp(r'^\d+$').hasMatch(value)) {
-                        return 'Số điện thoại chỉ được chứa số';
+                        return l10n.txtErrOnlyNumberL;
                       }
                       if (value.length < 9) {
-                        return 'Số điện thoại không hợp lệ';
+                        return l10n.txtErrNotValidPhoneL;
                       }
                       return null;
                     },
@@ -97,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Obx(
                     () => InputFormWidget(
                       readOnly: false,
-                      title: txtPasswordL,
+                      title: l10n.txtPasswordL,
                       controller: controller.passwordController,
                       obscureText: controller.obscurePassword.value,
                       iconStart: HugeIcons.strokeRoundedLockPassword,
@@ -108,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: controller.togglePasswordVisibility,
                       ),
                       validator: (value) => value == null || value.isEmpty
-                          ? txtPleaseEnPassL
+                          ? l10n.txtPleaseEnPassL
                           : null,
                     ),
                   ),
@@ -118,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: GestureDetector(
                       onTap: () {},
                       child: Text(
-                       txtForgotPassL,
+                       l10n.txtForgotPassL,
                         style: PrimaryFont.bodyTextMedium()
                             .copyWith(color: kPrimaryColor),
                       ),
@@ -141,7 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 shadowColor: Colors.black.withOpacity(0.3),
                               ),
                               child: Text(
-                                txtSignInL,
+                                l10n.txtSignInL,
                                 style: PrimaryFont.bodyTextMedium().copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -152,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 10.w),
                   Text(
-                    "----- $txtOrRegisterByCallL -----",
+                    "----- ${l10n.txtOrRegisterByCallL} -----",
                     style: PrimaryFont.bodyTextMedium()
                         .copyWith(color: Colors.black),
                   ),
@@ -173,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        txtByLoggingInYouAcceptL,
+                        l10n.txtByLoggingInYouAcceptL,
                         style: PrimaryFont.bodyTextMedium()
                             .copyWith(color: Colors.black),
                       ),
@@ -181,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       GestureDetector(
                         onTap: () {},
                         child: Text(
-                          txtTermsOfUseL,
+                          l10n.txtTermsOfUseL,
                           style: PrimaryFont.bodyTextMedium()
                               .copyWith(color: kPrimaryColor),
                         ),

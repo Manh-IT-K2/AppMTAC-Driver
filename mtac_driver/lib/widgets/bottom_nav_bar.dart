@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
-import 'package:mtac_driver/utils/text_util.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -17,6 +17,7 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ClipRRect(
       borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(30),
@@ -31,12 +32,12 @@ class BottomNavBar extends StatelessWidget {
         child: BottomNavigationBar(
           backgroundColor: kBackgroundColor,
           type: BottomNavigationBarType.fixed,
-          items: const [
+          items: [
             //BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedCalendar04), label: "Lên lịch"),
-            BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedHome11), label: txtHomeNB),
-            BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedClock01), label: txtPaymentNB),
-            BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedNotification03), label: txtNotificationNB),
-            BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedUser), label: txtAccountNB),
+            BottomNavigationBarItem(icon: const Icon(HugeIcons.strokeRoundedHome11), label: l10n.txtHomeNB),
+            BottomNavigationBarItem(icon: const Icon(HugeIcons.strokeRoundedClock01), label: l10n.txtPaymentNB),
+            BottomNavigationBarItem(icon: const Icon(HugeIcons.strokeRoundedNotification03), label: l10n.txtNotificationNB),
+            BottomNavigationBarItem(icon: const Icon(HugeIcons.strokeRoundedUser), label: l10n.txtAccountNB),
           ],
           currentIndex: selectedIndex,
           onTap: onItemTapped,

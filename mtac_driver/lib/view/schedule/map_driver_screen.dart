@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -11,10 +10,10 @@ import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
-import 'package:mtac_driver/utils/text_util.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:mtac_driver/widgets/schedule_widget/moving_gif_widget.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MapDriverScreen extends StatelessWidget {
   MapDriverScreen({super.key});
@@ -28,6 +27,8 @@ class MapDriverScreen extends StatelessWidget {
       Get.put(HandoverRecordController());
   @override
   Widget build(BuildContext context) {
+       //
+    final l10n = AppLocalizations.of(context)!;
     double screenHeight = 100.h;
     //final destinationsData = controller.getDestinationsByTripId(controller.tripId);
     return Scaffold(
@@ -51,7 +52,7 @@ class MapDriverScreen extends StatelessWidget {
                         fit: BoxFit.fill,
                       ),
                       const SizedBox(height: 16),
-                      const Text("Đang tối ưu tuyến đường...."),
+                      Text(l10n.txtOptimizingM, style: PrimaryFont.headerTextBold().copyWith(color: Colors.black),),
                     ],
                   );
                 }
@@ -271,7 +272,7 @@ class MapDriverScreen extends StatelessWidget {
                           child: Column(
                             children: [
                               Text(
-                                txtTitleBottomM,
+                                l10n.txtTitleBottomM,
                                 style: PrimaryFont.headerTextBold().copyWith(
                                   color: const Color(0xFF233751),
                                 ),
@@ -304,7 +305,7 @@ class MapDriverScreen extends StatelessWidget {
                                   ),
                                   SizedBox(width: 5.w),
                                   Expanded(
-                                    child: _buildDestinationList(),
+                                    child: _buildDestinationList(l10n),
                                   ),
                                   const SizedBox(
                                     width: 16.0,
@@ -412,7 +413,7 @@ class MapDriverScreen extends StatelessWidget {
   }
 
   //
-  Widget _buildDestinationList() {
+  Widget _buildDestinationList(AppLocalizations l10n) {
     if (controller.optimizedRoute.isNotEmpty) {
       // sort
       sortItemDestinationDataByOptimizedRoute();
@@ -438,6 +439,7 @@ class MapDriverScreen extends StatelessWidget {
                   print("object111 : $status");
 
                   return _ItemDestination(
+                    l10n: l10n,
                     scheduleId: destination.id,
                     distanceTime: distanceTime,
                     nameBusiness: destination.companyName,
@@ -540,156 +542,156 @@ class MapDriverScreen extends StatelessWidget {
   }
 
   //
-  void _showWeightInputDialog(BuildContext context, LatLng position) {
-    final TextEditingController weightController = TextEditingController();
-    var errText = "".obs;
-    showDialog(
-      context: Get.context!,
-      barrierDismissible: false,
-      builder: (context) {
-        return Stack(
-          children: [
-            Align(
-              alignment: Alignment.topCenter,
-              child: Material(
-                color: Colors.transparent,
-                child: Container(
-                  margin: EdgeInsets.only(top: 10.w),
-                  width: 90.w,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: kPrimaryColor, width: 1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            width: 5.w,
-                            height: 5.w,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(3.w),
-                            ),
-                            child: Icon(
-                              Icons.close,
-                              color: Colors.black,
-                              size: 3.w,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Text(
-                        "Thêm dữ liệu",
-                        style: PrimaryFont.headerTextBold()
-                            .copyWith(color: kPrimaryColor),
-                      ),
-                      SizedBox(height: 10.w),
-                      Text(
-                        "Khối lượng",
-                        style: PrimaryFont.bodyTextMedium()
-                            .copyWith(color: Colors.black),
-                      ),
-                      SizedBox(height: 1.w),
-                      SizedBox(
-                        height: 10.w,
-                        child: TextField(
-                          controller: weightController,
-                          decoration: InputDecoration(
-                            hintText: "Nhập khối lượng",
-                            hintStyle: PrimaryFont.bodyTextMedium()
-                                .copyWith(color: Colors.grey),
-                            border: const OutlineInputBorder(),
-                            enabledBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            suffixIcon: Container(
-                              alignment: Alignment.center,
-                              width: 40,
-                              child: Text(
-                                "kg",
-                                style: PrimaryFont.bodyTextMedium()
-                                    .copyWith(color: Colors.grey),
-                              ),
-                            ),
-                          ),
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 1.w),
-                      Obx(
-                        () => controller.statusInputWeight.value
-                            ? Text(
-                                errText.value,
-                                style: PrimaryFont.bodyTextMedium()
-                                    .copyWith(color: Colors.red),
-                              )
-                            : const SizedBox(),
-                      ),
-                      SizedBox(height: 10.w),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              if (weightController.text.isNotEmpty) {
-                                int a = int.parse(weightController.text);
-                                if (a < 50000) {
-                                  controller.statusInputWeight.value = false;
-                                  controller.updateWeight(
-                                      position, weightController.text);
-                                  Navigator.pop(context);
-                                } else {
-                                  controller.statusInputWeight.value = true;
-                                  errText.value =
-                                      "Khối lượng không lớn hơn 50.000 kg";
-                                }
-                              } else {
-                                controller.statusInputWeight.value = true;
-                                errText.value = "Chưa nhập khối lượng";
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: kPrimaryColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(2.w),
-                              ),
-                              elevation: 5,
-                              minimumSize: Size(15.h, 5.h),
-                            ),
-                            child: Text(
-                              "Thêm",
-                              style: PrimaryFont.bodyTextBold()
-                                  .copyWith(color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // void _showWeightInputDialog(BuildContext context, LatLng position) {
+  //   final TextEditingController weightController = TextEditingController();
+  //   var errText = "".obs;
+  //   showDialog(
+  //     context: Get.context!,
+  //     barrierDismissible: false,
+  //     builder: (context) {
+  //       return Stack(
+  //         children: [
+  //           Align(
+  //             alignment: Alignment.topCenter,
+  //             child: Material(
+  //               color: Colors.transparent,
+  //               child: Container(
+  //                 margin: EdgeInsets.only(top: 10.w),
+  //                 width: 90.w,
+  //                 padding: const EdgeInsets.all(16),
+  //                 decoration: BoxDecoration(
+  //                   color: Colors.white,
+  //                   border: Border.all(color: kPrimaryColor, width: 1),
+  //                   borderRadius: BorderRadius.circular(10),
+  //                 ),
+  //                 child: Column(
+  //                   mainAxisAlignment: MainAxisAlignment.start,
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   children: [
+  //                     Align(
+  //                       alignment: Alignment.centerRight,
+  //                       child: GestureDetector(
+  //                         onTap: () {
+  //                           Navigator.pop(context);
+  //                         },
+  //                         child: Container(
+  //                           width: 5.w,
+  //                           height: 5.w,
+  //                           decoration: BoxDecoration(
+  //                             color: Colors.grey.withOpacity(0.2),
+  //                             borderRadius: BorderRadius.circular(3.w),
+  //                           ),
+  //                           child: Icon(
+  //                             Icons.close,
+  //                             color: Colors.black,
+  //                             size: 3.w,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     Text(
+  //                       "Thêm dữ liệu",
+  //                       style: PrimaryFont.headerTextBold()
+  //                           .copyWith(color: kPrimaryColor),
+  //                     ),
+  //                     SizedBox(height: 10.w),
+  //                     Text(
+  //                       "Khối lượng",
+  //                       style: PrimaryFont.bodyTextMedium()
+  //                           .copyWith(color: Colors.black),
+  //                     ),
+  //                     SizedBox(height: 1.w),
+  //                     SizedBox(
+  //                       height: 10.w,
+  //                       child: TextField(
+  //                         controller: weightController,
+  //                         decoration: InputDecoration(
+  //                           hintText: "Nhập khối lượng",
+  //                           hintStyle: PrimaryFont.bodyTextMedium()
+  //                               .copyWith(color: Colors.grey),
+  //                           border: const OutlineInputBorder(),
+  //                           enabledBorder: const OutlineInputBorder(
+  //                             borderSide: BorderSide(color: Colors.grey),
+  //                           ),
+  //                           focusedBorder: const OutlineInputBorder(
+  //                             borderSide: BorderSide(color: Colors.grey),
+  //                           ),
+  //                           suffixIcon: Container(
+  //                             alignment: Alignment.center,
+  //                             width: 40,
+  //                             child: Text(
+  //                               "kg",
+  //                               style: PrimaryFont.bodyTextMedium()
+  //                                   .copyWith(color: Colors.grey),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                         keyboardType: TextInputType.number,
+  //                         inputFormatters: [
+  //                           FilteringTextInputFormatter.digitsOnly
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     SizedBox(height: 1.w),
+  //                     Obx(
+  //                       () => controller.statusInputWeight.value
+  //                           ? Text(
+  //                               errText.value,
+  //                               style: PrimaryFont.bodyTextMedium()
+  //                                   .copyWith(color: Colors.red),
+  //                             )
+  //                           : const SizedBox(),
+  //                     ),
+  //                     SizedBox(height: 10.w),
+  //                     Row(
+  //                       mainAxisAlignment: MainAxisAlignment.end,
+  //                       children: [
+  //                         ElevatedButton(
+  //                           onPressed: () {
+  //                             if (weightController.text.isNotEmpty) {
+  //                               int a = int.parse(weightController.text);
+  //                               if (a < 50000) {
+  //                                 controller.statusInputWeight.value = false;
+  //                                 controller.updateWeight(
+  //                                     position, weightController.text);
+  //                                 Navigator.pop(context);
+  //                               } else {
+  //                                 controller.statusInputWeight.value = true;
+  //                                 errText.value =
+  //                                     "Khối lượng không lớn hơn 50.000 kg";
+  //                               }
+  //                             } else {
+  //                               controller.statusInputWeight.value = true;
+  //                               errText.value = "Chưa nhập khối lượng";
+  //                             }
+  //                           },
+  //                           style: ElevatedButton.styleFrom(
+  //                             backgroundColor: kPrimaryColor,
+  //                             shape: RoundedRectangleBorder(
+  //                               borderRadius: BorderRadius.circular(2.w),
+  //                             ),
+  //                             elevation: 5,
+  //                             minimumSize: Size(15.h, 5.h),
+  //                           ),
+  //                           child: Text(
+  //                             "Thêm",
+  //                             style: PrimaryFont.bodyTextBold()
+  //                                 .copyWith(color: Colors.white),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   // sort
   void sortItemDestinationDataByOptimizedRoute() {
@@ -787,7 +789,7 @@ class _ItemDestination extends StatelessWidget {
     required this.distanceTime,
     required this.scheduleId,
     required this.controller,
-    this.onTap,
+    this.onTap, required this.l10n,
   });
 
   final String nameBusiness, typeWate, area, distanceTime;
@@ -795,6 +797,7 @@ class _ItemDestination extends StatelessWidget {
   final Function()? onTap;
   final int scheduleId;
   final ScheduleController controller;
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -810,18 +813,18 @@ class _ItemDestination extends StatelessWidget {
         case CollectionStatus.started:
           buttonColor = kPrimaryColor;
           icon = HugeIcons.strokeRoundedStop;
-          buttonText = "Đang thu gom";
+          buttonText = l10n.txtCollectingM;
           break;
         case CollectionStatus.ended:
           buttonColor = Colors.green;
           icon = HugeIcons.strokeRoundedCheckmarkCircle02;
-          buttonText = "Hoàn thành";
+          buttonText = l10n.txtFinishCollectionM;
           break;
         case CollectionStatus.idle:
         default:
           buttonColor = kPrimaryColor;
           icon = HugeIcons.strokeRoundedPlay;
-          buttonText = "Bắt đầu";
+          buttonText = l10n.txtStartCollectionM;
           break;
       }
       return Column(
@@ -933,7 +936,7 @@ class _ItemDestination extends StatelessWidget {
                             arguments: scheduleId);
                       },
                 child: Text(
-                  txtWriteRecordM,
+                  l10n.txtWriteRecordM,
                   style: PrimaryFont.bodyTextBold().copyWith(
                     color: status == CollectionStatus.ended
                         ? Colors.grey

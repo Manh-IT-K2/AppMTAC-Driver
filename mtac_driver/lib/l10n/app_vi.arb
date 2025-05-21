@@ -9,6 +9,7 @@
   "txtInfoSchedule2": "lịch đã sắp",
   "txtInviteTransport": "Mời thầu vận chuyển",
   "txtNumberMoney": "100,000,000 đ",
+  "txtSearch": "Tìm kiếm...",
 
   "txtTitleS": "Danh sách chuyến",
   "txtHelloS": "Xin chào, ",
@@ -40,9 +41,14 @@
   "txtPriceSC": "Đơn giá:",
   "txtButDetailSC": "Chi tiết",
   "txtButScheduleSC": "Sắp lịch",
+  "txtWhenFinishSC": "Không có lịch hôm nay",
 
   "txtTitleBottomM": "Theo dõi điểm đến",
   "txtWriteRecordM": "Ghi biên bản",
+  "txtCollectingM": "Đang thu gom",
+  "txtFinishCollectionM": "Hoàn thành",
+  "txtStartCollectionM": "Bắt đầu",
+  "txtOptimizingM": "Đang tối ưu tuyến đường....",
 
   "txtTitleHR": "Biên bản giao nhận",
   "txtCodeHR": "Số:",
@@ -57,6 +63,9 @@
   "txtNumberWasteHR": "Số lượng",
   "txtImageHR": "Hình ảnh Biên Bản Giao Nhận",
   "txtButSendHR": "Gửi Biên bản giao nhận",
+  "txtTypeSolidHR": "rắn",
+  "txtTypeLiquidHR": "lỏng",
+  "txtSuccessNotiHR": "Gửi biên bản thành công",
 
   "txtCamera": "Máy ảnh",
   "txtLibrary": "Thư viện",
@@ -74,5 +83,54 @@
   "txtScheduleHighlightD": "Lịch gom nổi bật",
   "txtTripColectionTodayD": "Chuyến thu gom hôm nay",
   "txtTitleNoteImportantD": "Ghi chú quan trọng",
-  "txtSubTitleNoteImportantD": "Đừng quên mình có ghi chú quan trọng nhé bác tài"
+  "txtSubTitleNoteImportantD": "Đừng quên mình có ghi chú quan trọng nhé bác tài",
+
+  "txtHomeNB": "Trang chủ",
+  "txtPaymentNB": "Thanh toán",
+  "txtNotificationNB": "Hộp thư",
+  "txtAccountNB": "Tài khoản",
+
+  "txtMyProfileAU": "Hồ sơ của tôi",
+  "txtLogoutAU": "Đăng xuất",
+  "txtPaymentMedthodAU": "Phương thức thanh toán",
+  "txtContactAU": "Liên hệ với chúng tôi",
+  "txtHelpAU": "Trợ giúp & Câu hỏi",
+  "txtSettingAU": "Cài đặt",
+  "txtLanguageAU": "Ngôn ngữ",
+  "txtVersionAU": "Phiên bản",
+
+  "txtNamePU": "Tên",
+  "txtPhone": "Điện thoại",
+  "txtEmailPU": "E-mail",
+  "txtAddressPU": "Địa chỉ",
+  "txtCarIDPU": "Số CCCD",
+  "txtTaxCodePU": "Mã số thuế",
+  "txtVehicleLicensePU": "Giấy phép lái xe",
+  "txtUpdateProfilePU": "Cập nhật thông tin",
+
+  "txtWelcomToL": "Chào mừng",
+  "txtPasswordL": "Mật khẩu",
+  "txtPleaseEnPassL": "Vui lòng nhập password",
+  "txtForgotPassL": "Quên mật khẩu?",
+  "txtSignInL": "Đăng Nhập",
+  "txtOrRegisterByCallL": "Hoặc đăng kí bằng cách gọi",
+  "txtTermsOfUseL": "Điều khoản sử dụng",
+  "txtByLoggingInYouAcceptL": "Bằng cách đăng nhập, bạn chấp nhận",
+  "txtPleaseEnPhoneL": "Vui lòng nhập số điện thoại",
+  "txtErrOnlyNumberL": "Số điện thoại chỉ được chứa số",
+  "txtErrNotValidPhoneL": "Số điện thoại không hợp lệ",
+
+  "txtSettingNotifiSU": "Cài đặt thông báo",
+  "txtPasswordManagementSU": "Quản lý mật khẩu",
+  "txtDeleteAcountSU": "Xoá tài khoản",
+
+  "txtCurrentPasswordMP": "Mật khẩu hiện tại",
+  "txtNewPasswordMP": "Mật khẩu mới",
+  "txtConfirmPasswordMP": "Xác nhận mật khẩu mới",
+  "txtChangePasswordMP": "Đổi mật khẩu",
+
+  "txtRetryNI": "Thử lại",
+
+  "txtErrConnectSP": "Lỗi kết nối",
+  "txtSubErrConnectSP": "Không thể kết nối đến máy chủ. Vui lòng kiểm tra mạng hoặc thử lại sau."
 }
