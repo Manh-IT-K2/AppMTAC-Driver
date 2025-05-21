@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mtac_driver/view/account_screen.dart';
 import 'package:mtac_driver/view/home_screen.dart';
-import 'package:mtac_driver/view/mailbox_screen.dart';
+import 'package:mtac_driver/view/notification_screen.dart';
 import 'package:mtac_driver/view/payment_screen.dart';
 import 'package:mtac_driver/widgets/bottom_nav_bar.dart';
 
@@ -44,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           HomeScreen(),
           const PaymentScreen(),
-          const MailboxScreen(),
+          const NotificationScreen(),
           AccountScreen(),
         ],
       ),
