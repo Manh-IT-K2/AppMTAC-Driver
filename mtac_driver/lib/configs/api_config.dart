@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 class ApiConfig {
   // initial 
   static const String baseUrl = 'http://partner.moitruongachau.vn';
+  static const String urlImage = 'http://partner.moitruongachau.vn/storage/';
 
   //
   Future<bool> checkServerStatus() async {

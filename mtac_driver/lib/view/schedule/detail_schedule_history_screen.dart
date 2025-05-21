@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
+import 'package:mtac_driver/configs/api_config.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
@@ -223,13 +224,13 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
                         (contex, index) {
                           return Padding(
                             padding: EdgeInsets.all(2.w),
-                            child: Image.asset(
-                              "assets/image/truck-detail.png",
+                            child: Image.network(
+                              "${ApiConfig.urlImage}${datum.images[index]}",
                               fit: BoxFit.cover,
                             ),
                           );
                         },
-                        childCount: 5,
+                        childCount: datum.images.length,
                       ),
                     ),
                   ],
