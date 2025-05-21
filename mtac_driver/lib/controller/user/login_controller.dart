@@ -22,12 +22,6 @@ class LoginController extends GetxController {
   final searchHelpFqas = TextEditingController();
   final isSelectedHelp = 0.obs;
 
-  // inital variable manager password
-  final passwordNewController = TextEditingController();
-  final passwordNewConfirmController = TextEditingController();
-  final obscurePasswordNew = true.obs;
-  final obscurePasswordNewConfirm = true.obs;
-
   // initial variable contact us
   final arrowDownService = false.obs;
   final arrowDownWhatsApp = false.obs;
@@ -104,16 +98,6 @@ class LoginController extends GetxController {
   // password visibility
   void togglePasswordVisibility() {
     obscurePassword.value = !obscurePassword.value;
-  }
-
-  // password new visibility
-  void togglePasswordNewVisibility() {
-    obscurePasswordNew.value = !obscurePasswordNew.value;
-  }
-
-  // password new confirm visibility
-  void togglePasswordNewConfirmVisibility() {
-    obscurePasswordNewConfirm.value = !obscurePasswordNewConfirm.value;
   }
 
   // clear input email

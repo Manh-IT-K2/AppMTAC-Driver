@@ -12,15 +12,41 @@ import 'package:mtac_driver/service/user/user_service.dart';
 
 class ProfileController extends GetxController {
   //
+  final formKeyChangePass = GlobalKey<FormState>();
+  //
   final Rxn<UserModel> infoUser = Rxn<UserModel>();
   final Rx<File?> imagePath = Rx<File?>(null);
   final loginController = Get.find<LoginController>();
   final scheduleController = Get.find<ScheduleController>();
+
+  // inital variable manager password
+  final passwordNewController = TextEditingController();
+  final passwordNewConfirmController = TextEditingController();
+  // final passwordController = TextEditingController();
+  // final obscurePassword = true.obs;
+  final obscurePasswordNew = true.obs;
+  final obscurePasswordNewConfirm = true.obs;
+
   // init
   @override
   void onInit() {
     super.onInit();
     getInforUser();
+  }
+
+// password visibility
+  // void togglePasswordVisibility() {
+  //   obscurePassword.value = !obscurePassword.value;
+  // }
+
+  // password new visibility
+  void togglePasswordNewVisibility() {
+    obscurePasswordNew.value = !obscurePasswordNew.value;
+  }
+
+  // password new confirm visibility
+  void togglePasswordNewConfirmVisibility() {
+    obscurePasswordNewConfirm.value = !obscurePasswordNewConfirm.value;
   }
 
   // Call function get user from service
@@ -44,6 +70,24 @@ class ProfileController extends GetxController {
     }
   }
 
+  // Call function update pass word from service
+  Future<void> updatePassword(Map<String, dynamic> updateUser) async {
+    try {
+      if (!formKeyChangePass.currentState!.validate()) return;
+
+      await UserService().updateUser(updateUser);
+      showSuccess('Đổi mật khẩu thành công.');
+    } catch (e) {
+      if (e.toString().contains('401')) {
+        showError('Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
+        Get.offAllNamed(AppRoutes.login);
+      }
+      if (kDebugMode) {
+        print("Error fetching user: $e");
+      }
+    }
+  }
+
   // Call function update user from service
   Future<void> updateUser(Map<String, dynamic> updateUser) async {
     try {
@@ -53,7 +97,7 @@ class ProfileController extends GetxController {
       showSuccess('Thông tin của bạn đã được cập nhật.');
     } catch (e) {
       if (e.toString().contains('401')) {
-       showError('Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
+        showError('Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
         Get.offAllNamed(AppRoutes.login);
       }
       if (kDebugMode) {

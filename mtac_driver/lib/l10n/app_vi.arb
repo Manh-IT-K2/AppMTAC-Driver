@@ -119,6 +119,7 @@
   "txtPleaseEnPhoneL": "Vui lòng nhập số điện thoại",
   "txtErrOnlyNumberL": "Số điện thoại chỉ được chứa số",
   "txtErrNotValidPhoneL": "Số điện thoại không hợp lệ",
+  "txtErrNotMatchL": "Mật khẩu xác nhận không khớp",
 
   "txtSettingNotifiSU": "Cài đặt thông báo",
   "txtPasswordManagementSU": "Quản lý mật khẩu",

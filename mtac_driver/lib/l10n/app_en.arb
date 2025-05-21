@@ -119,6 +119,7 @@
   "txtPleaseEnPhoneL": "Please enter phone number",
   "txtErrOnlyNumberL": "Phone numbers can only contain numbers",
   "txtErrNotValidPhoneL": "Invalid phone number",
+  "txtErrNotMatchL": "Confirmation password does not match",
 
   "txtSettingNotifiSU": "Notification settings",
   "txtPasswordManagementSU": "Password management",
