@@ -1,6 +1,7 @@
-import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
@@ -14,239 +15,182 @@ class CollectionStats {
   CollectionStats(this.label, this.onTime, this.completed, this.total);
 }
 
-class StatisticalChartWidget extends StatefulWidget {
-  const StatisticalChartWidget({super.key});
+class StatisticalSummary {
+  final int totalKg;
+  final int totalPoints;
+  final int totalDays;
 
-  @override
-  State<StatisticalChartWidget> createState() => _StatisticalChartWidgetState();
+  StatisticalSummary(this.totalKg, this.totalPoints, this.totalDays);
 }
 
-class _StatisticalChartWidgetState extends State<StatisticalChartWidget> {
-  String currentFilter = 'day'; // 'day', 'week', 'month'
-  List<CollectionStats> stats = [];
+class StatisticalChartWidget extends StatelessWidget {
+  StatisticalChartWidget({super.key});
 
-  @override
-  void initState() {
-    super.initState();
-    updateData();
-  }
-
-  void updateData() {
-    setState(() {
-      if (currentFilter == 'day') {
-        stats = generateHourlyData();
-      } else if (currentFilter == 'week') {
-        stats = generateWeeklyData();
-      } else {
-        stats = generateMonthlyData();
-      }
-    });
-  }
-
-  List<CollectionStats> generateHourlyData() {
-    return List.generate(8, (index) {
-      final hour = 6 + index * 2;
-      return CollectionStats(
-        '${hour}h',
-        Random().nextInt(2),
-        Random().nextInt(3),
-        1,
-      );
-    });
-  }
-
-  List<CollectionStats> generateWeeklyData() {
-    final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return days.map((day) {
-      final total = Random().nextInt(3) + 1;
-      final completed = Random().nextInt(total + 1);
-      final onTime = Random().nextInt(completed + 1);
-      return CollectionStats(day, onTime, completed, total);
-    }).toList();
-  }
-
-  List<CollectionStats> generateMonthlyData() {
-    return List.generate(12, (i) {
-      final total = Random().nextInt(3) + 1;
-      final completed = Random().nextInt(total + 1);
-      final onTime = Random().nextInt(completed + 1);
-      return CollectionStats('T${i + 1}', onTime, completed, total);
-    });
-  }
-
-  Widget getBottomTitle(double value, TitleMeta meta) {
-    final index = value.toInt();
-    if (index >= stats.length) return const SizedBox.shrink();
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      child: Text(stats[index].label, style: const TextStyle(fontSize: 10)),
-    );
-  }
-
-  List<BarChartGroupData> generateBarGroups() {
-    return stats.asMap().entries.map((entry) {
-      final index = entry.key;
-      final stat = entry.value;
-      return BarChartGroupData(
-        x: index,
-        barsSpace: 2,
-        barRods: [
-          BarChartRodData(
-              toY: stat.onTime.toDouble(), color: const Color(0xFFDADA5E), width: 12),
-          BarChartRodData(
-              toY: stat.completed.toDouble(), color: const Color(0xFF84E1CA), width: 12),
-          BarChartRodData(
-              toY: stat.total.toDouble(), color: const Color(0xFFCAABD7), width: 12),
-        ],
-      );
-    }).toList();
-  }
+  final _scheduleController = Get.find<ScheduleController>();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 5.w),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _itemStatistical(
-              title: "Ngày",
-              isSelected: currentFilter == "day",
-              onTap: () {
-                setState(() {
-                  currentFilter = "day";
-                  updateData();
-                });
-              },
-            ),
-            _itemStatistical(
-              title: "Tuần",
-              isSelected: currentFilter == "week",
-              onTap: () {
-                setState(() {
-                  currentFilter = "week";
-                  updateData();
-                });
-              },
-            ),
-            _itemStatistical(
-              title: "Tháng",
-              isSelected: currentFilter == "month",
-              onTap: () {
-                currentFilter = "month";
-                updateData();
-              },
-            ),
-          ],
-        ),
-        
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: AspectRatio(
-            aspectRatio: 1.5,
-            child: BarChart(
-              BarChartData(
-                maxY: 4,
-                barGroups: generateBarGroups(),
-                titlesData: FlTitlesData(
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 40,
-                      interval: 1,
-                      getTitlesWidget: getBottomTitle,
+    return Obx(
+      () => Column(
+        children: [
+          SizedBox(height: 2.w),
+          // --- Tabs ---
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _itemStatistical(
+                title: "Ngày",
+                isSelected: _scheduleController.currentFilter.value == "day",
+                onTap: () => _scheduleController.changeFilter("day"),
+              ),
+              _itemStatistical(
+                title: "Tuần",
+                isSelected: _scheduleController.currentFilter.value == "week",
+                onTap: () => _scheduleController.changeFilter("week"),
+              ),
+              _itemStatistical(
+                title: "Tháng",
+                isSelected: _scheduleController.currentFilter.value == "month",
+                onTap: () => _scheduleController.changeFilter("month"),
+              ),
+            ],
+          ),
+
+          // --- Bar Chart ---
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: AspectRatio(
+              aspectRatio: 1.5,
+              child: BarChart(
+                BarChartData(
+                  maxY: 4,
+                  barGroups: generateBarGroups(_scheduleController.stats),
+                  titlesData: FlTitlesData(
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 40,
+                        interval: 1,
+                        getTitlesWidget: (value, meta) => getBottomTitle(
+                            value, meta, _scheduleController.stats),
+                      ),
                     ),
+                    leftTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false),
+                    ),
+                    topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
+                    rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
                   ),
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: false,
-                      reservedSize: 40,
-                      interval: 1,
-                      getTitlesWidget: (value, meta) {
-                        return Text(
-                          value.toInt().toString(),
-                          style: PrimaryFont.bodyTextBold()
-                              .copyWith(color: Colors.black),
+                  barTouchData: BarTouchData(
+                    enabled: true,
+                    touchTooltipData: BarTouchTooltipData(
+                      tooltipBgColor: Colors.black87,
+                      tooltipRoundedRadius: 8,
+                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                        return BarTooltipItem(
+                          '${rod.toY.toInt()} chuyến',
+                          PrimaryFont.bodyTextBold()
+                              .copyWith(color: Colors.white),
                         );
                       },
                     ),
                   ),
-                  topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false)),
-                  rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false)),
-                ),
-                barTouchData: BarTouchData(
-                  enabled: true,
-                  touchTooltipData: BarTouchTooltipData(
-                    tooltipBgColor: Colors.black87,
-                    tooltipRoundedRadius: 8,
-                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                      return BarTooltipItem(
-                          '${rod.toY.toInt()} chuyến',
-                          PrimaryFont.bodyTextBold()
-                              .copyWith(color: Colors.white));
+                  gridData: FlGridData(
+                    show: true,
+                    drawVerticalLine: false,
+                    horizontalInterval: 1,
+                    getDrawingHorizontalLine: (value) {
+                      return FlLine(
+                        color: kPrimaryColor.withOpacity(0.3),
+                        strokeWidth: 0.5,
+                      );
                     },
                   ),
+                  borderData: FlBorderData(show: false),
                 ),
-                gridData: FlGridData(
-                  show: true,
-                  drawVerticalLine: false,
-                  horizontalInterval: 1,
-                  getDrawingHorizontalLine: (value) {
-                    return FlLine(
-                      color: Colors.grey.withOpacity(0.3),
-                      strokeWidth: 0.5,
-                    );
-                  },
-                ),
-                borderData: FlBorderData(show: false),
               ),
             ),
           ),
-        ),
-        SizedBox(
-          height: 2.w,
-        ),
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            LegendDot(color: Color(0xFFDADA5E), label: "Đúng giờ"),
-            SizedBox(width: 10),
-            LegendDot(color: Color(0xFF84E1CA), label: "Hoàn tất"),
-            SizedBox(width: 10),
-            LegendDot(color: Color(0xFFCAABD7), label: "Tổng chuyến"),
-          ],
-        ),
-         SizedBox(
-          height: 2.w,
-        ),
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _itemStatisticalByCircle(
-              title: "Khối lượng",
-              subTitle: "1000 Kg",
-            ),
-            _itemStatisticalByCircle(
-              title: "Điểm thu gom",
-              subTitle: "12 Điểm",
-            ),
-            _itemStatisticalByCircle(
-              title: "Ngày làm việc",
-              subTitle: "14 Ngày",
-            ),
-          ],
-        ),
-      ],
+          SizedBox(
+            height: 2.w,
+          ),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              LegendDot(color: Color(0xFFDADA5E), label: "Đúng giờ"),
+              SizedBox(width: 10),
+              LegendDot(color: Color(0xFF84E1CA), label: "Hoàn tất"),
+              SizedBox(width: 10),
+              LegendDot(color: Color(0xFFCAABD7), label: "Tổng chuyến"),
+            ],
+          ),
+          SizedBox(
+            height: 2.w,
+          ),
+          Obx(() {
+            final summary = _scheduleController.summary.value;
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _itemStatisticalByCircle(
+                  title: "Khối lượng",
+                  subTitle: "${summary.totalKg} Kg",
+                ),
+                _itemStatisticalByCircle(
+                  title: "Điểm thu gom",
+                  subTitle: "${summary.totalPoints} Điểm",
+                ),
+                _itemStatisticalByCircle(
+                  title: "Ngày làm việc",
+                  subTitle: "${summary.totalDays} Ngày",
+                ),
+              ],
+            );
+          })
+        ],
+      ),
     );
   }
 }
 
+List<BarChartGroupData> generateBarGroups(List<CollectionStats> stats) {
+  return stats.asMap().entries.map((entry) {
+    final index = entry.key;
+    final stat = entry.value;
+    return BarChartGroupData(
+      x: index,
+      barRods: [
+        BarChartRodData(
+            toY: stat.onTime.toDouble(),
+            color: const Color(0xFFDADA5E),
+            width: 12),
+        BarChartRodData(
+            toY: stat.completed.toDouble(),
+            color: const Color(0xFF84E1CA),
+            width: 12),
+        BarChartRodData(
+            toY: stat.total.toDouble(),
+            color: const Color(0xFFCAABD7),
+            width: 12),
+      ],
+    );
+  }).toList();
+}
+
+Widget getBottomTitle(
+    double value, TitleMeta meta, List<CollectionStats> stats) {
+  final index = value.toInt();
+  if (index >= stats.length) return const SizedBox.shrink();
+  return SideTitleWidget(
+    axisSide: meta.axisSide,
+    child: Text(stats[index].label, style: const TextStyle(fontSize: 10)),
+  );
+}
+
 class _itemStatistical extends StatelessWidget {
   const _itemStatistical({
-    super.key,
     required this.title,
     required this.isSelected,
     this.onTap,
@@ -300,7 +244,6 @@ class LegendDot extends StatelessWidget {
 
 class _itemStatisticalByCircle extends StatelessWidget {
   const _itemStatisticalByCircle({
-    super.key,
     required this.title,
     required this.subTitle,
   });

@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: kPrimaryColor,
                     ),
                   ),
-                  SizedBox(height: 5.w),
+                  SizedBox(height: 10.h),
                   InputFormWidget(
                     readOnly: false,
                     title: l10n.txtPhone,

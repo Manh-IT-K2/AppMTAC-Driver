@@ -225,17 +225,19 @@ class _HeaderDriverScreen extends StatelessWidget {
         //   "51C - 7373",
         //   style: PrimaryFont.headerTextBold().copyWith(color: Colors.black),
         // ),
-        SizedBox(
-          height: 5.w,
+        SizedBox(height: 2.w,),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(5.w),
+          child: Image.asset(
+            "assets/image/banner_app.png",
+            width: 100.w,
+            
+            fit: BoxFit.fill,
+            
+          ),
         ),
-        // Text(
-        //   "Thống kê",
-        //   style: PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
-        // ),
-        SizedBox(
-          height: 2.w,
-        ),
-        const StatisticalChartWidget(),
+        SizedBox(height: 2.w,),
+        StatisticalChartWidget(),
         Text(
           l10n.txtUtilDriverD,
           style: PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
@@ -256,7 +258,7 @@ class _HeaderDriverScreen extends StatelessWidget {
             const SizedBox(
               width: 16,
             ),
-           GestureDetector(
+            GestureDetector(
               onTap: () {
                 scheduleController.getListScheduleHistory();
                 Get.toNamed(AppRoutes.scheduleHistory);
@@ -277,6 +279,7 @@ class _HeaderDriverScreen extends StatelessWidget {
     );
   }
 }
+
 class _ItemTripToday extends StatelessWidget {
   const _ItemTripToday({
     super.key,

@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:get/get.dart';
 import 'package:mtac_driver/common/show_notify_snackbar.dart';
 import 'package:mtac_driver/shared/user/user_shared.dart';
+import 'package:mtac_driver/widgets/schedule_widget/statistical_chart_widget.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:mtac_driver/route/app_route.dart';
@@ -52,6 +54,9 @@ class ScheduleController extends GetxController {
   final highlightedDays = <int>[].obs;
   final tripTimes = List.generate(
       12, (index) => '${(index * 2).toString().padLeft(2, '0')}:00');
+  var currentFilter = 'day'.obs;
+  var stats = <CollectionStats>[].obs;
+  var summary = StatisticalSummary(0, 0, 0).obs;
 
   // State
   final collectionStatus = <int, Rx<CollectionStatus>>{};
@@ -62,6 +67,7 @@ class ScheduleController extends GetxController {
   void onInit() {
     super.onInit();
     _initialize();
+    updateData();
   }
 
   @override
@@ -235,6 +241,62 @@ class ScheduleController extends GetxController {
       showError(defaultMessage);
     }
     debugPrint('Error: $error');
+  }
+
+  void changeFilter(String filter) {
+    currentFilter.value = filter;
+    updateData();
+  }
+
+  void updateData() {
+    if (currentFilter.value == 'day') {
+      stats.value = generateHourlyData();
+    } else if (currentFilter.value == 'week') {
+      stats.value = generateWeeklyData();
+    } else {
+      stats.value = generateMonthlyData();
+    }
+    summary.value = generateSummary(stats);
+  }
+
+  StatisticalSummary generateSummary(List<CollectionStats> data) {
+    final totalKg =
+        data.fold(0, (sum, e) => sum + Random().nextInt(100)); // giả lập
+    final totalPoints = data.length;
+    final totalDays = currentFilter.value == 'day'
+        ? 1
+        : currentFilter.value == 'week'
+            ? 7
+            : 30;
+
+    return StatisticalSummary(totalKg, totalPoints, totalDays);
+  }
+
+  List<CollectionStats> generateHourlyData() {
+    return List.generate(8, (index) {
+      final hour = 6 + index * 2;
+      return CollectionStats(
+          '${hour}h', Random().nextInt(2), Random().nextInt(3), 1);
+    });
+  }
+
+  List<CollectionStats> generateWeeklyData() {
+    final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    return days.map((day) {
+      final total = Random().nextInt(3) + 1;
+      final completed = Random().nextInt(total + 1);
+      final onTime = Random().nextInt(completed + 1);
+      return CollectionStats(day, onTime, completed, total);
+    }).toList();
+  }
+
+  List<CollectionStats> generateMonthlyData() {
+    return List.generate(12, (i) {
+      final total = Random().nextInt(3) + 1;
+      final completed = Random().nextInt(total + 1);
+      final onTime = Random().nextInt(completed + 1);
+      return CollectionStats('T${i + 1}', onTime, completed, total);
+    });
   }
 
   // UI methods
