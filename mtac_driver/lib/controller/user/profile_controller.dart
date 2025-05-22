@@ -77,6 +77,7 @@ class ProfileController extends GetxController {
 
       await UserService().updateUser(updateUser);
       showSuccess('Đổi mật khẩu thành công.');
+      Get.offAllNamed(AppRoutes.main);
     } catch (e) {
       if (e.toString().contains('401')) {
         showError('Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');

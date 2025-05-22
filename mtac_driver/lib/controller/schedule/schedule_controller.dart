@@ -20,12 +20,27 @@ class ScheduleController extends GetxController {
   final PageController pageController = PageController();
 
   // Constants
-  static const List<String> _weekdays = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-  static const List<String> _wasteTypes = ["Tất cả", "Nguy hại", "Tái chế", "Công nghiệp"];
+  static const List<String> _weekdays = [
+    "Mo",
+    "Tu",
+    "We",
+    "Th",
+    "Fr",
+    "Sa",
+    "Su"
+  ];
+  static const List<String> _wasteTypes = [
+    "Tất cả",
+    "Nguy hại",
+    "Tái chế",
+    "Công nghiệp"
+  ];
+  List<String> statistical = ["Ngày", "Tuần", "Tháng"];
   static const int _totalItemCount = 9999;
-  static double _itemWidth = 13.w;
+  static final double _itemWidth = 13.w;
 
   // Observables
+  final isSelectedSatistical = 0.obs;
   final currentDate = DateTime.now().obs;
   final daysInMonth = <DateTime>[].obs;
   final username = ''.obs;
@@ -35,7 +50,8 @@ class ScheduleController extends GetxController {
   final historySchedules = <Datum>[].obs;
   final checkTodaySchedules = <Datum>[].obs;
   final highlightedDays = <int>[].obs;
-  final tripTimes = List.generate(12, (index) => '${(index * 2).toString().padLeft(2, '0')}:00');
+  final tripTimes = List.generate(
+      12, (index) => '${(index * 2).toString().padLeft(2, '0')}:00');
 
   // State
   final collectionStatus = <int, Rx<CollectionStatus>>{};
@@ -84,7 +100,8 @@ class ScheduleController extends GetxController {
 
   Future<void> _loadTodaySchedules() async {
     await getGroupedScheduleFromLocal(schedulesByWasteType);
-    todaySchedules.assignAll(schedulesByWasteType.values.expand((e) => e).toList());
+    todaySchedules
+        .assignAll(schedulesByWasteType.values.expand((e) => e).toList());
     debugPrint('✅ Today schedules loaded: ${todaySchedules.length}');
   }
 
@@ -119,7 +136,8 @@ class ScheduleController extends GetxController {
       debugPrint(">>> GỌI getListScheduleToday từ Controller");
       final schedule = await _scheduleService.getListScheduleToday();
       schedulesByWasteType.value = schedule;
-      debugPrint("Các loại chất thải hôm nay: ${schedulesByWasteType.keys.toList()}");
+      debugPrint(
+          "Các loại chất thải hôm nay: ${schedulesByWasteType.keys.toList()}");
     } catch (e) {
       _handleApiError(e, 'Không thể tải lịch hôm nay');
     }
@@ -137,7 +155,8 @@ class ScheduleController extends GetxController {
   // Collection operations
   Future<void> startCollectionTrip(int scheduleId) async {
     debugPrint('--- DEBUG: Danh sách trạng thái collection ---');
-    collectionStatus.forEach((key, value) => debugPrint('🟡 scheduleId: $key, status: ${value.value}'));
+    collectionStatus.forEach((key, value) =>
+        debugPrint('🟡 scheduleId: $key, status: ${value.value}'));
 
     try {
       final success = await _scheduleService.startCollectionTrip(scheduleId);
@@ -149,7 +168,8 @@ class ScheduleController extends GetxController {
         showError('Không thể bắt đầu chuyến thu gom');
       }
     } catch (e) {
-      _handleApiError(e, 'Đã xảy ra lỗi khi bắt đầu chuyến thu gom. Vui lòng thử lại.');
+      _handleApiError(
+          e, 'Đã xảy ra lỗi khi bắt đầu chuyến thu gom. Vui lòng thử lại.');
     }
   }
 
@@ -193,15 +213,18 @@ class ScheduleController extends GetxController {
   }
 
   double _calculateScrollOffset() {
-    final todayIndex = daysInMonth.indexWhere((day) => day.isSameDate(currentDate.value));
+    final todayIndex =
+        daysInMonth.indexWhere((day) => day.isSameDate(currentDate.value));
     final middleItem = _totalItemCount ~/ 2;
-    final targetIndex = middleItem - (middleItem % daysInMonth.length) + todayIndex;
+    final targetIndex =
+        middleItem - (middleItem % daysInMonth.length) + todayIndex;
     return (targetIndex * _itemWidth) - ((100.w - 32) / 2) + (_itemWidth / 2);
   }
 
   List<DateTime> _generateDaysInMonth(DateTime date) {
     final daysCount = DateTime(date.year, date.month + 1, 0).day;
-    return List.generate(daysCount, (i) => DateTime(date.year, date.month, i + 1));
+    return List.generate(
+        daysCount, (i) => DateTime(date.year, date.month, i + 1));
   }
 
   void _handleApiError(dynamic error, String defaultMessage) {
@@ -240,6 +263,10 @@ class ScheduleController extends GetxController {
     }
   }
 
+  void selectedItemStatistical(int index) {
+    isSelectedSatistical.value = index;
+  }
+
   void onPageChanged(int index) {
     if (index >= 0 && index < _wasteTypes.length) {
       selectedWasteType.value = _wasteTypes[index];
@@ -248,12 +275,15 @@ class ScheduleController extends GetxController {
 
   // Getters
   String getWeekdayShortName(DateTime date) => _weekdays[date.weekday - 1];
-  List<Datum> getSchedulesByWasteType(String wasteType) => schedulesByWasteType[wasteType] ?? [];
+  List<Datum> getSchedulesByWasteType(String wasteType) =>
+      schedulesByWasteType[wasteType] ?? [];
   List<String> get wasteTypes => _wasteTypes;
 }
 
 // Extensions
 extension DateUtils on DateTime {
-  bool isSameDate(DateTime other) => year == other.year && month == other.month && day == other.day;
-  bool isSameMonthAndYear(DateTime other) => year == other.year && month == other.month;
+  bool isSameDate(DateTime other) =>
+      year == other.year && month == other.month && day == other.day;
+  bool isSameMonthAndYear(DateTime other) =>
+      year == other.year && month == other.month;
 }

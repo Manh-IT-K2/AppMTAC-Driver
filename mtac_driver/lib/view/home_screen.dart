@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
-import 'package:mtac_driver/data/driver_screen/item_note_important.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
+import 'package:mtac_driver/view/collection_stats_chart.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -35,9 +36,7 @@ class HomeScreen extends StatelessWidget {
                 height: 3.w,
               ),
               _BodyDriverScreen(
-                l10n: l10n,
-                scheduleController: _scheduleController),
-              //const _BottomDriverScreen(),
+                  l10n: l10n, scheduleController: _scheduleController),
               SizedBox(
                 height: 3.w,
               ),
@@ -49,63 +48,15 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class _BottomDriverScreen extends StatelessWidget {
-  const _BottomDriverScreen({
-    super.key, required this.l10n,
-  });
-  
-  final AppLocalizations l10n; 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l10n.txtTitleNoteImportantD,
-          style: PrimaryFont.titleTextMedium().copyWith(color: Colors.red),
-        ),
-        Text(
-          l10n.txtSubTitleNoteImportantD,
-          style: PrimaryFont.bodyTextMedium().copyWith(
-            color: Colors.black.withOpacity(0.8),
-          ),
-        ),
-        SizedBox(
-          height: 3.w,
-        ),
-        SizedBox(
-          height: 30.h,
-          child: CustomScrollView(
-            slivers: [
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final note = noteImportantData[index];
-                    return _ItemNoteImportant(
-                      title: note.nameNote,
-                      subTitle: note.contentNote,
-                      hour: note.hourNote,
-                    );
-                  },
-                  childCount: noteImportantData.length,
-                ),
-              )
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _BodyDriverScreen extends StatelessWidget {
   const _BodyDriverScreen({
     super.key,
-    required ScheduleController scheduleController, required this.l10n,
+    required ScheduleController scheduleController,
+    required this.l10n,
   }) : _scheduleController = scheduleController;
 
   final ScheduleController _scheduleController;
-  final AppLocalizations l10n; 
+  final AppLocalizations l10n;
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +100,8 @@ class _BodyDriverScreen extends StatelessWidget {
                 //   26,
                 //   29
                 // ];
-                bool isHighlight = _scheduleController.highlightedDays.contains(day.day);
+                bool isHighlight =
+                    _scheduleController.highlightedDays.contains(day.day);
 
                 return _ItemDayOfWeek(
                   day: day.day.toString(),
@@ -215,10 +167,11 @@ class _BodyDriverScreen extends StatelessWidget {
 class _HeaderDriverScreen extends StatelessWidget {
   const _HeaderDriverScreen({
     super.key,
-    required this.scheduleController, required this.l10n,
+    required this.scheduleController,
+    required this.l10n,
   });
   final ScheduleController scheduleController;
-  final AppLocalizations l10n; 
+  final AppLocalizations l10n;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -256,14 +209,14 @@ class _HeaderDriverScreen extends StatelessWidget {
                 children: [
                   Center(
                     child: Icon(
-                      Icons.notifications_none_outlined,
+                      HugeIcons.strokeRoundedNotification01,
                       size: 6.w,
                       color: kPrimaryColor,
                     ),
                   ),
                   Positioned(
                     top: 3.w,
-                    right: 3.5.w,
+                    right: 3.w,
                     child: Container(
                       width: 1.5.w,
                       height: 1.5.w,
@@ -276,22 +229,58 @@ class _HeaderDriverScreen extends StatelessWidget {
             ),
           ],
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "51C - 7373",
-              style: PrimaryFont.headerTextBold().copyWith(color: Colors.black),
-            ),
-            Text(
-              "MSX: 7362",
-              style: PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
-            ),
-          ],
-        ),
+        // Text(
+        //   "51C - 7373",
+        //   style: PrimaryFont.headerTextBold().copyWith(color: Colors.black),
+        // ),
         SizedBox(
-          height: 3.w,
+          height: 5.w,
         ),
+        // Text(
+        //   "Thống kê",
+        //   style: PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
+        // ),
+        SizedBox(
+          height: 2.w,
+        ),
+        // Obx(
+        //   () => Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children:
+        //         List.generate(scheduleController.statistical.length, (index) {
+        //       final title = scheduleController.statistical[index];
+        //       final isSelected =
+        //           scheduleController.isSelectedSatistical.value == index;
+
+        //       return _itemStatistical(
+        //         title: title,
+        //         isSelected: isSelected,
+        //         onTap: () {
+        //           scheduleController.selectedItemStatistical(index);
+        //         },
+        //       );
+        //     }),
+        //   ),
+        // ),
+        // const Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: [
+        //     _itemStatisticalByCircle(
+        //       title: "khối lượng",
+        //       subTitle: "1000 Kg",
+        //     ),
+        //     _itemStatisticalByCircle(
+        //       title: "Điểm thu gom",
+        //       subTitle: "12 Điểm",
+        //     ),
+        //     _itemStatisticalByCircle(
+        //       title: "Ngày làm việc",
+        //       subTitle: "14 Ngày",
+        //     ),
+        //   ],
+        // ),
+        const CollectionStatsChart(),
+        
         Text(
           l10n.txtUtilDriverD,
           style: PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
@@ -312,29 +301,7 @@ class _HeaderDriverScreen extends StatelessWidget {
             const SizedBox(
               width: 16,
             ),
-            _UtilDriver(
-              color: Colors.greenAccent.withOpacity(0.2),
-              icon: Icons.trending_down,
-              title: l10n.txtTitleStatisticalD,
-              subTitle: l10n.txtSubTitleStatisticalD,
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 8,
-        ),
-        Row(
-          children: [
-            _UtilDriver(
-              color: Colors.green.withOpacity(0.1),
-              icon: HugeIcons.strokeRoundedCustomerService01,
-              title: l10n.txtTitleHelpD,
-              subTitle: l10n.txtSubTitleHelpD,
-            ),
-            const SizedBox(
-              width: 16,
-            ),
-            GestureDetector(
+           GestureDetector(
               onTap: () {
                 scheduleController.getListScheduleHistory();
                 Get.toNamed(AppRoutes.scheduleHistory);
@@ -348,98 +315,85 @@ class _HeaderDriverScreen extends StatelessWidget {
             ),
           ],
         ),
+        SizedBox(
+          height: 5.w,
+        ),
       ],
     );
   }
 }
 
-class _ItemNoteImportant extends StatelessWidget {
-  const _ItemNoteImportant({
+class _itemStatisticalByCircle extends StatelessWidget {
+  const _itemStatisticalByCircle({
     super.key,
     required this.title,
     required this.subTitle,
-    required this.hour,
   });
-
-  final String title, subTitle, hour;
-
+  final String title, subTitle;
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 12),
-      width: double.infinity,
-      height: 18.w,
+      width: 28.w,
+      height: 30.w,
+      margin: EdgeInsets.symmetric(vertical: 5.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF8572FE),
-        borderRadius: BorderRadius.circular(3.w),
+        color: Colors.pink.shade200,
+        borderRadius: BorderRadius.circular(5.w),
       ),
-      child: Row(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          SizedBox(
-            width: 3.w,
+          Text(
+            title,
+            style: PrimaryFont.bodyTextBold().copyWith(color: Colors.white),
           ),
           Container(
             width: 15.w,
             height: 15.w,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(3.w),
+            decoration: const BoxDecoration(
+                color: Colors.white, shape: BoxShape.circle),
+            child: Center(
+              child: Text(
+                subTitle,
+                textAlign: TextAlign.center,
+                style: PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
+              ),
             ),
-            child: Icon(
-              HugeIcons.strokeRoundedCalendar02,
-              size: 8.w,
-              color: Colors.white,
-            ),
-          ),
-          SizedBox(
-            width: 10.w,
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                SizedBox(
-                  height: 2.w,
-                ),
-                Text(
-                  title,
-                  style:
-                      PrimaryFont.bodyTextBold().copyWith(color: Colors.white),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  subTitle,
-                  style: PrimaryFont.bodyTextMedium()
-                      .copyWith(color: Colors.white),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.access_time_filled,
-                      size: 5.w,
-                      color: Colors.white,
-                    ),
-                    Text(
-                      hour,
-                      style: PrimaryFont.bodyTextBold()
-                          .copyWith(color: Colors.white),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 2.w,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            width: 3.w,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _itemStatistical extends StatelessWidget {
+  const _itemStatistical({
+    super.key,
+    required this.title,
+    required this.isSelected,
+    this.onTap,
+  });
+  final String title;
+  final bool isSelected;
+  final Function()? onTap;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 28.w,
+        height: 10.w,
+        decoration: BoxDecoration(
+          color: isSelected ? kPrimaryColor.withOpacity(0.8) : Colors.grey[200],
+          borderRadius: BorderRadius.circular(10.w),
+        ),
+        child: Center(
+          child: Text(
+            title,
+            style: PrimaryFont.bodyTextBold()
+                .copyWith(color: isSelected ? Colors.white : Colors.black),
+          ),
+        ),
       ),
     );
   }

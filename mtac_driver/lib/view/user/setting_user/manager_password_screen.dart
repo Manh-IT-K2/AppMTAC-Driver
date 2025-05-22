@@ -169,7 +169,7 @@ class ManagerPasswordScreen extends StatelessWidget {
                         "password":
                             _profileController.passwordNewController.text.trim()
                       });
-                      Get.offAllNamed(AppRoutes.main);
+                      
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: kPrimaryColor,
