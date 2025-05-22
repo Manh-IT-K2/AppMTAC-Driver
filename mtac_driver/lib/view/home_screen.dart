@@ -5,10 +5,9 @@ import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
-import 'package:mtac_driver/view/collection_stats_chart.dart';
+import 'package:mtac_driver/widgets/schedule_widget/statistical_chart_widget.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -199,33 +198,26 @@ class _HeaderDriverScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              width: 10.w,
-              height: 10.w,
-              decoration: BoxDecoration(
-                  color: kPrimaryColor.withOpacity(0.2),
-                  shape: BoxShape.circle),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Icon(
-                      HugeIcons.strokeRoundedNotification01,
-                      size: 6.w,
-                      color: kPrimaryColor,
-                    ),
+            Stack(
+              children: [
+                Center(
+                  child: Icon(
+                    HugeIcons.strokeRoundedNotification01,
+                    size: 6.w,
+                    color: kPrimaryColor,
                   ),
-                  Positioned(
-                    top: 3.w,
-                    right: 3.w,
-                    child: Container(
-                      width: 1.5.w,
-                      height: 1.5.w,
-                      decoration: const BoxDecoration(
-                          color: Colors.red, shape: BoxShape.circle),
-                    ),
+                ),
+                Positioned(
+                  top: 1.w,
+                  right: 1.w,
+                  child: Container(
+                    width: 1.5.w,
+                    height: 1.5.w,
+                    decoration: const BoxDecoration(
+                        color: Colors.red, shape: BoxShape.circle),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
@@ -243,44 +235,7 @@ class _HeaderDriverScreen extends StatelessWidget {
         SizedBox(
           height: 2.w,
         ),
-        // Obx(
-        //   () => Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //     children:
-        //         List.generate(scheduleController.statistical.length, (index) {
-        //       final title = scheduleController.statistical[index];
-        //       final isSelected =
-        //           scheduleController.isSelectedSatistical.value == index;
-
-        //       return _itemStatistical(
-        //         title: title,
-        //         isSelected: isSelected,
-        //         onTap: () {
-        //           scheduleController.selectedItemStatistical(index);
-        //         },
-        //       );
-        //     }),
-        //   ),
-        // ),
-        // const Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //   children: [
-        //     _itemStatisticalByCircle(
-        //       title: "khối lượng",
-        //       subTitle: "1000 Kg",
-        //     ),
-        //     _itemStatisticalByCircle(
-        //       title: "Điểm thu gom",
-        //       subTitle: "12 Điểm",
-        //     ),
-        //     _itemStatisticalByCircle(
-        //       title: "Ngày làm việc",
-        //       subTitle: "14 Ngày",
-        //     ),
-        //   ],
-        // ),
-        const CollectionStatsChart(),
-        
+        const StatisticalChartWidget(),
         Text(
           l10n.txtUtilDriverD,
           style: PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
@@ -292,7 +247,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                 Get.toNamed(AppRoutes.schedule);
               },
               child: _UtilDriver(
-                color: Colors.purple.withOpacity(0.2),
+                color: Colors.purple.withOpacity(0.3),
                 icon: HugeIcons.strokeRoundedCalendar03,
                 title: l10n.txtTitleScheduleColectionD,
                 subTitle: l10n.txtSubTitleScheduleColectionD,
@@ -307,7 +262,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                 Get.toNamed(AppRoutes.scheduleHistory);
               },
               child: _UtilDriver(
-                color: Colors.orange.withOpacity(0.2),
+                color: Colors.orange.withOpacity(0.3),
                 icon: HugeIcons.strokeRoundedSmartPhone01,
                 title: l10n.txtTitleHistoryD,
                 subTitle: l10n.txtSubTitleHistoryD,
@@ -322,83 +277,6 @@ class _HeaderDriverScreen extends StatelessWidget {
     );
   }
 }
-
-class _itemStatisticalByCircle extends StatelessWidget {
-  const _itemStatisticalByCircle({
-    super.key,
-    required this.title,
-    required this.subTitle,
-  });
-  final String title, subTitle;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 28.w,
-      height: 30.w,
-      margin: EdgeInsets.symmetric(vertical: 5.w),
-      decoration: BoxDecoration(
-        color: Colors.pink.shade200,
-        borderRadius: BorderRadius.circular(5.w),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text(
-            title,
-            style: PrimaryFont.bodyTextBold().copyWith(color: Colors.white),
-          ),
-          Container(
-            width: 15.w,
-            height: 15.w,
-            decoration: const BoxDecoration(
-                color: Colors.white, shape: BoxShape.circle),
-            child: Center(
-              child: Text(
-                subTitle,
-                textAlign: TextAlign.center,
-                style: PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _itemStatistical extends StatelessWidget {
-  const _itemStatistical({
-    super.key,
-    required this.title,
-    required this.isSelected,
-    this.onTap,
-  });
-  final String title;
-  final bool isSelected;
-  final Function()? onTap;
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 28.w,
-        height: 10.w,
-        decoration: BoxDecoration(
-          color: isSelected ? kPrimaryColor.withOpacity(0.8) : Colors.grey[200],
-          borderRadius: BorderRadius.circular(10.w),
-        ),
-        child: Center(
-          child: Text(
-            title,
-            style: PrimaryFont.bodyTextBold()
-                .copyWith(color: isSelected ? Colors.white : Colors.black),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _ItemTripToday extends StatelessWidget {
   const _ItemTripToday({
     super.key,
@@ -421,13 +299,13 @@ class _ItemTripToday extends StatelessWidget {
           width: 70.w,
           height: 10.w,
           decoration: BoxDecoration(
-            color: kPrimaryColor.withOpacity(0.5),
+            color: kPrimaryColor,
             borderRadius: BorderRadius.circular(10.w),
           ),
           child: Center(
             child: Text(
               addressBusiness,
-              style: PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
+              style: PrimaryFont.bodyTextMedium().copyWith(color: Colors.white),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

@@ -70,7 +70,7 @@
   "txtCamera": "Máy ảnh",
   "txtLibrary": "Thư viện",
 
-  "txtHelloD": "Xin chào bác tài\n",
+  "txtHelloD": "Xin chào bác tài!\n",
   "txtUtilDriverD": "Tiện ích của bác tài",
   "txtTitleScheduleColectionD": "Lịch thu gom",
   "txtSubTitleScheduleColectionD": "Tổng hợp các lịch\n thu gom của bác tài",
@@ -109,7 +109,7 @@
   "txtVehicleLicensePU": "Giấy phép lái xe",
   "txtUpdateProfilePU": "Cập nhật thông tin",
 
-  "txtWelcomToL": "Chào mừng",
+  "txtWelcomToL": "Chào mừng đến",
   "txtPasswordL": "Mật khẩu",
   "txtPleaseEnPassL": "Vui lòng nhập password",
   "txtForgotPassL": "Quên mật khẩu?",

@@ -57,13 +57,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 20.w),
                   Text(
                     l10n.txtWelcomToL,
-                    style: PrimaryFont.bold(10.w).copyWith(
+                    style: PrimaryFont.headerTextBold().copyWith(
                       color: kPrimaryColor,
                     ),
                   ),
                   Text(
                     "MTAC-Driver",
-                    style: PrimaryFont.titleTextBold().copyWith(
+                    style: PrimaryFont.bold(8.w).copyWith(
                       color: kPrimaryColor,
                     ),
                   ),
@@ -165,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       Icon(HugeIcons.strokeRoundedCall02, color: kPrimaryColor, size: 5.w,),
                       Text(
-                        "1900.8080.0020",
+                        "1900.545.450",
                         style: PrimaryFont.titleTextBold()
                             .copyWith(color: kPrimaryColor),
                       ),

@@ -14,14 +14,14 @@ class CollectionStats {
   CollectionStats(this.label, this.onTime, this.completed, this.total);
 }
 
-class CollectionStatsChart extends StatefulWidget {
-  const CollectionStatsChart({super.key});
+class StatisticalChartWidget extends StatefulWidget {
+  const StatisticalChartWidget({super.key});
 
   @override
-  State<CollectionStatsChart> createState() => _CollectionStatsChartState();
+  State<StatisticalChartWidget> createState() => _StatisticalChartWidgetState();
 }
 
-class _CollectionStatsChartState extends State<CollectionStatsChart> {
+class _StatisticalChartWidgetState extends State<StatisticalChartWidget> {
   String currentFilter = 'day'; // 'day', 'week', 'month'
   List<CollectionStats> stats = [];
 
@@ -92,11 +92,11 @@ class _CollectionStatsChartState extends State<CollectionStatsChart> {
         barsSpace: 2,
         barRods: [
           BarChartRodData(
-              toY: stat.onTime.toDouble(), color: kPrimaryColor, width: 12),
+              toY: stat.onTime.toDouble(), color: const Color(0xFFDADA5E), width: 12),
           BarChartRodData(
-              toY: stat.completed.toDouble(), color: Colors.green, width: 12),
+              toY: stat.completed.toDouble(), color: const Color(0xFF84E1CA), width: 12),
           BarChartRodData(
-              toY: stat.total.toDouble(), color: Colors.grey, width: 12),
+              toY: stat.total.toDouble(), color: const Color(0xFFCAABD7), width: 12),
         ],
       );
     }).toList();
@@ -106,7 +106,7 @@ class _CollectionStatsChartState extends State<CollectionStatsChart> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const SizedBox(height: 12),
+        SizedBox(height: 5.w),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -147,7 +147,7 @@ class _CollectionStatsChartState extends State<CollectionStatsChart> {
             aspectRatio: 1.5,
             child: BarChart(
               BarChartData(
-                maxY: 5,
+                maxY: 4,
                 barGroups: generateBarGroups(),
                 titlesData: FlTitlesData(
                   bottomTitles: AxisTitles(
@@ -206,23 +206,21 @@ class _CollectionStatsChartState extends State<CollectionStatsChart> {
             ),
           ),
         ),
-        
-        Text(
-          "Chú thích:",
-          style: PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
-        ),
         SizedBox(
           height: 2.w,
         ),
         const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            LegendDot(color: kPrimaryColor, label: "Đúng giờ"),
+            LegendDot(color: Color(0xFFDADA5E), label: "Đúng giờ"),
             SizedBox(width: 10),
-            LegendDot(color: Colors.green, label: "Hoàn tất"),
+            LegendDot(color: Color(0xFF84E1CA), label: "Hoàn tất"),
             SizedBox(width: 10),
-            LegendDot(color: Colors.grey, label: "Tổng chuyến"),
+            LegendDot(color: Color(0xFFCAABD7), label: "Tổng chuyến"),
           ],
+        ),
+         SizedBox(
+          height: 2.w,
         ),
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -314,7 +312,7 @@ class _itemStatisticalByCircle extends StatelessWidget {
       height: 30.w,
       margin: EdgeInsets.symmetric(vertical: 5.w),
       decoration: BoxDecoration(
-        color: kPrimaryColor,
+        color: const Color(0xFFFCD5D8),
         borderRadius: BorderRadius.circular(5.w),
       ),
       child: Column(
@@ -322,7 +320,7 @@ class _itemStatisticalByCircle extends StatelessWidget {
         children: [
           Text(
             title,
-            style: PrimaryFont.bodyTextBold().copyWith(color: Colors.white),
+            style: PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
           ),
           Container(
             width: 15.w,
@@ -333,7 +331,7 @@ class _itemStatisticalByCircle extends StatelessWidget {
               child: Text(
                 subTitle,
                 textAlign: TextAlign.center,
-                style: PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
+                style: PrimaryFont.bodyTextBold().copyWith(color: Colors.red),
               ),
             ),
           ),
