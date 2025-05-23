@@ -141,33 +141,6 @@ class AccountScreen extends StatelessWidget {
                 height: 5.w,
               ),
               _ItemFuncAccount(
-                title: l10n.txtPaymentMedthodAU,
-                arrowRight: true,
-                color: kPrimaryColor,
-                icon: HugeIcons.strokeRoundedCreditCardValidation,
-              ),
-              const Divider(),
-              _ItemFuncAccount(
-                title: l10n.txtContactAU,
-                arrowRight: true,
-                onTap: () {
-                  Get.toNamed(AppRoutes.contactUs);
-                },
-                color: kPrimaryColor,
-                icon: HugeIcons.strokeRoundedCalling02,
-              ),
-              const Divider(),
-              _ItemFuncAccount(
-                title: l10n.txtHelpAU,
-                arrowRight: true,
-                onTap: () {
-                  Get.toNamed(AppRoutes.helpFaqs);
-                },
-                color: kPrimaryColor,
-                icon: HugeIcons.strokeRoundedBot,
-              ),
-              const Divider(),
-              _ItemFuncAccount(
                 title: l10n.txtSettingAU,
                 arrowRight: true,
                 onTap: () {
@@ -175,6 +148,13 @@ class AccountScreen extends StatelessWidget {
                 },
                 color: kPrimaryColor,
                 icon: HugeIcons.strokeRoundedSetting07,
+              ),
+              const Divider(),
+              _ItemFuncAccount(
+                title: l10n.txFeedBackAU,
+                arrowRight: true,
+                color: kPrimaryColor,
+                icon: HugeIcons.strokeRoundedComment02,
               ),
               const Divider(),
               Row(
@@ -239,6 +219,26 @@ class AccountScreen extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+              const Divider(),
+              _ItemFuncAccount(
+                title: l10n.txtContactAU,
+                arrowRight: true,
+                onTap: () {
+                  Get.toNamed(AppRoutes.contactUs);
+                },
+                color: kPrimaryColor,
+                icon: HugeIcons.strokeRoundedCalling02,
+              ),
+              const Divider(),
+              _ItemFuncAccount(
+                title: l10n.txtPrivacyAU,
+                arrowRight: true,
+                onTap: () {
+                  Get.toNamed(AppRoutes.privacyPolicy);
+                },
+                color: kPrimaryColor,
+                icon: HugeIcons.strokeRoundedBlocked,
               ),
               const Divider(),
               SizedBox(

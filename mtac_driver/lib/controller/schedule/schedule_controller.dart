@@ -37,7 +37,6 @@ class ScheduleController extends GetxController {
     "Tái chế",
     "Công nghiệp"
   ];
-  List<String> statistical = ["Ngày", "Tuần", "Tháng"];
   static const int _totalItemCount = 9999;
   static final double _itemWidth = 13.w;
 

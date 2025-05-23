@@ -41,10 +41,8 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
         children: [
-         
-          const HelpScreen(),
+          HelpScreen(),
           HomeScreen(),
-          //const NotificationScreen(),
           AccountScreen(),
         ],
       ),

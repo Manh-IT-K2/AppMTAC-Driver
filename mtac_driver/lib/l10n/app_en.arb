@@ -94,9 +94,10 @@
 
   "txtMyProfileAU": "My Profile",
   "txtLogoutAU": "Logout",
-  "txtPaymentMedthodAU": "Payment Methods",
+  "txFeedBackAU": "FeedBack",
   "txtContactAU": "Contact Us",
   "txtHelpAU": "Help & FAQs",
+  "txtPrivacyAU": "Privacy policy",
   "txtSettingAU": "Settings",
   "txtLanguageAU": "Language",
   "txtVersionAU": "Version",

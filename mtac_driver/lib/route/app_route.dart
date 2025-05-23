@@ -10,7 +10,7 @@ class AppRoutes {
   static const profile = "/profile";
   static const setting = "/setting";
   static const contactUs = "/contactUs";
-  static const helpFaqs = "/helpFaqs";
+  static const privacyPolicy = "/privacyPolicy";
   static const notification = "/notification";
   static const managerPassword = "/managerPassword";
   static const scheduleHistory = "/scheduleHistory";
