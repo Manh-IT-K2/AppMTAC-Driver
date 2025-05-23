@@ -11,6 +11,7 @@ import 'package:mtac_driver/view/schedule/schedule_colection_driver_screen.dart'
 import 'package:mtac_driver/view/schedule/schedule_history_screen.dart';
 import 'package:mtac_driver/view/splash_screen.dart';
 import 'package:mtac_driver/view/user/contact_us_screen.dart';
+import 'package:mtac_driver/view/user/feedback_screen.dart';
 import 'package:mtac_driver/view/user/privacy_policy_screen.dart';
 import 'package:mtac_driver/view/user/login_screen.dart';
 import 'package:mtac_driver/view/user/profile_screen.dart';
@@ -88,9 +89,14 @@ class AppPages {
       page: () => const DetailScheduleHistoryScreen(),
       middlewares: [NetworkCheckMiddlewareController()],
     ),
-     GetPage(
+    GetPage(
       name: AppRoutes.notification,
       page: () => const NotificationScreen(),
+      middlewares: [NetworkCheckMiddlewareController()],
+    ),
+    GetPage(
+      name: AppRoutes.feedback,
+      page: () => const FeedbackScreen(),
       middlewares: [NetworkCheckMiddlewareController()],
     ),
   ];

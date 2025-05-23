@@ -5,6 +5,7 @@ class AppRoutes {
   static const splash = "/splash";
   static const schedule = "/schedule";
   static const map = "/map";
+  static const feedback = "/feedback";
   static const handoverRecord = "/handoverRecord";
   static const driver = "/driver";
   static const profile = "/profile";

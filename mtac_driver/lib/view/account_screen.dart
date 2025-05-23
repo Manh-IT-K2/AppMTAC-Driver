@@ -153,6 +153,7 @@ class AccountScreen extends StatelessWidget {
               _ItemFuncAccount(
                 title: l10n.txFeedBackAU,
                 arrowRight: true,
+                onTap: () => Get.toNamed(AppRoutes.feedback),
                 color: kPrimaryColor,
                 icon: HugeIcons.strokeRoundedComment02,
               ),
