@@ -4,12 +4,14 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
   //Color.fromARGB(255, 234, 232, 232)
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -29,7 +31,7 @@ class NotificationScreen extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  "Thông báo",
+                  l10n.txtTitleNS,
                   textAlign: TextAlign.center,
                   style: PrimaryFont.headerTextBold()
                       .copyWith(color: Colors.black),
@@ -54,13 +56,13 @@ class NotificationScreen extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    "Today",
+                    l10n.txtTodayNS,
                     style: PrimaryFont.titleTextBold()
                         .copyWith(color: Colors.black),
                   ),
                   const Spacer(),
                   Text(
-                    "Mark all as read",
+                    l10n.txtAllReadNS,
                     style: PrimaryFont.bodyTextBold()
                         .copyWith(color: kPrimaryColor),
                   ),
@@ -70,8 +72,8 @@ class NotificationScreen extends StatelessWidget {
             SizedBox(
               height: 5.w,
             ),
-            const _itemNotification(
-              time: "Justnow",
+            _itemNotification(
+              time: l10n.txtJustnowNS,
               title: "Collection scheduled",
               subTitle:
                   "Mark all as read Mark all as read Mark all as read Mark all as read",
@@ -96,13 +98,13 @@ class NotificationScreen extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    "Yesterday",
+                    l10n.txtYesterdayS,
                     style: PrimaryFont.titleTextBold()
                         .copyWith(color: Colors.black),
                   ),
                   const Spacer(),
                   Text(
-                    "Mark all as read",
+                    l10n.txtAllReadNS,
                     style: PrimaryFont.bodyTextBold()
                         .copyWith(color: kPrimaryColor),
                   ),

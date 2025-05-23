@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
+import 'package:mtac_driver/utils/text_util.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CollectionStats {
   final String label; // Nhãn thời gian
@@ -30,6 +32,7 @@ class StatisticalChartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Obx(
       () => Column(
         children: [
@@ -39,17 +42,17 @@ class StatisticalChartWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _itemStatistical(
-                title: "Ngày",
+                title: l10n.txtDaySCW,
                 isSelected: _scheduleController.currentFilter.value == "day",
                 onTap: () => _scheduleController.changeFilter("day"),
               ),
               _itemStatistical(
-                title: "Tuần",
+                title: l10n.txtWeekSCW,
                 isSelected: _scheduleController.currentFilter.value == "week",
                 onTap: () => _scheduleController.changeFilter("week"),
               ),
               _itemStatistical(
-                title: "Tháng",
+                title: l10n.txtMonthSCW,
                 isSelected: _scheduleController.currentFilter.value == "month",
                 onTap: () => _scheduleController.changeFilter("month"),
               ),
@@ -90,7 +93,7 @@ class StatisticalChartWidget extends StatelessWidget {
                       tooltipRoundedRadius: 8,
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
                         return BarTooltipItem(
-                          '${rod.toY.toInt()} chuyến',
+                          '${rod.toY.toInt()} ${l10n.txtTripSCW}',
                           PrimaryFont.bodyTextBold()
                               .copyWith(color: Colors.white),
                         );
@@ -119,11 +122,11 @@ class StatisticalChartWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              LegendDot(color: kSecondaryColor, label: "Đúng giờ"),
+              LegendDot(color: kSecondaryColor, label: l10n.txtTripOntimeSCW),
               const SizedBox(width: 10),
-              LegendDot(color: kPrimaryColor, label: "Hoàn tất"),
+              LegendDot(color: kPrimaryColor, label: l10n.txtTripFinishSCW),
               const SizedBox(width: 10),
-              LegendDot(color: Colors.grey.shade300, label: "Tổng chuyến"),
+              LegendDot(color: Colors.grey.shade300, label: l10n.txtTripTotalSCW),
             ],
           ),
           SizedBox(
@@ -135,16 +138,16 @@ class StatisticalChartWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _itemStatisticalByCircle(
-                  title: "Khối lượng",
+                  title: l10n.txtWeightSCW,
                   subTitle: "${summary.totalKg} Kg",
                 ),
                 _itemStatisticalByCircle(
-                  title: "Điểm thu gom",
-                  subTitle: "${summary.totalPoints} Điểm",
+                  title: l10n.txtCollectionPointSCW,
+                  subTitle: "${summary.totalPoints} ${l10n.txtPointSCW}",
                 ),
                 _itemStatisticalByCircle(
-                  title: "Ngày làm việc",
-                  subTitle: "${summary.totalDays} Ngày",
+                  title: l10n.txtWorkDaySCW,
+                  subTitle: "${summary.totalDays} ${l10n.txtDaySCW}",
                 ),
               ],
             );

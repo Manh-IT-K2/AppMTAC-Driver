@@ -153,3 +153,22 @@ const String txtRetryNI = "Thử lại";
 const String txtErrConnectSP = "Lỗi kết nối"; 
 const String txtSubErrConnectSP = "Không thể kết nối đến máy chủ. Vui lòng kiểm tra mạng hoặc thử lại sau.";
 
+// text notification screen
+const String txtTitleNS = "Thông báo";
+const String txtTodayNS = "Hôm nay";
+const String txtAllReadNS = "Đánh dấu đọc tất cả";
+const String txtYesterdayS = "Hôm qua";
+const String txtJustnowNS = "Bây giờ";
+
+// text statistical chart widget
+const String txtWeightSCW = "Khối lượng";
+const String txtCollectionPointSCW = "Điểm thu gom";
+const String txtWorkDaySCW = "Ngày làm việc";
+const String txtPointSCW = "Điểm";
+const String txtDaySCW = "Ngày";
+const String txtWeekSCW = "Tuần";
+const String txtMonthSCW = "Tháng";
+const String txtTripSCW = "Chuyến";
+const String txtTripOntimeSCW = "Đúng giờ";
+const String txtTripFinishSCW = "Hoàn tất";
+const String txtTripTotalSCW = "Tổng chuyến";

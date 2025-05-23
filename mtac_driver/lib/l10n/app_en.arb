@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+
   "txtMTAC": "MTAC Merchant",
   "txtRevenue": "Today's Revenue",
   "txtYesterday": "Yesterday",
@@ -51,7 +52,7 @@
   "txtOptimizingM": "Optimizing route....",
 
   "txtTitleHR": "Handover record",
-  "txtCodeHR": "No.:",
+  "txtCodeHR": "Number.:",
   "txtNoteHR": "Regarding collection and transport of hazardous waste",
   "txtTimeHR": "Time:",
   "txtAddress1HR": "Address:",
@@ -134,5 +135,23 @@
   "txtRetryNI": "Retry",
 
   "txtErrConnectSP": "Connection error",
-  "txtSubErrConnectSP": "Cannot connect to server. Please check your network or try again later."
+  "txtSubErrConnectSP": "Cannot connect to server. Please check your network or try again later.",
+
+  "txtTitleNS": "Notifications",
+  "txtTodayNS": "Today",
+  "txtAllReadNS": "Mark all as read",
+  "txtYesterdayS": "Yesterday",
+  "txtJustnowNS": "Just now",
+
+  "txtWeightSCW": "Weight",
+  "txtCollectionPointSCW": "Collection point",
+  "txtWorkDaySCW": "Workday",
+  "txtPointSCW": "Point",
+  "txtDaySCW": "Day",
+  "txtWeekSCW": "Week",
+  "txtMonthSCW": "Month",
+  "txtTripSCW": "Trip",
+  "txtTripOntimeSCW": "On time",
+  "txtTripFinishSCW": "Completed",
+  "txtTripTotalSCW": "Total trips"
 }
