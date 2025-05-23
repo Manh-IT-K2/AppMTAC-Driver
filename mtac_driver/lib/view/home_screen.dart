@@ -201,10 +201,13 @@ class _HeaderDriverScreen extends StatelessWidget {
             Stack(
               children: [
                 Center(
-                  child: Icon(
-                    HugeIcons.strokeRoundedNotification01,
-                    size: 6.w,
-                    color: kPrimaryColor,
+                  child: GestureDetector(
+                    onTap: () => Get.toNamed(AppRoutes.notification),
+                    child: Icon(
+                      HugeIcons.strokeRoundedNotification01,
+                      size: 6.w,
+                      color: kPrimaryColor,
+                    ),
                   ),
                 ),
                 Positioned(
@@ -249,7 +252,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                 Get.toNamed(AppRoutes.schedule);
               },
               child: _UtilDriver(
-                color: Colors.purple.withOpacity(0.3),
+                color: kSecondaryColor.withOpacity(0.3),
                 icon: HugeIcons.strokeRoundedCalendar03,
                 title: l10n.txtTitleScheduleColectionD,
                 subTitle: l10n.txtSubTitleScheduleColectionD,
@@ -264,7 +267,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                 Get.toNamed(AppRoutes.scheduleHistory);
               },
               child: _UtilDriver(
-                color: Colors.orange.withOpacity(0.3),
+                color: kPrimaryColor.withOpacity(0.3),
                 icon: HugeIcons.strokeRoundedSmartPhone01,
                 title: l10n.txtTitleHistoryD,
                 subTitle: l10n.txtSubTitleHistoryD,

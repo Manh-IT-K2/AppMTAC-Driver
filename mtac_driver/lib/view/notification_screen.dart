@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
@@ -11,12 +12,42 @@ class NotificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        title: SizedBox(
+          width: 100.w,
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () => Get.back(),
+                child: Icon(
+                  HugeIcons.strokeRoundedArrowLeft01,
+                  size: 8.w,
+                  color: Colors.black,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  "Thông báo",
+                  textAlign: TextAlign.center,
+                  style: PrimaryFont.headerTextBold()
+                      .copyWith(color: Colors.black),
+                ),
+              ),
+              SizedBox(
+                width: 8.w,
+              ),
+            ],
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             SizedBox(
-              height: 10.h,
+              height: 5.w,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -24,14 +55,14 @@ class NotificationScreen extends StatelessWidget {
                 children: [
                   Text(
                     "Today",
-                    style:
-                        PrimaryFont.titleTextBold().copyWith(color: Colors.black),
+                    style: PrimaryFont.titleTextBold()
+                        .copyWith(color: Colors.black),
                   ),
                   const Spacer(),
                   Text(
                     "Mark all as read",
-                    style:
-                        PrimaryFont.bodyTextBold().copyWith(color: kPrimaryColor),
+                    style: PrimaryFont.bodyTextBold()
+                        .copyWith(color: kPrimaryColor),
                   ),
                 ],
               ),
@@ -66,14 +97,14 @@ class NotificationScreen extends StatelessWidget {
                 children: [
                   Text(
                     "Yesterday",
-                    style:
-                        PrimaryFont.titleTextBold().copyWith(color: Colors.black),
+                    style: PrimaryFont.titleTextBold()
+                        .copyWith(color: Colors.black),
                   ),
                   const Spacer(),
                   Text(
                     "Mark all as read",
-                    style:
-                        PrimaryFont.bodyTextBold().copyWith(color: kPrimaryColor),
+                    style: PrimaryFont.bodyTextBold()
+                        .copyWith(color: kPrimaryColor),
                   ),
                 ],
               ),

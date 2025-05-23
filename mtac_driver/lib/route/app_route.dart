@@ -11,6 +11,7 @@ class AppRoutes {
   static const setting = "/setting";
   static const contactUs = "/contactUs";
   static const helpFaqs = "/helpFaqs";
+  static const notification = "/notification";
   static const managerPassword = "/managerPassword";
   static const scheduleHistory = "/scheduleHistory";
   static const detailScheduleHistory = "/detailScheduleHistory";

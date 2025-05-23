@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mtac_driver/view/account_screen.dart';
 import 'package:mtac_driver/view/home_screen.dart';
-import 'package:mtac_driver/view/notification_screen.dart';
-import 'package:mtac_driver/view/payment_screen.dart';
+import 'package:mtac_driver/view/help_screen.dart';
 import 'package:mtac_driver/widgets/bottom_nav_bar.dart';
 
 class MainScreen extends StatefulWidget {
@@ -13,8 +12,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
-  final PageController _pageController = PageController();
+  int _selectedIndex = 1;
+  final PageController _pageController = PageController(initialPage: 1);
 
   void _onItemTapped(int index) {
     setState(() {
@@ -42,9 +41,10 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
         children: [
+         
+          const HelpScreen(),
           HomeScreen(),
-          const PaymentScreen(),
-          const NotificationScreen(),
+          //const NotificationScreen(),
           AccountScreen(),
         ],
       ),

@@ -116,14 +116,14 @@ class StatisticalChartWidget extends StatelessWidget {
           SizedBox(
             height: 2.w,
           ),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              LegendDot(color: Color(0xFFDADA5E), label: "Đúng giờ"),
-              SizedBox(width: 10),
-              LegendDot(color: Color(0xFF84E1CA), label: "Hoàn tất"),
-              SizedBox(width: 10),
-              LegendDot(color: Color(0xFFCAABD7), label: "Tổng chuyến"),
+              LegendDot(color: kSecondaryColor, label: "Đúng giờ"),
+              const SizedBox(width: 10),
+              LegendDot(color: kPrimaryColor, label: "Hoàn tất"),
+              const SizedBox(width: 10),
+              LegendDot(color: Colors.grey.shade300, label: "Tổng chuyến"),
             ],
           ),
           SizedBox(
@@ -164,15 +164,15 @@ List<BarChartGroupData> generateBarGroups(List<CollectionStats> stats) {
       barRods: [
         BarChartRodData(
             toY: stat.onTime.toDouble(),
-            color: const Color(0xFFDADA5E),
+            color: kSecondaryColor,
             width: 12),
         BarChartRodData(
             toY: stat.completed.toDouble(),
-            color: const Color(0xFF84E1CA),
+            color: kPrimaryColor,
             width: 12),
         BarChartRodData(
             toY: stat.total.toDouble(),
-            color: const Color(0xFFCAABD7),
+            color: Colors.grey.shade300,
             width: 12),
       ],
     );
@@ -222,10 +222,10 @@ class _itemStatistical extends StatelessWidget {
 }
 
 class LegendDot extends StatelessWidget {
-  final Color color;
+  final Color? color;
   final String label;
 
-  const LegendDot({super.key, required this.color, required this.label});
+  LegendDot({super.key, required this.color, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +255,7 @@ class _itemStatisticalByCircle extends StatelessWidget {
       height: 30.w,
       margin: EdgeInsets.symmetric(vertical: 5.w),
       decoration: BoxDecoration(
-        color: const Color(0xFFFCD5D8),
+        color: kPrimaryColor,
         borderRadius: BorderRadius.circular(5.w),
       ),
       child: Column(
@@ -263,7 +263,7 @@ class _itemStatisticalByCircle extends StatelessWidget {
         children: [
           Text(
             title,
-            style: PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
+            style: PrimaryFont.bodyTextBold().copyWith(color: Colors.white),
           ),
           Container(
             width: 15.w,
@@ -274,7 +274,7 @@ class _itemStatisticalByCircle extends StatelessWidget {
               child: Text(
                 subTitle,
                 textAlign: TextAlign.center,
-                style: PrimaryFont.bodyTextBold().copyWith(color: Colors.red),
+                style: PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
               ),
             ),
           ),
