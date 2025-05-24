@@ -1,12 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/model/help_faqs_model.dart';
 
 class HelpFAQController extends GetxController {
   // initial varialbe search help & FQAs
-  List<String> helpTitles = ['Tất cả', 'Tổng quan', 'Thu gom', 'Loại rác', 'Dịch vụ', 'Tài khoản'];
+  List<String> helpTitles = [
+    'Tất cả',
+    'Tổng quan',
+    'Thu gom',
+    'Loại rác',
+    'Dịch vụ',
+    'Tài khoản'
+  ];
+    List<String> goodRate = [
+    'Lộ trình hiển thị rõ ràng, dễ đi đúng tuyến.',
+    'Thông báo nhiệm vụ và điểm thu gom rất chính xác.',
+    'Ứng dụng mượt, không bị giật lag khi sử dụng.',
+    'Hỗ trợ định vị tốt, dễ tìm đúng địa điểm thu gom.',
+    'Quản lý công việc trong ngày tiện lợi và khoa học.',
+  ];
   final searchHelpFqas = TextEditingController();
+  List<String> rate = ['Rất tệ', 'Tệ', 'Bình thường', 'Tốt', 'Rất Tốt'];
+  List<IconData> iconRate = [
+    HugeIcons.strokeRoundedAngry,
+    HugeIcons.strokeRoundedSad01,
+    HugeIcons.strokeRoundedMeh,
+    HugeIcons.strokeRoundedRelieved01,
+    HugeIcons.strokeRoundedInLove
+  ];
+
+  // obs
   final isSelectedHelp = 0.obs;
+  final isSellectedRate = 0.obs;
+  final selectedRateIndices = <int>[].obs;
+
+
+  // sellected item rate
+  void sellectedItemRate(int index) {
+    isSellectedRate.value = index;
+  }
+
+  // sellected item rate
+  void toggleSelectedRateGood(int index) {
+  if (selectedRateIndices.contains(index)) {
+    selectedRateIndices.remove(index);
+  } else {
+    selectedRateIndices.add(index);
+  }
+}
+
 
   // selected item help & FQAs
   void selectedItemHelpFQA(int index) {

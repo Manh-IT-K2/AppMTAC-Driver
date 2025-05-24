@@ -96,7 +96,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.feedback,
-      page: () => const FeedbackScreen(),
+      page: () => FeedbackScreen(),
       middlewares: [NetworkCheckMiddlewareController()],
     ),
   ];

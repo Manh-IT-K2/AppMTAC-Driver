@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:mtac_driver/controller/user/help_faqs_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
 
 class FeedbackScreen extends StatelessWidget {
-  const FeedbackScreen({super.key});
+  FeedbackScreen({super.key});
 
+  final _controller = Get.find<HelpFAQController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,31 +54,28 @@ class FeedbackScreen extends StatelessWidget {
               style:
                   PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
             ),
-            const Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _itemRateExperience(
-                    title: "Rất tệ",
-                    icon: HugeIcons.strokeRoundedAngry,
-                    isSelectedRate: false),
-                _itemRateExperience(
-                    title: "Tệ",
-                    icon: HugeIcons.strokeRoundedSad01,
-                    isSelectedRate: false),
-                _itemRateExperience(
-                    title: "Bình thường",
-                    icon: HugeIcons.strokeRoundedMeh,
-                    isSelectedRate: false),
-                _itemRateExperience(
-                    title: "Tốt",
-                    icon: HugeIcons.strokeRoundedRelieved01,
-                    isSelectedRate: false),
-                _itemRateExperience(
-                    title: "Rất tốt",
-                    icon: HugeIcons.strokeRoundedInLove,
-                    isSelectedRate: true),
-              ],
+            Obx(
+              () => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: List.generate(
+                  _controller.rate.length,
+                  (index) {
+                    final title = _controller.rate[index];
+                    final icon = _controller.iconRate[index];
+                    final isSelected =
+                        _controller.isSellectedRate.value == index;
+                    return _itemRateExperience(
+                      title: title,
+                      isSelectedRate: isSelected,
+                      onTap: () {
+                        _controller.sellectedItemRate(index);
+                      },
+                      icon: icon,
+                    );
+                  },
+                ),
+              ),
             ),
             SizedBox(
               height: 5.w,
@@ -89,20 +88,23 @@ class FeedbackScreen extends StatelessWidget {
             SizedBox(
               height: 3.w,
             ),
-            _itemGoodRateChoice(
-                title: "Dịch vụ hỗ trợ tốt", isSeletedRateGood: true),
-            const Divider(),
-            _itemGoodRateChoice(
-                title: "Dịch vụ hỗ trợ tốt", isSeletedRateGood: true),
-            const Divider(),
-            _itemGoodRateChoice(
-                title: "Dịch vụ hỗ trợ tốt", isSeletedRateGood: false),
-            const Divider(),
-            _itemGoodRateChoice(
-                title: "Dịch vụ hỗ trợ tốt", isSeletedRateGood: false),
-            const Divider(),
-            _itemGoodRateChoice(
-                title: "Dịch vụ hỗ trợ tốt", isSeletedRateGood: true),
+            Obx(
+              () => Column(
+                children: List.generate(
+                  _controller.goodRate.length,
+                  (index) {
+                    final title = _controller.goodRate[index];
+                    final selected =
+                        _controller.selectedRateIndices.contains(index);
+                    return _itemGoodRateChoice(
+                      title: title,
+                      isSeletedRateGood: selected,
+                      onTap: () => _controller.toggleSelectedRateGood(index),
+                    );
+                  },
+                ),
+              ),
+            ),
             SizedBox(
               height: 5.h,
             ),
@@ -117,7 +119,7 @@ class FeedbackScreen extends StatelessWidget {
             SizedBox(
               width: 100.w,
               child: TextField(
-                maxLines: null, 
+                maxLines: null,
                 minLines: 5,
                 cursorColor: kPrimaryColor.withOpacity(0.6),
                 decoration: InputDecoration(
@@ -136,6 +138,26 @@ class FeedbackScreen extends StatelessWidget {
                   ),
                   filled: true,
                   fillColor: Colors.white,
+                ),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {},
+              child: Container(
+                width: 100.w,
+                height: 10.w,
+                margin: EdgeInsets.only(top: 10.w),
+                decoration: BoxDecoration(
+                  color: kPrimaryColor,
+                  borderRadius: BorderRadius.circular(10.w),
+                ),
+                child: Center(
+                  child: Text(
+                    "Xác nhận",
+                    textAlign: TextAlign.center,
+                    style: PrimaryFont.bodyTextBold()
+                        .copyWith(color: Colors.white),
+                  ),
                 ),
               ),
             ),
@@ -158,33 +180,38 @@ class _itemGoodRateChoice extends StatelessWidget {
   final bool isSeletedRateGood;
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
       children: [
-        Text(
-          title,
-          style: PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
-        ),
-        const Spacer(),
-        GestureDetector(
-          onTap: onTap,
-          child: Container(
-            width: 5.w,
-            height: 5.w,
-            decoration: BoxDecoration(
-              border: Border.all(color: kPrimaryColor),
-              color: isSeletedRateGood ? kPrimaryColor : Colors.white,
-              shape: BoxShape.circle,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              title,
+              style: PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
             ),
-            child: isSeletedRateGood
-                ? Icon(
-                    HugeIcons.strokeRoundedTick01,
-                    size: 4.w,
-                    color: Colors.white,
-                  )
-                : const SizedBox(),
-          ),
-        )
+            const Spacer(),
+            GestureDetector(
+              onTap: onTap,
+              child: Container(
+                width: 5.w,
+                height: 5.w,
+                decoration: BoxDecoration(
+                  border: Border.all(color: kPrimaryColor),
+                  color: isSeletedRateGood ? kPrimaryColor : Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                child: isSeletedRateGood
+                    ? Icon(
+                        HugeIcons.strokeRoundedTick01,
+                        size: 4.w,
+                        color: Colors.white,
+                      )
+                    : const SizedBox(),
+              ),
+            )
+          ],
+        ),
+        const Divider(),
       ],
     );
   }
