@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:mtac_driver/common/appbar/app_bar_common.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
@@ -26,53 +27,13 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: () => Get.back(),
-              child: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.black,
-                size: 5.w,
-              ),
-            ),
-            Text(
-              l10n.txtTitleS,
-              style: PrimaryFont.headerTextBold().copyWith(color: Colors.black),
-            ),
-            GestureDetector(
-              onTap: () {
-                // _scheduleController.removeCollectionStatus();
-                // _scheduleController.removeSchedule();
-              },
-              child: Container(
-                width: 10.w,
-                height: 10.w,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.w),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: const Offset(2, 2),
-                      ),
-                    ]),
-                child: Icon(
-                  Icons.menu,
-                  color: Colors.black,
-                  size: 5.w,
-                ),
-              ),
-            ),
-          ],
-        ),
+      appBar: AppBarCommon(
+        hasMenu: true,
+        title: l10n.txtTitleS,
+        onTap: () {
+          // _scheduleController.removeCollectionStatus();
+          // _scheduleController.removeSchedule();
+        },
       ),
       body: Padding(
         padding: const EdgeInsets.only(bottom: 20),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
+import 'package:mtac_driver/common/appbar/app_bar_common.dart';
 import 'package:mtac_driver/configs/api_config.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:mtac_driver/theme/color.dart';
@@ -20,36 +21,7 @@ class DetailScheduleHistoryScreen extends StatelessWidget {
     final Datum datum = Get.arguments;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-        title: SizedBox(
-          width: 100.w,
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () => Get.back(),
-                child: Icon(
-                  HugeIcons.strokeRoundedArrowLeft01,
-                  size: 8.w,
-                  color: Colors.black,
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  l10n.txtTitleDSH,
-                  textAlign: TextAlign.center,
-                  style: PrimaryFont.headerTextBold()
-                      .copyWith(color: Colors.black),
-                ),
-              ),
-              SizedBox(
-                width: 5.w,
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar: AppBarCommon(hasMenu: false, title:  l10n.txtTitleDSH),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(

@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mtac_driver/common/show_notify_snackbar.dart';
+import 'package:mtac_driver/common/notify/show_notify_snackbar.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/model/user_model.dart';

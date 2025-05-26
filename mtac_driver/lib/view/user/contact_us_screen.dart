@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:mtac_driver/common/appbar/app_bar_common.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
@@ -16,40 +17,11 @@ class ContactUsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    //
+    // initial AppLocalizations
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        title: SizedBox(
-          width: 100.w,
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () => Get.back(),
-                child: Icon(
-                  HugeIcons.strokeRoundedArrowLeft01,
-                  size: 8.w,
-                  color: Colors.black,
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  l10n.txtContactAU,
-                  textAlign: TextAlign.center,
-                  style: PrimaryFont.headerTextBold()
-                      .copyWith(color: Colors.black),
-                ),
-              ),
-              SizedBox(
-                width: 8.w,
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar: AppBarCommon(hasMenu: false, title:  l10n.txtContactAU),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(

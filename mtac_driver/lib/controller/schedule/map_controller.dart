@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:mtac_driver/common/show_notify_snackbar.dart';
+import 'package:mtac_driver/common/notify/show_notify_snackbar.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:url_launcher/url_launcher.dart';

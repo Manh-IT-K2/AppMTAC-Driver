@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:mtac_driver/common/appbar/app_bar_common.dart';
 import 'package:mtac_driver/controller/user/profile_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
@@ -16,36 +17,7 @@ class ManagerPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        title: SizedBox(
-          width: 100.w,
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () => Get.back(),
-                child: Icon(
-                  HugeIcons.strokeRoundedArrowLeft01,
-                  size: 8.w,
-                  color: Colors.black,
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  l10n.txtPasswordManagementSU,
-                  textAlign: TextAlign.center,
-                  style: PrimaryFont.headerTextBold()
-                      .copyWith(color: Colors.black),
-                ),
-              ),
-              SizedBox(
-                width: 8.w,
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar:  AppBarCommon(hasMenu: false, title:  l10n.txtPasswordManagementSU),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(

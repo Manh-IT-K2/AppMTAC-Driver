@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:mtac_driver/common/appbar/app_bar_common.dart';
 import 'package:mtac_driver/controller/user/help_faqs_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
@@ -14,36 +15,7 @@ class FeedbackScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        title: SizedBox(
-          width: 100.w,
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () => Get.back(),
-                child: Icon(
-                  HugeIcons.strokeRoundedArrowLeft01,
-                  size: 8.w,
-                  color: Colors.black,
-                ),
-              ),
-              Expanded(
-                child: Text(
-                  "Phản hồi",
-                  textAlign: TextAlign.center,
-                  style: PrimaryFont.headerTextBold()
-                      .copyWith(color: Colors.black),
-                ),
-              ),
-              SizedBox(
-                width: 8.w,
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar: const AppBarCommon(hasMenu: false, title: "Phản hồi"),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

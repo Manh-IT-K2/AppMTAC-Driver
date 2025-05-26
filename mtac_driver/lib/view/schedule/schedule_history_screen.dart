@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:mtac_driver/common/appbar/app_bar_common.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
@@ -17,33 +18,7 @@ class ScheduleHistoryScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!; 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-        title: SizedBox(
-          width: 100.w,
-          child: Row(
-            children: [
-              GestureDetector(
-                onTap: () => Get.back(),
-                child:
-                    Icon(Icons.arrow_back_ios, color: Colors.black, size: 5.w),
-              ),
-              Expanded(
-                child: Text(
-                  l10n.txtTitleSH,
-                  textAlign: TextAlign.center,
-                  style: PrimaryFont.headerTextBold()
-                      .copyWith(color: Colors.black),
-                ),
-              ),
-              SizedBox(
-                width: 5.w,
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar: AppBarCommon(hasMenu: false, title:  l10n.txtTitleSH),
       body: Obx(
         () {
           final list = _scheduleController.historySchedules;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mtac_driver/common/show_notify_snackbar.dart';
+import 'package:mtac_driver/common/notify/show_notify_snackbar.dart';
 import 'package:mtac_driver/model/user_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/service/user/login_service.dart';

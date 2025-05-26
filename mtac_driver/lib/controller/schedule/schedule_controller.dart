@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:get/get.dart';
-import 'package:mtac_driver/common/show_notify_snackbar.dart';
+import 'package:mtac_driver/common/notify/show_notify_snackbar.dart';
 import 'package:mtac_driver/shared/user/user_shared.dart';
 import 'package:mtac_driver/widgets/schedule_widget/statistical_chart_widget.dart';
 import 'package:sizer/sizer.dart';

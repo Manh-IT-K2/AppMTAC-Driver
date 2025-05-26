@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mtac_driver/common/notify_success_dialog.dart';
+import 'package:mtac_driver/common/appbar/app_bar_common.dart';
+import 'package:mtac_driver/common/notify/notify_success_dialog.dart';
 import 'package:mtac_driver/controller/schedule/handover_record_controller.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/data/map_screen/item_info_waste.dart';
@@ -25,38 +26,11 @@ class HandoverRecordDriverScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //
+    // initial AppLocalizations
     final l10n = AppLocalizations.of(context)!;
     //final size = context.screenSize;
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        title: Row(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Get.back();
-              },
-              child: Icon(
-                Icons.arrow_back_ios,
-                color: const Color(0xFF0A4564),
-                size: 5.w,
-              ),
-            ),
-            Expanded(
-              child: Text(
-                l10n.txtTitleHR,
-                style: PrimaryFont.headerTextBold().copyWith(
-                  color: const Color(0xFF0A4564),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
-        centerTitle: true,
-      ),
+      appBar: AppBarCommon(hasMenu: false, title:  l10n.txtTitleHR),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Container(
