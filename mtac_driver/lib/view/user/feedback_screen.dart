@@ -153,7 +153,7 @@ class FeedbackScreen extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    "Xác nhận",
+                    "Gửi",
                     textAlign: TextAlign.center,
                     style: PrimaryFont.bodyTextBold()
                         .copyWith(color: Colors.white),

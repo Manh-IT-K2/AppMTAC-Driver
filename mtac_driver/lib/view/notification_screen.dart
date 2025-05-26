@@ -94,7 +94,7 @@ class NotificationScreen extends StatelessWidget {
               isReaded: true,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
               child: Row(
                 children: [
                   Text(
