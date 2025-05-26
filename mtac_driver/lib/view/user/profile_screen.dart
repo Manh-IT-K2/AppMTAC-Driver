@@ -103,7 +103,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.only(left: 10.w, top: 10.w, right: 10.w),
+                  padding: EdgeInsets.only(left: 16.0, top: 10.w, right: 16.0),
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
                     child: Column(
@@ -146,85 +146,99 @@ class ProfileScreen extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          height: 5.w,
+                          height: 3.w,
                         ),
-                        InputFormWidget(
-                          readOnly: false,
-                          controller: nameController,
-                          title: l10n.txtNamePU,
-                          obscureText: false,
-                        ),
-                        SizedBox(
-                          height: 5.w,
-                        ),
-                        InputFormWidget(
-                          readOnly: false,
-                          controller: phoneController,
-                          title: l10n.txtPhone,
-                          obscureText: false,
-                        ),
-                        SizedBox(
-                          height: 5.w,
-                        ),
-                        InputFormWidget(
-                          readOnly: false,
-                          controller: emailController,
-                          title: l10n.txtEmailPU,
-                          obscureText: false,
-                          suffixIcon: IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              HugeIcons.strokeRoundedAlert02,
-                              size: 5.w,
-                              color: Colors.orange.withOpacity(0.5),
-                            ),
+                        Text(
+                          "Joined on 12/5/2023",
+                          style: PrimaryFont.bodyTextMedium().copyWith(
+                            color: Colors.grey.withOpacity(0.5),
                           ),
                         ),
                         SizedBox(
                           height: 5.w,
                         ),
-                        InputFormWidget(
-                          readOnly: false,
-                          controller: addressController,
-                          title: l10n.txtAddressPU,
-                          obscureText: false,
-                        ),
-                        SizedBox(
-                          height: 5.w,
-                        ),
-                        InputFormWidget(
-                          readOnly: false,
-                          controller: nummberIDController,
-                          title: l10n.txtCarIDPU,
-                          obscureText: false,
-                        ),
-                        SizedBox(
-                          height: 5.w,
-                        ),
-                        InputFormWidget(
-                          readOnly: true,
-                          showCursor: false,
-                          controller: taxCodeController,
-                          title: l10n.txtTaxCodePU,
-                          colorText: Colors.grey,
-                          obscureText: false,
-                          suffixIcon: IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              HugeIcons.strokeRoundedAlert02,
-                              size: 5.w,
-                              color: Colors.orange.withOpacity(0.5),
-                            ),
+                        Container(
+                          width: 100.w,
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(5.w),
+                          ),
+                          child: Column(
+                            children: [
+                              InputFormWidget(
+                                readOnly: false,
+                                controller: nameController,
+                                title: l10n.txtNamePU,
+                                obscureText: false,
+                              ),
+                              SizedBox(
+                                height: 5.w,
+                              ),
+                              InputFormWidget(
+                                readOnly: false,
+                                controller: phoneController,
+                                title: l10n.txtPhone,
+                                obscureText: false,
+                              ),
+                              SizedBox(
+                                height: 5.w,
+                              ),
+                              InputFormWidget(
+                                readOnly: false,
+                                controller: emailController,
+                                title: l10n.txtEmailPU,
+                                obscureText: false,
+                                suffixIcon: IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    HugeIcons.strokeRoundedAlert02,
+                                    size: 5.w,
+                                    color: Colors.orange.withOpacity(0.5),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5.w,
+                              ),
+                              InputFormWidget(
+                                readOnly: false,
+                                controller: addressController,
+                                title: l10n.txtAddressPU,
+                                obscureText: false,
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(
                           height: 5.w,
                         ),
-                        InputFormWidget(
-                          readOnly: false,
-                          controller: numberVehicleController,
-                          title: l10n.txtVehicleLicensePU,
-                          obscureText: false,
+                        Container(
+                          width: 100.w,
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(5.w),
+                          ),
+                          child: Column(
+                            children: [
+                              InputFormWidget(
+                                readOnly: false,
+                                controller: nummberIDController,
+                                title: l10n.txtCarIDPU,
+                                obscureText: false,
+                              ),
+                              SizedBox(
+                                height: 5.w,
+                              ),
+                              InputFormWidget(
+                                readOnly: false,
+                                controller: numberVehicleController,
+                                title: l10n.txtVehicleLicensePU,
+                                obscureText: false,
+                              ),
+                            ],
+                          ),
                         ),
                         SizedBox(
                           height: 10.w,

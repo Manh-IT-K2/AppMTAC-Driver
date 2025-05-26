@@ -41,7 +41,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                   const Spacer(),
                   Icon(
                     HugeIcons.strokeRoundedHourglass,
-                    size: 5.w,
+                    size: 4.w,
                     color: kPrimaryColor.withOpacity(0.5),
                   ),
                 ],

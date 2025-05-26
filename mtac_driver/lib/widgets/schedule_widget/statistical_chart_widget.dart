@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
@@ -125,7 +126,8 @@ class StatisticalChartWidget extends StatelessWidget {
               const SizedBox(width: 10),
               LegendDot(color: kPrimaryColor, label: l10n.txtTripFinishSCW),
               const SizedBox(width: 10),
-              LegendDot(color: Colors.grey.shade300, label: l10n.txtTripTotalSCW),
+              LegendDot(
+                  color: Colors.grey.shade300, label: l10n.txtTripTotalSCW),
             ],
           ),
           SizedBox(
@@ -138,14 +140,23 @@ class StatisticalChartWidget extends StatelessWidget {
               children: [
                 _itemStatisticalByCircle(
                   title: l10n.txtWeightSCW,
+                  icon: HugeIcons.strokeRoundedWeightScale01,
+                  colorBegin: const Color(0xFF28B8E4),
+                  colorEnd: kPrimaryColor,
                   subTitle: "${summary.totalKg} Kg",
                 ),
                 _itemStatisticalByCircle(
                   title: l10n.txtCollectionPointSCW,
+                  icon: HugeIcons.strokeRoundedCursorPointer02,
+                  colorBegin: const Color(0xFF6287E8),
+                  colorEnd: const Color(0xFF733FE9),
                   subTitle: "${summary.totalPoints} ${l10n.txtPointSCW}",
                 ),
                 _itemStatisticalByCircle(
                   title: l10n.txtWorkDaySCW,
+                  icon: HugeIcons.strokeRoundedWorkHistory,
+                  colorBegin: const Color(0xFFFA815A),
+                  colorEnd: const Color(0xFFFB356D),
                   subTitle: "${summary.totalDays} ${l10n.txtDaySCW}",
                 ),
               ],
@@ -165,17 +176,11 @@ List<BarChartGroupData> generateBarGroups(List<CollectionStats> stats) {
       x: index,
       barRods: [
         BarChartRodData(
-            toY: stat.onTime.toDouble(),
-            color: kSecondaryColor,
-            width: 12),
+            toY: stat.onTime.toDouble(), color: kSecondaryColor, width: 12),
         BarChartRodData(
-            toY: stat.completed.toDouble(),
-            color: kPrimaryColor,
-            width: 12),
+            toY: stat.completed.toDouble(), color: kPrimaryColor, width: 12),
         BarChartRodData(
-            toY: stat.total.toDouble(),
-            color: Colors.grey.shade300,
-            width: 12),
+            toY: stat.total.toDouble(), color: Colors.grey.shade300, width: 12),
       ],
     );
   }).toList();
@@ -248,8 +253,13 @@ class _itemStatisticalByCircle extends StatelessWidget {
   const _itemStatisticalByCircle({
     required this.title,
     required this.subTitle,
+    required this.colorBegin,
+    required this.colorEnd,
+    required this.icon,
   });
   final String title, subTitle;
+  final Color colorBegin, colorEnd;
+  final IconData icon;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -257,7 +267,10 @@ class _itemStatisticalByCircle extends StatelessWidget {
       height: 30.w,
       margin: EdgeInsets.symmetric(vertical: 5.w),
       decoration: BoxDecoration(
-        color: kPrimaryColor,
+        gradient: LinearGradient(
+            begin: Alignment.bottomLeft,
+            end: Alignment.topRight,
+            colors: [colorBegin, colorEnd]),
         borderRadius: BorderRadius.circular(5.w),
       ),
       child: Column(
@@ -272,12 +285,22 @@ class _itemStatisticalByCircle extends StatelessWidget {
             height: 15.w,
             decoration: const BoxDecoration(
                 color: Colors.white, shape: BoxShape.circle),
-            child: Center(
-              child: Text(
-                subTitle,
-                textAlign: TextAlign.center,
-                style: PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  size: 5.w,
+                  color: Colors.black,
+                ),
+                Text(
+                  subTitle,
+                  textAlign: TextAlign.center,
+                  style:
+                      PrimaryFont.bold(2.5.w).copyWith(color: Colors.black),
+                ),
+              ],
             ),
           ),
         ],

@@ -203,9 +203,11 @@ class AccountScreen extends StatelessWidget {
                           child: Container(
                             width: 5.w,
                             height: 4.w,
-                            //alignment: Alignment.centerLeft,
                             decoration: const BoxDecoration(
-                                color: kPrimaryColor, shape: BoxShape.circle),
+                              color: kPrimaryColor,
+                              shape: BoxShape.circle,
+                              
+                            ),
                             child: Center(
                               child: Text(
                                 loginController.isEnglish ? "en" : "vi",
