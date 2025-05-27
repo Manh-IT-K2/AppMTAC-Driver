@@ -33,138 +33,301 @@ class StatisticalChartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    return Obx(
-      () => Column(
-        children: [
-          SizedBox(height: 2.w),
-          // --- Tabs ---
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _itemStatistical(
-                title: l10n.txtDaySCW,
-                isSelected: _scheduleController.currentFilter.value == "day",
-                onTap: () => _scheduleController.changeFilter("day"),
-              ),
-              _itemStatistical(
-                title: l10n.txtWeekSCW,
-                isSelected: _scheduleController.currentFilter.value == "week",
-                onTap: () => _scheduleController.changeFilter("week"),
-              ),
-              _itemStatistical(
-                title: l10n.txtMonthSCW,
-                isSelected: _scheduleController.currentFilter.value == "month",
-                onTap: () => _scheduleController.changeFilter("month"),
-              ),
-            ],
-          ),
+    return
+        // Obx(
+        //   () =>
+        Column(
+      children: [
+        // Obx(() {
+        //   final summary = _scheduleController.summary.value;
+        //   return
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(
+              width: 100.w - 32,
+              // decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(5.w),
+              //     color: Colors.grey.shade200
+              //     //border: Border.all(color: Colors.grey.shade200,
+              //     //)
 
-          // --- Bar Chart ---
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: AspectRatio(
-              aspectRatio: 1.5,
-              child: BarChart(
-                BarChartData(
-                  maxY: 4,
-                  barGroups: generateBarGroups(_scheduleController.stats),
-                  titlesData: FlTitlesData(
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 40,
-                        interval: 1,
-                        getTitlesWidget: (value, meta) => getBottomTitle(
-                            value, meta, _scheduleController.stats),
-                      ),
+              //     ),
+              child: Column(
+                children: [
+                  // SizedBox(
+                  //   height: 2.w,
+                  // ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // SizedBox(width: 3.w,),
+                        _itemStatisticalByCircle(
+                          title: l10n.txtWeightSCW,
+                          colorIcon: const Color(0xFF56E1E9),
+                          subTitle0: "Tổng khối lượng",
+                          icon: HugeIcons.strokeRoundedWeightScale01,
+                          colorBegin: const Color(0xFF28B8E4),
+                          colorEnd: kPrimaryColor,
+                          //subTitle: "${summary.totalKg} Kg",
+                          subTitle: "109 Kg",
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        _itemStatisticalByCircle(
+                          colorIcon: const Color(0xFF112C71),
+                          title: l10n.txtCollectionPointSCW,
+                          subTitle0: "Tổng số điểm",
+                          icon: HugeIcons.strokeRoundedCursorPointer02,
+                          colorBegin: const Color(0xFF6287E8),
+                          colorEnd: const Color(0xFF733FE9),
+                          // subTitle:
+                          //     "${summary.totalPoints} ${l10n.txtPointSCW}",
+                          subTitle: "100 điểm",
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        const _itemStatisticalByCircle(
+                          title: "Đúng giờ",
+                          subTitle0: "Tổng số chuyến đúng giờ",
+                          colorIcon: kPrimaryColor,
+                          icon: HugeIcons.strokeRoundedDeliveryTruck02,
+                          colorBegin: Color(0xFF28B8E4),
+                          colorEnd: kPrimaryColor,
+                          subTitle: "3 chuyến",
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        const _itemStatisticalByCircle(
+                          colorIcon: Color(0xFF0A2353),
+                          title: "Hoàn tất",
+                          subTitle0: "Tổng số chuyến hoàn tất",
+                          icon: HugeIcons.strokeRoundedShippingTruck01,
+                          colorBegin: Color(0xFF6287E8),
+                          colorEnd: Color(0xFF733FE9),
+                          subTitle: "7 chuyến",
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        const _itemStatisticalByCircle(
+                          title: "Tổng chuyến",
+                          subTitle0: "Tổng số điểm thu gom",
+                          colorIcon: Color(0xFFBB63FF),
+                          icon: HugeIcons.strokeRoundedArrowAllDirection,
+                          colorBegin: Color(0xFF28B8E4),
+                          colorEnd: kPrimaryColor,
+                          subTitle: "10 chuyến",
+                        ),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        const _itemStatisticalByCircle(
+                          colorIcon: Color(0xFF5B58EB),
+                          title: "Ngày làm",
+                          subTitle0: "Tổng số ngày làm việc",
+                          icon: HugeIcons.strokeRoundedWorkHistory,
+                          colorBegin: Color(0xFF6287E8),
+                          colorEnd: Color(0xFF733FE9),
+                          subTitle: "15 ngày",
+                        ),
+                        //SizedBox(width: 3.w,),
+                        // _itemStatisticalByCircle(
+                        //   title: l10n.txtWorkDaySCW,
+                        //   colorIcon: Colors.green,
+                        //   icon: HugeIcons.strokeRoundedWorkHistory,
+                        //   colorBegin: const Color(0xFFFA815A),
+                        //   colorEnd: const Color(0xFFFB356D),
+                        //   subTitle: "${summary.totalDays} ${l10n.txtDaySCW}",
+                        // ),
+                      ],
                     ),
-                    leftTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
-                    topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
-                    rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
                   ),
-                  barTouchData: BarTouchData(
-                    enabled: true,
-                    touchTooltipData: BarTouchTooltipData(
-                      tooltipBgColor: Colors.black87,
-                      tooltipRoundedRadius: 8,
-                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                        return BarTooltipItem(
-                          '${rod.toY.toInt()} ${l10n.txtTripSCW}',
-                          PrimaryFont.bodyTextBold()
-                              .copyWith(color: Colors.white),
-                        );
-                      },
-                    ),
+                  SizedBox(
+                    height: 2.w,
                   ),
-                  gridData: FlGridData(
-                    show: true,
-                    drawVerticalLine: false,
-                    horizontalInterval: 1,
-                    getDrawingHorizontalLine: (value) {
-                      return FlLine(
-                        color: kPrimaryColor.withOpacity(0.3),
-                        strokeWidth: 0.5,
-                      );
-                    },
-                  ),
-                  borderData: FlBorderData(show: false),
-                ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  // _itemStatisticalByCircle(
+                  //   title: "Đúng giờ",
+                  //   subTitle0: "Tổng số chuyến đúng giờ",
+                  //   colorIcon: Colors.red,
+                  //   icon: HugeIcons.strokeRoundedWeightScale01,
+                  //   colorBegin: const Color(0xFF28B8E4),
+                  //   colorEnd: kPrimaryColor,
+                  //   subTitle: "3 chuyến",
+                  // ),
+                  // _itemStatisticalByCircle(
+                  //   colorIcon: Colors.yellow.shade500,
+                  //   title: "Hoàn tất",
+                  //    subTitle0: "Tổng số chuyến hoàn tất",
+                  //   icon: HugeIcons.strokeRoundedCursorPointer02,
+                  //   colorBegin: const Color(0xFF6287E8),
+                  //   colorEnd: const Color(0xFF733FE9),
+                  //  subTitle: "7 chuyến",
+                  // ),
+                  // _itemStatisticalByCircle(
+                  //   title: "Tổng chuyến",
+                  //   colorIcon: Colors.green,
+                  //   icon: HugeIcons.strokeRoundedWorkHistory,
+                  //   colorBegin: const Color(0xFFFA815A),
+                  //   colorEnd: const Color(0xFFFB356D),
+                  //   subTitle: "${summary.totalDays} ${l10n.txtDaySCW}",
+                  // ),
+                  //   ],
+                  // ),
+                  // SizedBox(
+                  //   height: 2.w,
+                  // ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  // _itemStatisticalByCircle(
+                  //   title: "Tổng chuyến",
+                  //    subTitle0: "Tổng số điểm thu gom",
+                  //   colorIcon: Colors.red,
+                  //   icon: HugeIcons.strokeRoundedWeightScale01,
+                  //   colorBegin: const Color(0xFF28B8E4),
+                  //   colorEnd: kPrimaryColor,
+                  //   subTitle: "10 chuyến",
+                  // ),
+                  // _itemStatisticalByCircle(
+                  //   colorIcon: Colors.yellow.shade500,
+                  //   title: "Ngày làm",
+                  //    subTitle0: "Tổng số ngày làm việc",
+                  //   icon: HugeIcons.strokeRoundedCursorPointer02,
+                  //   colorBegin: const Color(0xFF6287E8),
+                  //   colorEnd: const Color(0xFF733FE9),
+                  //   subTitle: "15 ngày",
+                  // ),
+                  // _itemStatisticalByCircle(
+                  //   title: "Tổng chuyến",
+                  //   colorIcon: Colors.green,
+                  //   icon: HugeIcons.strokeRoundedWorkHistory,
+                  //   colorBegin: const Color(0xFFFA815A),
+                  //   colorEnd: const Color(0xFFFB356D),
+                  //   subTitle: "${summary.totalDays} ${l10n.txtDaySCW}",
+                  //     // ),
+                  //   ],
+                  // ),
+                  // SizedBox(
+                  //   height: 2.w,
+                  // ),
+                ],
               ),
-            ),
-          ),
-          SizedBox(
-            height: 2.w,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              LegendDot(color: kSecondaryColor, label: l10n.txtTripOntimeSCW),
-              const SizedBox(width: 10),
-              LegendDot(color: kPrimaryColor, label: l10n.txtTripFinishSCW),
-              const SizedBox(width: 10),
-              LegendDot(
-                  color: Colors.grey.shade300, label: l10n.txtTripTotalSCW),
-            ],
-          ),
-          SizedBox(
-            height: 2.w,
-          ),
-          Obx(() {
-            final summary = _scheduleController.summary.value;
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _itemStatisticalByCircle(
-                  title: l10n.txtWeightSCW,
-                  icon: HugeIcons.strokeRoundedWeightScale01,
-                  colorBegin: const Color(0xFF28B8E4),
-                  colorEnd: kPrimaryColor,
-                  subTitle: "${summary.totalKg} Kg",
-                ),
-                _itemStatisticalByCircle(
-                  title: l10n.txtCollectionPointSCW,
-                  icon: HugeIcons.strokeRoundedCursorPointer02,
-                  colorBegin: const Color(0xFF6287E8),
-                  colorEnd: const Color(0xFF733FE9),
-                  subTitle: "${summary.totalPoints} ${l10n.txtPointSCW}",
-                ),
-                _itemStatisticalByCircle(
-                  title: l10n.txtWorkDaySCW,
-                  icon: HugeIcons.strokeRoundedWorkHistory,
-                  colorBegin: const Color(0xFFFA815A),
-                  colorEnd: const Color(0xFFFB356D),
-                  subTitle: "${summary.totalDays} ${l10n.txtDaySCW}",
-                ),
-              ],
-            );
-          })
-        ],
-      ),
+            )
+          ],
+        ),
+        //}),
+        //SizedBox(height: 2.w),
+        // --- Tabs ---
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: [
+        //     _itemStatistical(
+        //       title: l10n.txtDaySCW,
+        //       isSelected: _scheduleController.currentFilter.value == "day",
+        //       onTap: () => _scheduleController.changeFilter("day"),
+        //     ),
+        //     _itemStatistical(
+        //       title: l10n.txtWeekSCW,
+        //       isSelected: _scheduleController.currentFilter.value == "week",
+        //       onTap: () => _scheduleController.changeFilter("week"),
+        //     ),
+        //     _itemStatistical(
+        //       title: l10n.txtMonthSCW,
+        //       isSelected: _scheduleController.currentFilter.value == "month",
+        //       onTap: () => _scheduleController.changeFilter("month"),
+        //     ),
+        //   ],
+        // ),
+
+        // --- Bar Chart ---
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 16),
+        //   child: AspectRatio(
+        //     aspectRatio: 1.5,
+        //     child: BarChart(
+        //       BarChartData(
+        //         maxY: 4,
+        //         barGroups: generateBarGroups(_scheduleController.stats),
+        //         titlesData: FlTitlesData(
+        //           bottomTitles: AxisTitles(
+        //             sideTitles: SideTitles(
+        //               showTitles: true,
+        //               reservedSize: 40,
+        //               interval: 1,
+        //               getTitlesWidget: (value, meta) => getBottomTitle(
+        //                   value, meta, _scheduleController.stats),
+        //             ),
+        //           ),
+        //           leftTitles: const AxisTitles(
+        //             sideTitles: SideTitles(showTitles: false),
+        //           ),
+        //           topTitles: const AxisTitles(
+        //               sideTitles: SideTitles(showTitles: false)),
+        //           rightTitles: const AxisTitles(
+        //               sideTitles: SideTitles(showTitles: false)),
+        //         ),
+        //         barTouchData: BarTouchData(
+        //           enabled: true,
+        //           touchTooltipData: BarTouchTooltipData(
+        //             tooltipBgColor: Colors.black87,
+        //             tooltipRoundedRadius: 8,
+        //             getTooltipItem: (group, groupIndex, rod, rodIndex) {
+        //               return BarTooltipItem(
+        //                 '${rod.toY.toInt()} ${l10n.txtTripSCW}',
+        //                 PrimaryFont.bodyTextBold()
+        //                     .copyWith(color: Colors.white),
+        //               );
+        //             },
+        //           ),
+        //         ),
+        //         gridData: FlGridData(
+        //           show: true,
+        //           drawVerticalLine: false,
+        //           horizontalInterval: 1,
+        //           getDrawingHorizontalLine: (value) {
+        //             return FlLine(
+        //               color: kPrimaryColor.withOpacity(0.3),
+        //               strokeWidth: 0.5,
+        //             );
+        //           },
+        //         ),
+        //         borderData: FlBorderData(show: false),
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // SizedBox(
+        //   height: 2.w,
+        // ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: [
+        //     LegendDot(color: kSecondaryColor, label: l10n.txtTripOntimeSCW),
+        //     const SizedBox(width: 10),
+        //     LegendDot(color: kPrimaryColor, label: l10n.txtTripFinishSCW),
+        //     const SizedBox(width: 10),
+        //     LegendDot(
+        //         color: Colors.grey.shade300, label: l10n.txtTripTotalSCW),
+        //   ],
+        // ),
+        SizedBox(
+          height: 2.w,
+        ),
+      ],
     );
+    //);
   }
 }
 
@@ -256,49 +419,88 @@ class _itemStatisticalByCircle extends StatelessWidget {
     required this.colorBegin,
     required this.colorEnd,
     required this.icon,
+    required this.colorIcon,
+    required this.subTitle0,
   });
-  final String title, subTitle;
-  final Color colorBegin, colorEnd;
+  final String title, subTitle, subTitle0;
+  final Color colorBegin, colorEnd, colorIcon;
   final IconData icon;
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 28.w,
+      width: 50.w - 24,
       height: 30.w,
-      margin: EdgeInsets.symmetric(vertical: 5.w),
+      padding: EdgeInsets.only(left: 3.w, right: 1.w),
+      //margin: EdgeInsets.symmetric(vertical: 2.w),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.bottomLeft,
-            end: Alignment.topRight,
-            colors: [colorBegin, colorEnd]),
+        color: Colors.grey.shade100,
+        // gradient: LinearGradient(
+        //     begin: Alignment.bottomLeft,
+        //     end: Alignment.topRight,
+        //     colors: [colorBegin, colorEnd]),
         borderRadius: BorderRadius.circular(5.w),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text(
-            title,
-            style: PrimaryFont.bodyTextBold().copyWith(color: Colors.white),
+          Row(
+            children: [
+              Text(
+                title,
+                style: PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
+              ),
+              const Spacer(),
+              Icon(
+                icon,
+                size: 5.w,
+                color: colorIcon,
+              ),
+              SizedBox(
+                width: 3.w,
+              ),
+            ],
           ),
           Container(
-            width: 15.w,
+            width: 40.w,
             height: 15.w,
-            decoration: const BoxDecoration(
-                color: Colors.white, shape: BoxShape.circle),
+            // decoration: BoxDecoration(
+            //     //border: Border.all(color: kPrimaryColor),
+            //     color: Colors.white,
+            //     shape: BoxShape.circle),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  icon,
-                  size: 5.w,
-                  color: Colors.black,
-                ),
                 Text(
-                  subTitle,
-                  textAlign: TextAlign.center,
-                  style:
-                      PrimaryFont.bold(2.5.w).copyWith(color: Colors.black),
+                  subTitle0,
+                  // textAlign: TextAlign.center,
+                  style: PrimaryFont.bold(3.w).copyWith(color: Colors.grey),
+                ),
+                // Icon(
+                //   icon,
+                //   size: 5.w,
+                //   color: colorIcon,
+                // ),
+
+                Row(
+                  children: [
+                    Text(
+                      subTitle,
+                      textAlign: TextAlign.center,
+                      style: PrimaryFont.titleTextBold()
+                          .copyWith(color: Colors.black),
+                    ),
+                    const Spacer(),
+                    Icon(
+                      HugeIcons.strokeRoundedArrowRight02,
+                      size: 5.w,
+                      color: kPrimaryColor,
+                    ),
+                    SizedBox(
+                      width: 3.w,
+                    ),
+                  ],
                 ),
               ],
             ),

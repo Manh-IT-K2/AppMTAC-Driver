@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:mtac_driver/configs/api_config.dart';
 import 'package:mtac_driver/model/user_model.dart';
 
 Widget buildAvatar(UserModel userModel) {
@@ -12,7 +13,7 @@ Widget buildAvatar(UserModel userModel) {
 
   if (photoPath != '' && photoPath != null && File(photoPath).existsSync()) {
     return Image.file(
-      File(photoUrl),
+      File(photoPath),
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) => defaultAvatar,
     );

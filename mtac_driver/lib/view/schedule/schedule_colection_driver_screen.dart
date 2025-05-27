@@ -40,56 +40,80 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 12, top: 20, right: 12),
+            //   child: Text.rich(
+            //     TextSpan(children: [
+            //       TextSpan(
+            //         text: l10n.txtHelloS,
+            //         style: PrimaryFont.bodyTextMedium()
+            //             .copyWith(color: Colors.grey),
+            //       ),
+            //       TextSpan(
+            //         text: _scheduleController.username.value,
+            //         style: PrimaryFont.bodyTextBold()
+            //             .copyWith(color: Colors.black),
+            //       ),
+            //     ]),
+            //   ),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 12),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: [
+            //       Text(
+            //         l10n.txtScheduleTodayS,
+            //         style: PrimaryFont.headerTextBold()
+            //             .copyWith(color: Colors.black),
+            //       ),
+            //       Text(
+            //         today,
+            //         style: PrimaryFont.bodyTextBold()
+            //             .copyWith(color: kPrimaryColor),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            SizedBox(height: 1.w,),
             Padding(
-              padding: const EdgeInsets.only(left: 12, top: 20, right: 12),
-              child: Text.rich(
-                TextSpan(children: [
-                  TextSpan(
-                    text: l10n.txtHelloS,
-                    style: PrimaryFont.bodyTextMedium()
-                        .copyWith(color: Colors.grey),
-                  ),
-                  TextSpan(
-                    text: _scheduleController.username.value,
-                    style: PrimaryFont.bodyTextBold()
-                        .copyWith(color: Colors.black),
-                  ),
-                ]),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    l10n.txtScheduleTodayS,
-                    style: PrimaryFont.headerTextBold()
-                        .copyWith(color: Colors.black),
-                  ),
-                  Text(
-                    today,
-                    style: PrimaryFont.bodyTextBold()
-                        .copyWith(color: kPrimaryColor),
-                  ),
-                ],
-              ),
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Hôm nay",
+                      style: PrimaryFont.bodyTextMedium()
+                          .copyWith(color: Colors.grey),
+                    ),
+                    SizedBox(height: 1.w,),
+                    Text(
+                      "Thứ 3, Ngày 27 Tháng 5 Năm 2025",
+                      style: PrimaryFont.bodyTextBold()
+                          .copyWith(color: Colors.black),
+                    ),
+                  ],
+                ),
             ),
             SizedBox(
               height: 3.h,
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              height: 5.h,
-              color: const Color(0xFFEBF5FF),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: _scheduleController.wasteTypes
-                    .map(
-                      (title) => _ItemListTrip(title: title),
-                    )
-                    .toList(),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                height: 5.h,
+                color: Colors.white,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: _scheduleController.wasteTypes
+                      .map(
+                        (title) => _ItemListTrip(title: title),
+                      )
+                      .toList(),
+                ),
               ),
             ),
             Expanded(
@@ -169,17 +193,17 @@ class _ItemTripWork extends StatelessWidget {
       width: 100.w,
       margin: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey),
+        color: Colors.grey.shade100,
+        //border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(5.w),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 1,
-            offset: const Offset(1, 4),
-          ),
-        ],
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Colors.black.withOpacity(0.1),
+        //     spreadRadius: 2,
+        //     blurRadius: 1,
+        //     offset: const Offset(1, 4),
+        //   ),
+        // ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -250,7 +274,7 @@ class _ItemTripWork extends StatelessWidget {
             },
             child: Container(
               height: double.infinity,
-              width: 8.h,
+              width: 3.h,
               decoration: BoxDecoration(
                 color: status.contains("Đã sắp")
                     ? kPrimaryColor
@@ -261,20 +285,20 @@ class _ItemTripWork extends StatelessWidget {
                   topRight: Radius.circular(5.w),
                   bottomRight: Radius.circular(5.w),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    spreadRadius: 2,
-                    blurRadius: 1,
-                    offset: const Offset(1, 4),
-                  ),
-                ],
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: Colors.black.withOpacity(0.3),
+                //     spreadRadius: 2,
+                //     blurRadius: 1,
+                //     offset: const Offset(1, 4),
+                //   ),
+                // ],
               ),
               child: Center(
                 child: RotatedBox(
                   quarterTurns: -1,
                   child: Text(
-                    status,
+                    "",
                     style: PrimaryFont.bodyTextBold()
                         .copyWith(color: Colors.white),
                   ),
@@ -301,23 +325,30 @@ class _ItemListTrip extends StatelessWidget {
       child: Obx(() {
         bool isSelected = controller.selectedWasteType.value == title;
         return IntrinsicWidth(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: isSelected ? Colors.blue : Colors.grey,
+          child: Container(
+           padding: EdgeInsets.symmetric(horizontal: 5.w),
+            decoration: BoxDecoration(
+              color: isSelected ? Colors.blue : Colors.white,
+              borderRadius: BorderRadius.circular(5.w)
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: isSelected ? Colors.white : Colors.grey,
+                  ),
                 ),
-              ),
-              Container(
-                color: isSelected ? Colors.blue : Colors.transparent,
-                height: 2,
-                width: isSelected ? double.infinity : 0,
-                margin: const EdgeInsets.only(top: 5),
-              ),
-            ],
+                // Container(
+                //   color: isSelected ? Colors.blue : Colors.transparent,
+                //   height: 2,
+                //   width: isSelected ? double.infinity : 0,
+                //   margin: const EdgeInsets.only(top: 5),
+                // ),
+              ],
+            ),
           ),
         );
       }),

@@ -1,24 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mtac_driver/controller/connection/connection_controller.dart';
-import 'package:mtac_driver/route/app_route.dart';
+import 'package:mtac_driver/theme/color.dart';
+import 'package:mtac_driver/utils/style_text_util.dart';
+import 'package:sizer/sizer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:mtac_driver/controller/network_check_middleware_controller.dart';
 
+class ConnectionMiddlewareScreen extends StatelessWidget {
+  const ConnectionMiddlewareScreen({super.key});
 
-class ConnectionMiddlewareScreen extends GetMiddleware {
   @override
-  RouteSettings? redirect(String? route) {
-    final connectionController = Get.find<ConnectionController>();
-
-    if (!connectionController.hasConnection.value && route != AppRoutes.noConnection) {
-      // Nếu mất mạng và chưa ở màn NoConnection
-      return const RouteSettings(name: AppRoutes.noConnection);
-    }
-
-    if (connectionController.hasConnection.value && route == AppRoutes.noConnection) {
-      // Nếu có mạng lại và đang ở màn NoConnection
-      return const RouteSettings(name: AppRoutes.splash);
-    }
-
-    return null; // Bình thường, đi tiếp
+  Widget build(BuildContext context) {
+    //
+    final l10n = AppLocalizations.of(context)!;
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              "assets/image/no_internet.gif",
+              width: 200,
+              height: 200,
+              fit: BoxFit.cover,
+            ),
+            SizedBox(height: 4.h),
+            ElevatedButton(
+              onPressed: () {
+                NetworkCheckMiddlewareController.instance
+                    .checkConnectionAndRedirect();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.w),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Text(
+                l10n.txtRetryNI,
+                style:
+                    PrimaryFont.bodyTextMedium().copyWith(color: kPrimaryColor),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

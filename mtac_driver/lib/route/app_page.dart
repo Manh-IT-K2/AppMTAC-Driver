@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:mtac_driver/controller/network_check_middleware_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/view/main_screen.dart';
-import 'package:mtac_driver/view/no_internet_screen.dart';
+import 'package:mtac_driver/view/connection/connection_middleware_screen.dart';
 import 'package:mtac_driver/view/notification_screen.dart';
 import 'package:mtac_driver/view/schedule/detail_schedule_history_screen.dart';
 import 'package:mtac_driver/view/schedule/handover_record_driver_screen.dart';
@@ -27,7 +27,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.noConnection,
-      page: () => const NoInternetScreen(),
+      page: () => const ConnectionMiddlewareScreen(),
     ),
     GetPage(
       name: AppRoutes.splash,

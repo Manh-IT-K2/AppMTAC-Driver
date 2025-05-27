@@ -41,7 +41,6 @@ final controller = Get.put(LoginController(), permanent: true);
 class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
-
     //
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
@@ -52,86 +51,89 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             child: Form(
               key: controller.formKeyLogin,
-              child: Column(
-                children: [
-                  SizedBox(height: 20.w),
-                  Text(
-                    l10n.txtWelcomToL,
-                    style: PrimaryFont.headerTextBold().copyWith(
-                      color: kPrimaryColor,
-                    ),
-                  ),
-                  Text(
-                    "MTAC-Driver",
-                    style: PrimaryFont.bold(8.w).copyWith(
-                      color: kPrimaryColor,
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  InputFormWidget(
-                    readOnly: false,
-                    title: l10n.txtPhone,
-                    obscureText: false,
-                    controller: controller.usernameController,
-                    iconStart: HugeIcons.strokeRoundedCall02,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
-                    suffixIcon: IconButton(
-                      icon: const Icon(HugeIcons.strokeRoundedCancel01),
-                      iconSize: 5.w,
-                      onPressed: controller.clearInputPhone,
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return l10n.txtPleaseEnPhoneL;
-                      }
-                      if (!RegExp(r'^\d+$').hasMatch(value)) {
-                        return l10n.txtErrOnlyNumberL;
-                      }
-                      if (value.length < 9) {
-                        return l10n.txtErrNotValidPhoneL;
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 5.w),
-                  Obx(
-                    () => InputFormWidget(
-                      readOnly: false,
-                      title: l10n.txtPasswordL,
-                      controller: controller.passwordController,
-                      obscureText: controller.obscurePassword.value,
-                      iconStart: HugeIcons.strokeRoundedLockPassword,
-                      suffixIcon: IconButton(
-                        icon: Icon(controller.obscurePassword.value
-                            ? HugeIcons.strokeRoundedView
-                            : HugeIcons.strokeRoundedViewOff),
-                        onPressed: controller.togglePasswordVisibility,
-                      ),
-                      validator: (value) => value == null || value.isEmpty
-                          ? l10n.txtPleaseEnPassL
-                          : null,
-                    ),
-                  ),
-                  SizedBox(height: 5.w),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Text(
-                       l10n.txtForgotPassL,
-                        style: PrimaryFont.bodyTextMedium()
-                            .copyWith(color: kPrimaryColor),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 5.w),
-                  Obx(
-                    () => controller.isLoading.value
-                        ? const CircularProgressIndicator()
-                        : SizedBox(
+              child: Obx(
+                () => controller.isLoading.value
+                    ? Image.asset(
+                        "assets/image/loadingDot.gif",
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.cover,
+                      )
+                    : Column(
+                        children: [
+                          SizedBox(height: 20.w),
+                          Text(
+                            l10n.txtWelcomToL,
+                            style: PrimaryFont.headerTextBold().copyWith(
+                              color: kPrimaryColor,
+                            ),
+                          ),
+                          Text(
+                            "MTAC-Driver",
+                            style: PrimaryFont.bold(8.w).copyWith(
+                              color: kPrimaryColor,
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          InputFormWidget(
+                            readOnly: false,
+                            title: l10n.txtPhone,
+                            obscureText: false,
+                            controller: controller.usernameController,
+                            iconStart: HugeIcons.strokeRoundedCall02,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            suffixIcon: IconButton(
+                              icon: const Icon(HugeIcons.strokeRoundedCancel01),
+                              iconSize: 5.w,
+                              onPressed: controller.clearInputPhone,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return l10n.txtPleaseEnPhoneL;
+                              }
+                              if (!RegExp(r'^\d+$').hasMatch(value)) {
+                                return l10n.txtErrOnlyNumberL;
+                              }
+                              if (value.length < 9) {
+                                return l10n.txtErrNotValidPhoneL;
+                              }
+                              return null;
+                            },
+                          ),
+                          SizedBox(height: 5.w),
+                          InputFormWidget(
+                            readOnly: false,
+                            title: l10n.txtPasswordL,
+                            controller: controller.passwordController,
+                            obscureText: controller.obscurePassword.value,
+                            iconStart: HugeIcons.strokeRoundedLockPassword,
+                            suffixIcon: IconButton(
+                              icon: Icon(controller.obscurePassword.value
+                                  ? HugeIcons.strokeRoundedView
+                                  : HugeIcons.strokeRoundedViewOff),
+                              onPressed: controller.togglePasswordVisibility,
+                            ),
+                            validator: (value) => value == null || value.isEmpty
+                                ? l10n.txtPleaseEnPassL
+                                : null,
+                          ),
+                          SizedBox(height: 5.w),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: GestureDetector(
+                              onTap: () {},
+                              child: Text(
+                                l10n.txtForgotPassL,
+                                style: PrimaryFont.bodyTextMedium()
+                                    .copyWith(color: kPrimaryColor),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 5.w),
+                          SizedBox(
                             width: 100.w,
                             child: ElevatedButton(
                               onPressed: controller.login,
@@ -152,46 +154,50 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ),
-                  ),
-                  SizedBox(height: 10.w),
-                  Text(
-                    "----- ${l10n.txtOrRegisterByCallL} -----",
-                    style: PrimaryFont.bodyTextMedium()
-                        .copyWith(color: Colors.black),
-                  ),
-                  SizedBox(height: 15.w),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(HugeIcons.strokeRoundedCall02, color: kPrimaryColor, size: 5.w,),
-                      Text(
-                        "1900.545.450",
-                        style: PrimaryFont.titleTextBold()
-                            .copyWith(color: kPrimaryColor),
+                          SizedBox(height: 10.w),
+                          Text(
+                            "----- ${l10n.txtOrRegisterByCallL} -----",
+                            style: PrimaryFont.bodyTextMedium()
+                                .copyWith(color: Colors.black),
+                          ),
+                          SizedBox(height: 15.w),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                HugeIcons.strokeRoundedCall02,
+                                color: kPrimaryColor,
+                                size: 5.w,
+                              ),
+                              Text(
+                                "1900.545.450",
+                                style: PrimaryFont.titleTextBold()
+                                    .copyWith(color: kPrimaryColor),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20.w),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                l10n.txtByLoggingInYouAcceptL,
+                                style: PrimaryFont.bodyTextMedium()
+                                    .copyWith(color: Colors.black),
+                              ),
+                              SizedBox(width: 1.w),
+                              GestureDetector(
+                                onTap: () {},
+                                child: Text(
+                                  l10n.txtTermsOfUseL,
+                                  style: PrimaryFont.bodyTextMedium()
+                                      .copyWith(color: kPrimaryColor),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 20.w),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        l10n.txtByLoggingInYouAcceptL,
-                        style: PrimaryFont.bodyTextMedium()
-                            .copyWith(color: Colors.black),
-                      ),
-                      SizedBox(width: 1.w),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Text(
-                          l10n.txtTermsOfUseL,
-                          style: PrimaryFont.bodyTextMedium()
-                              .copyWith(color: kPrimaryColor),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
               ),
             ),
           ),
