@@ -169,7 +169,7 @@ class _itemHightScheduleCollection extends StatelessWidget {
               size: 5.w,
               color: Colors.white,
             ),
-          )
+          ),
         ],
       ),
     );
@@ -624,6 +624,11 @@ class _HeaderDriverScreen extends StatelessWidget {
           //   ],
           // ),
         ),
+         Text(
+          "Phân tích hoạt động",
+          style: PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
+        ),
+        SizedBox(height: 3.w,),
         StatisticalChartWidget(),
         Text(
           l10n.txtUtilDriverD,

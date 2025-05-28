@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/common/appbar/app_bar_common.dart';
 import 'package:mtac_driver/controller/user/profile_controller.dart';
-import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:mtac_driver/widgets/user_widget/input_form_widget.dart';
@@ -17,7 +16,7 @@ class ManagerPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar:  AppBarCommon(hasMenu: false, title:  l10n.txtPasswordManagementSU),
+      appBar: AppBarCommon(hasMenu: false, title: l10n.txtPasswordManagementSU),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
@@ -106,32 +105,33 @@ class ManagerPasswordScreen extends StatelessWidget {
                 ),
                 Obx(
                   () => InputFormWidget(
-                    readOnly: false,
-                    title: l10n.txtPasswordL,
-                    controller: _profileController.passwordNewConfirmController,
-                    obscureText:
-                        _profileController.obscurePasswordNewConfirm.value,
-                    iconStart: HugeIcons.strokeRoundedLockPassword,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                          _profileController.obscurePasswordNewConfirm.value
-                              ? HugeIcons.strokeRoundedView
-                              : HugeIcons.strokeRoundedViewOff),
-                      onPressed:
-                          _profileController.togglePasswordNewConfirmVisibility,
-                    ),
-                    validator: (value) {
-                      if( value == null || value.isEmpty){
-                        return l10n.txtPleaseEnPassL;
-                      } else if(value != _profileController.passwordNewController.text){
-                        return l10n.txtErrNotMatchL;
-                      }
-                      return null;
-                    }   
-                  ),
+                      readOnly: false,
+                      title: l10n.txtPasswordL,
+                      controller:
+                          _profileController.passwordNewConfirmController,
+                      obscureText:
+                          _profileController.obscurePasswordNewConfirm.value,
+                      iconStart: HugeIcons.strokeRoundedLockPassword,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                            _profileController.obscurePasswordNewConfirm.value
+                                ? HugeIcons.strokeRoundedView
+                                : HugeIcons.strokeRoundedViewOff),
+                        onPressed: _profileController
+                            .togglePasswordNewConfirmVisibility,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return l10n.txtPleaseEnPassL;
+                        } else if (value !=
+                            _profileController.passwordNewController.text) {
+                          return l10n.txtErrNotMatchL;
+                        }
+                        return null;
+                      }),
                 ),
                 SizedBox(
-                  height: 25.w,
+                  height: 20.w,
                 ),
                 SizedBox(
                   width: 100.w,
@@ -141,7 +141,6 @@ class ManagerPasswordScreen extends StatelessWidget {
                         "password":
                             _profileController.passwordNewController.text.trim()
                       });
-                      
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: kPrimaryColor,

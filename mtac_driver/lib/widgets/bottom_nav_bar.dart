@@ -33,9 +33,9 @@ class BottomNavBar extends StatelessWidget {
           backgroundColor: kBackgroundColor,
           type: BottomNavigationBarType.fixed,
           items: [
+            BottomNavigationBarItem(icon: const Icon(HugeIcons.strokeRoundedHome11), label: l10n.txtHomeNB),
             //BottomNavigationBarItem(icon: Icon(HugeIcons.strokeRoundedCalendar04), label: "Lên lịch"),
             BottomNavigationBarItem(icon: const Icon(HugeIcons.strokeRoundedCustomerService01), label: l10n.txtHelp),
-            BottomNavigationBarItem(icon: const Icon(HugeIcons.strokeRoundedHome11), label: l10n.txtHomeNB),
             //BottomNavigationBarItem(icon: const Icon(HugeIcons.strokeRoundedNotification03), label: l10n.txtNotificationNB),
             BottomNavigationBarItem(icon: const Icon(HugeIcons.strokeRoundedUser), label: l10n.txtAccountNB),
           ],

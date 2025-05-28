@@ -45,8 +45,11 @@ class AccountScreen extends StatelessWidget {
                             width: 100.w - 32,
                             height: 15.h,
                             decoration: BoxDecoration(
-                                color: const Color.fromRGBO(238, 238, 238, 1),
-                                borderRadius: BorderRadius.circular(3.w)),
+                              color: const Color.fromRGBO(238, 238, 238, 1),
+                              borderRadius: BorderRadius.circular(
+                                3.w,
+                              ),
+                            ),
                           ),
                         ),
                         Positioned(
@@ -86,48 +89,17 @@ class AccountScreen extends StatelessWidget {
                           bottom: 0,
                           child: Row(
                             children: [
-                              GestureDetector(
+                              _itemButHeaderAccount(
+                                l10n: l10n,
+                                color: kPrimaryColor,
+                                title: l10n.txtMyProfileAU,
                                 onTap: () => Get.toNamed(AppRoutes.profile),
-                                child: Container(
-                                  width: 50.w - 16,
-                                  height: 10.w,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[100],
-                                    borderRadius: BorderRadius.only(
-                                      bottomLeft: Radius.circular(30.w),
-                                      topRight: Radius.circular(100.w),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      l10n.txtMyProfileAU,
-                                      style: PrimaryFont.bodyTextBold()
-                                          .copyWith(color: kPrimaryColor),
-                                    ),
-                                  ),
-                                ),
                               ),
-                              GestureDetector(
+                              _itemButHeaderAccount(
+                                l10n: l10n,
+                                color: Colors.red,
+                                title: l10n.txtLogoutAU,
                                 onTap: () => loginController.logOut(),
-                                child: Container(
-                                  width: 50.w - 16,
-                                  height: 10.w,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[100],
-                                    borderRadius: BorderRadius.only(
-                                      bottomRight: Radius.circular(30.w),
-                                      bottomLeft: Radius.circular(100.w),
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      l10n.txtLogoutAU,
-                                      textAlign: TextAlign.center,
-                                      style: PrimaryFont.bodyTextBold()
-                                          .copyWith(color: Colors.red),
-                                    ),
-                                  ),
-                                ),
                               ),
                             ],
                           ),
@@ -186,7 +158,6 @@ class AccountScreen extends StatelessWidget {
                     onTap: () {
                       final newLang = loginController.isEnglish ? 'vi' : 'en';
                       loginController.changeLanguage(newLang);
-                      //print(newLang);
                     },
                     child: Container(
                       width: 10.w,
@@ -206,7 +177,6 @@ class AccountScreen extends StatelessWidget {
                             decoration: const BoxDecoration(
                               color: kPrimaryColor,
                               shape: BoxShape.circle,
-                              
                             ),
                             child: Center(
                               child: Text(
@@ -251,8 +221,45 @@ class AccountScreen extends StatelessWidget {
                 "${l10n.txtVersionAU} 1.1.1 build 1110",
                 style:
                     PrimaryFont.bodyTextMedium().copyWith(color: Colors.grey),
-              )
+              ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _itemButHeaderAccount extends StatelessWidget {
+  const _itemButHeaderAccount({
+    super.key,
+    required this.l10n,
+    this.onTap,
+    required this.title, required this.color,
+  });
+
+  final AppLocalizations l10n;
+  final Function()? onTap;
+  final String title;
+  final Color color;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 50.w - 16,
+        height: 10.w,
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(30.w),
+            topRight: Radius.circular(100.w),
+          ),
+        ),
+        child: Center(
+          child: Text(
+            title,
+            style: PrimaryFont.bodyTextBold().copyWith(color: color),
           ),
         ),
       ),
@@ -286,8 +293,9 @@ class _ItemFuncAccount extends StatelessWidget {
               width: 10.w,
               height: 10.w,
               decoration: BoxDecoration(
-                  color: kBackgroundColor,
-                  borderRadius: BorderRadius.circular(2.w)),
+                color: kBackgroundColor,
+                borderRadius: BorderRadius.circular(2.w),
+              ),
               child: Icon(
                 icon,
                 color: color,

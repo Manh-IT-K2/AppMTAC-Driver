@@ -10,6 +10,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class HelpScreen extends StatelessWidget {
   HelpScreen({super.key});
 
+  // initial HelpFAQController
   final HelpFAQController _helpFAQController = Get.put(HelpFAQController());
 
   @override
@@ -19,11 +20,13 @@ class HelpScreen extends StatelessWidget {
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 5.h,),
+              SizedBox(
+                height: 5.h,
+              ),
               TextField(
                 controller: _helpFAQController.searchHelpFqas,
                 cursorColor: kPrimaryColor.withOpacity(0.6),
@@ -60,7 +63,6 @@ class HelpScreen extends StatelessWidget {
                         final title = _helpFAQController.helpTitles[index];
                         final isSelected =
                             _helpFAQController.isSelectedHelp.value == index;
-
                         return Padding(
                           padding: EdgeInsets.only(right: 3.w),
                           child: _itemTitleHelpFQAs(
@@ -81,7 +83,7 @@ class HelpScreen extends StatelessWidget {
                   width: 100.w,
                   height: 70.h,
                   child: ListView.builder(
-                    padding: EdgeInsets.only(bottom: 10.h),
+                    padding: EdgeInsets.only(bottom: 5.h),
                     itemCount: _helpFAQController.faqList.length,
                     itemBuilder: (context, index) {
                       final item = _helpFAQController.faqList[index];
@@ -97,7 +99,6 @@ class HelpScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              
             ],
           ),
         ),
@@ -123,17 +124,17 @@ class _itemTitleHelpFQAs extends StatelessWidget {
       child: Container(
         width: 20.w,
         height: 10.w,
+        alignment: Alignment.center,
         margin: EdgeInsets.symmetric(vertical: 5.w),
         decoration: BoxDecoration(
           color: isSelectedHelp ? kPrimaryColor : Colors.grey[200],
           borderRadius: BorderRadius.circular(10.w),
         ),
-        child: Center(
-          child: Text(
-            title,
-            style: PrimaryFont.bodyTextMedium().copyWith(
-              color: isSelectedHelp ? Colors.white : Colors.black,
-            ),
+        child: Text(
+          title,
+          textAlign: TextAlign.center,
+          style: PrimaryFont.bodyTextMedium().copyWith(
+            color: isSelectedHelp ? Colors.white : Colors.black,
           ),
         ),
       ),
@@ -175,11 +176,12 @@ class _itemHelpFQAsAccount extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                    child: Text(
-                  title,
-                  style:
-                      PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
-                )),
+                  child: Text(
+                    title,
+                    style: PrimaryFont.bodyTextMedium()
+                        .copyWith(color: Colors.black),
+                  ),
+                ),
                 GestureDetector(
                   onTap: ontap,
                   child: Icon(
@@ -208,8 +210,8 @@ class _itemHelpFQAsAccount extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             subTitle,
-                            // maxLines: 4,
-                            // overflow: TextOverflow.ellipsis,
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.center,
                             style: PrimaryFont.bodyTextThin().copyWith(
                               color: Colors.black.withOpacity(0.6),

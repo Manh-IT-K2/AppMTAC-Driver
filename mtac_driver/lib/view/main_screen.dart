@@ -12,8 +12,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 1;
-  final PageController _pageController = PageController(initialPage: 1);
+  int _selectedIndex = 0;
+  final PageController _pageController = PageController();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -41,8 +41,8 @@ class _MainScreenState extends State<MainScreen> {
           });
         },
         children: [
-          HelpScreen(),
           HomeScreen(),
+          HelpScreen(),
           AccountScreen(),
         ],
       ),

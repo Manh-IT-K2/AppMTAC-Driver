@@ -8,40 +8,20 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
-  //Color.fromARGB(255, 234, 232, 232)
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBarCommon(hasMenu: false, title:  l10n.txtTitleNS),
+      appBar: AppBarCommon(hasMenu: false, title: l10n.txtTitleNS),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            SizedBox(
-              height: 5.w,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                children: [
-                  Text(
-                    l10n.txtTodayNS,
-                    style: PrimaryFont.titleTextBold()
-                        .copyWith(color: Colors.black),
-                  ),
-                  const Spacer(),
-                  Text(
-                    l10n.txtAllReadNS,
-                    style: PrimaryFont.bodyTextBold()
-                        .copyWith(color: kPrimaryColor),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 5.w,
+            _itemTitleHeader(
+              l10n: l10n,
+              title: l10n.txtTodayNS,
+              subTitle: l10n.txtAllReadNS,
             ),
             _itemNotification(
               time: l10n.txtJustnowNS,
@@ -64,68 +44,55 @@ class NotificationScreen extends StatelessWidget {
                   "Mark all as read Mark all as read Mark all as read Mark all as read",
               isReaded: true,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-              child: Row(
-                children: [
-                  Text(
-                    l10n.txtYesterdayS,
-                    style: PrimaryFont.titleTextBold()
-                        .copyWith(color: Colors.black),
-                  ),
-                  const Spacer(),
-                  Text(
-                    l10n.txtAllReadNS,
-                    style: PrimaryFont.bodyTextBold()
-                        .copyWith(color: kPrimaryColor),
-                  ),
-                ],
-              ),
+            _itemTitleHeader(
+              l10n: l10n,
+              title: l10n.txtYesterdayS,
+              subTitle: l10n.txtAllReadNS,
+            ),
+            const _itemNotification(
+              time: "20-05",
+              title: "Collection scheduled",
+              subTitle:
+                  "Mark all as read Mark all as read Mark all as read Mark all as read",
+              isReaded: false,
+            ),
+            const _itemNotification(
+              time: "20-05",
+              title: "Collection scheduled",
+              subTitle:
+                  "Mark all as read Mark all as read Mark all as read Mark all as read",
+              isReaded: true,
+            ),
+            const _itemNotification(
+              time: "20-05",
+              title: "Collection scheduled",
+              subTitle:
+                  "Mark all as read Mark all as read Mark all as read Mark all as read",
+              isReaded: false,
+            ),
+            const _itemNotification(
+              time: "20-05",
+              title: "Collection scheduled",
+              subTitle:
+                  "Mark all as read Mark all as read Mark all as read Mark all as read",
+              isReaded: false,
+            ),
+            const _itemNotification(
+              time: "20-05",
+              title: "Collection scheduled",
+              subTitle:
+                  "Mark all as read Mark all as read Mark all as read Mark all as read",
+              isReaded: true,
+            ),
+            const _itemNotification(
+              time: "20-05",
+              title: "Collection scheduled",
+              subTitle:
+                  "Mark all as read Mark all as read Mark all as read Mark all as read",
+              isReaded: false,
             ),
             SizedBox(
               height: 5.w,
-            ),
-            const _itemNotification(
-              time: "20-05",
-              title: "Collection scheduled",
-              subTitle:
-                  "Mark all as read Mark all as read Mark all as read Mark all as read",
-              isReaded: false,
-            ),
-            const _itemNotification(
-              time: "20-05",
-              title: "Collection scheduled",
-              subTitle:
-                  "Mark all as read Mark all as read Mark all as read Mark all as read",
-              isReaded: true,
-            ),
-            const _itemNotification(
-              time: "20-05",
-              title: "Collection scheduled",
-              subTitle:
-                  "Mark all as read Mark all as read Mark all as read Mark all as read",
-              isReaded: false,
-            ),
-            const _itemNotification(
-              time: "20-05",
-              title: "Collection scheduled",
-              subTitle:
-                  "Mark all as read Mark all as read Mark all as read Mark all as read",
-              isReaded: false,
-            ),
-            const _itemNotification(
-              time: "20-05",
-              title: "Collection scheduled",
-              subTitle:
-                  "Mark all as read Mark all as read Mark all as read Mark all as read",
-              isReaded: true,
-            ),
-            const _itemNotification(
-              time: "20-05",
-              title: "Collection scheduled",
-              subTitle:
-                  "Mark all as read Mark all as read Mark all as read Mark all as read",
-              isReaded: false,
             ),
           ],
         ),
@@ -134,6 +101,40 @@ class NotificationScreen extends StatelessWidget {
   }
 }
 
+/* title header */
+class _itemTitleHeader extends StatelessWidget {
+  const _itemTitleHeader({
+    super.key,
+    required this.l10n,
+    required this.title,
+    required this.subTitle,
+  });
+
+  final AppLocalizations l10n;
+  final String title, subTitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 5.w),
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: PrimaryFont.titleTextBold().copyWith(color: Colors.black),
+          ),
+          const Spacer(),
+          Text(
+            subTitle,
+            style: PrimaryFont.bodyTextBold().copyWith(color: kPrimaryColor),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/* item notification */
 class _itemNotification extends StatelessWidget {
   const _itemNotification({
     super.key,

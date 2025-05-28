@@ -17,7 +17,7 @@ class SettingScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBarCommon(hasMenu: false, title:  l10n.txtSettingAU),
+      appBar: AppBarCommon(hasMenu: false, title: l10n.txtSettingAU),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -57,7 +57,9 @@ class _itemSettingAccount extends StatelessWidget {
     super.key,
     required this.title,
     this.ontap,
-    required this.icon, this.color, required this.arrowRight,
+    required this.icon,
+    this.color,
+    required this.arrowRight,
   });
   final String title;
   final Function()? ontap;
@@ -84,14 +86,16 @@ class _itemSettingAccount extends StatelessWidget {
               style: PrimaryFont.bodyTextMedium().copyWith(color: color),
             ),
           ),
-          arrowRight ? GestureDetector(
-            onTap: ontap,
-            child: Icon(
-              HugeIcons.strokeRoundedArrowRight01,
-              size: 5.w,
-              color: color,
-            ),
-          ) : const SizedBox(),
+          arrowRight
+              ? GestureDetector(
+                  onTap: ontap,
+                  child: Icon(
+                    HugeIcons.strokeRoundedArrowRight01,
+                    size: 5.w,
+                    color: color,
+                  ),
+                )
+              : const SizedBox(),
         ],
       ),
     );

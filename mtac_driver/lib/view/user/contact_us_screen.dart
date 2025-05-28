@@ -11,17 +11,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class ContactUsScreen extends StatelessWidget {
   ContactUsScreen({super.key});
 
-  //
+  // initial LoginController
   final _loginController = Get.find<LoginController>();
 
   @override
   Widget build(BuildContext context) {
-
     // initial AppLocalizations
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBarCommon(hasMenu: false, title:  l10n.txtContactAU),
+      appBar: AppBarCommon(hasMenu: false, title: l10n.txtContactAU),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
