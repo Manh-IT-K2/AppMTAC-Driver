@@ -335,6 +335,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(right: 16.0),
                   child: _itemStatisticalByCircle(
+                    onTap: () => Get.toNamed(AppRoutes.detailStatistical),
                     title: item.title,
                     subTitle: item.subTitle,
                     icon: item.icon,
@@ -488,10 +489,12 @@ class _itemStatisticalByCircle extends StatelessWidget {
     required this.subTitle,
     required this.icon,
     required this.colorIcon,
+    this.onTap,
   });
   final String title, subTitle;
   final Color colorIcon;
   final IconData icon;
+  final Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -525,10 +528,13 @@ class _itemStatisticalByCircle extends StatelessWidget {
                           .copyWith(color: Colors.black),
                     ),
                     const Spacer(),
-                    Icon(
-                      HugeIcons.strokeRoundedArrowRight02,
-                      size: 5.w,
-                      color: kPrimaryColor,
+                    GestureDetector(
+                      onTap: onTap,
+                      child: Icon(
+                        HugeIcons.strokeRoundedArrowRight02,
+                        size: 5.w,
+                        color: kPrimaryColor,
+                      ),
                     ),
                   ],
                 ),
