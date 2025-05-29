@@ -11,6 +11,7 @@ class AppRoutes {
   static const driver = "/driver";
   static const profile = "/profile";
   static const setting = "/setting";
+  static const settingLocation = "/settingLocation";
   static const settingNotify = "/settingNotify";
   static const contactUs = "/contactUs";
   static const privacyPolicy = "/privacyPolicy";

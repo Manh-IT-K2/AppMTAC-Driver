@@ -32,6 +32,15 @@ class SettingScreen extends StatelessWidget {
               },
             ),
             _itemSettingAccount(
+              title: "Thiết lập vị trí",
+              arrowRight: true,
+              color: Colors.black,
+              icon: HugeIcons.strokeRoundedLocation01,
+              ontap: () {
+                Get.toNamed(AppRoutes.settingLocation);
+              },
+            ),
+            _itemSettingAccount(
               title: l10n.txtPasswordManagementSU,
               arrowRight: true,
               color: Colors.black,

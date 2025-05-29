@@ -89,17 +89,47 @@ class AccountScreen extends StatelessWidget {
                           bottom: 0,
                           child: Row(
                             children: [
-                              _itemButHeaderAccount(
-                                l10n: l10n,
-                                color: kPrimaryColor,
-                                title: l10n.txtMyProfileAU,
+                              GestureDetector(
                                 onTap: () => Get.toNamed(AppRoutes.profile),
+                                child: Container(
+                                  width: 50.w - 16,
+                                  height: 10.w,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(30.w),
+                                      topRight: Radius.circular(100.w),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      l10n.txtMyProfileAU,
+                                      style: PrimaryFont.bodyTextBold()
+                                          .copyWith(color: kPrimaryColor),
+                                    ),
+                                  ),
+                                ),
                               ),
-                              _itemButHeaderAccount(
-                                l10n: l10n,
-                                color: Colors.red,
-                                title: l10n.txtLogoutAU,
-                                onTap: () => loginController.logOut(),
+                              GestureDetector(
+                                onTap: () =>() => loginController.logOut(),
+                                child: Container(
+                                  width: 50.w - 16,
+                                  height: 10.w,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[100],
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(100.w),
+                                      bottomRight: Radius.circular(30.w),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                     l10n.txtLogoutAU,
+                                      style: PrimaryFont.bodyTextBold()
+                                          .copyWith(color: Colors.red),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -163,7 +193,7 @@ class AccountScreen extends StatelessWidget {
                       width: 10.w,
                       height: 5.w,
                       decoration: BoxDecoration(
-                        color: Colors.grey[400],
+                        color: loginController.isEnglish ? kPrimaryColor : Colors.grey[400],
                         borderRadius: BorderRadius.circular(5.w),
                       ),
                       child: Obx(
@@ -175,7 +205,7 @@ class AccountScreen extends StatelessWidget {
                             width: 5.w,
                             height: 4.w,
                             decoration: const BoxDecoration(
-                              color: kPrimaryColor,
+                              color: Colors.white,
                               shape: BoxShape.circle,
                             ),
                             child: Center(
@@ -183,7 +213,7 @@ class AccountScreen extends StatelessWidget {
                                 loginController.isEnglish ? "en" : "vi",
                                 textAlign: TextAlign.center,
                                 style: PrimaryFont.bold(2.w)
-                                    .copyWith(color: Colors.white),
+                                    .copyWith(color: Colors.black),
                               ),
                             ),
                           ),
@@ -235,7 +265,8 @@ class _itemButHeaderAccount extends StatelessWidget {
     super.key,
     required this.l10n,
     this.onTap,
-    required this.title, required this.color,
+    required this.title,
+    required this.color,
   });
 
   final AppLocalizations l10n;

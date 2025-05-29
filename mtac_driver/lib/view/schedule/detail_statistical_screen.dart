@@ -41,7 +41,7 @@ class DetailStatisticalScreen extends StatelessWidget {
     return Scaffold(
       appBar: const AppBarCommon(hasMenu: false, title: "Chi tiết thống kê"),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
