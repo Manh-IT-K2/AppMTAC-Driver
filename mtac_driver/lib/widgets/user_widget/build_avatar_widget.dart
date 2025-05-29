@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:mtac_driver/configs/api_config.dart';
 import 'package:mtac_driver/model/user_model.dart';
 
 Widget buildAvatar(UserModel userModel) {

@@ -3,11 +3,10 @@ import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
+import 'package:mtac_driver/model/ui_model/statistical_ui_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
-import 'package:mtac_driver/widgets/schedule_widget/pie_chart_sample3.dart';
-import 'package:mtac_driver/widgets/schedule_widget/statistical_chart_widget.dart';
 import 'package:mtac_driver/widgets/user_widget/build_avatar_widget.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -38,8 +37,6 @@ class HomeScreen extends StatelessWidget {
               SizedBox(
                 height: 5.w,
               ),
-              //_BodyDriverScreen(
-              //l10n: l10n, scheduleController: _scheduleController),
               Text(
                 l10n.txtTripColectionTodayD,
                 style:
@@ -50,13 +47,13 @@ class HomeScreen extends StatelessWidget {
               ),
               _itemHightScheduleCollection(
                 icon: HugeIcons.strokeRoundedTick01,
-                colorBackIcon: Color(0xFF00B7FF).withOpacity(0.6),
-                colorStatus: Color(0xFF0099FE),
+                colorBackIcon: const Color(0xFF00B7FF).withOpacity(0.6),
+                colorStatus: const Color(0xFF0099FE),
               ),
               SizedBox(
                 height: 3.w,
               ),
-              _itemHightScheduleCollection(
+              const _itemHightScheduleCollection(
                 colorStatus: kPrimaryColor,
                 colorBackIcon: Color(0xFF0A7BC1),
                 icon: HugeIcons.strokeRoundedLoading02,
@@ -66,13 +63,13 @@ class HomeScreen extends StatelessWidget {
               ),
               _itemHightScheduleCollection(
                 icon: HugeIcons.strokeRoundedTick01,
-                colorBackIcon: Color(0xFF00B7FF).withOpacity(0.6),
-                colorStatus: Color(0xFF0099FE),
+                colorBackIcon: const Color(0xFF00B7FF).withOpacity(0.6),
+                colorStatus: const Color(0xFF0099FE),
               ),
               SizedBox(
                 height: 3.w,
               ),
-              _itemHightScheduleCollection(
+              const _itemHightScheduleCollection(
                 colorStatus: kPrimaryColor,
                 colorBackIcon: Color(0xFF0A7BC1),
                 icon: HugeIcons.strokeRoundedLoading02,
@@ -176,122 +173,6 @@ class _itemHightScheduleCollection extends StatelessWidget {
   }
 }
 
-class _BodyDriverScreen extends StatelessWidget {
-  const _BodyDriverScreen({
-    super.key,
-    required ScheduleController scheduleController,
-    required this.l10n,
-  }) : _scheduleController = scheduleController;
-
-  final ScheduleController _scheduleController;
-  final AppLocalizations l10n;
-
-  @override
-  Widget build(BuildContext context) {
-    //
-    _scheduleController.scrollToToday();
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l10n.txtScheduleHighlightD,
-          style: PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
-        ),
-        SizedBox(
-          height: 3.w,
-        ),
-        SizedBox(
-          height: 20.w,
-          child: ListView.builder(
-            controller: _scheduleController.scrollController,
-            scrollDirection: Axis.horizontal,
-            itemCount: 9999,
-            itemExtent: 13.w, // rất quan trọng để tối ưu!
-            itemBuilder: (context, index) {
-              return Obx(() {
-                // Tính realIndex để lặp lại
-                int realIndex = index % _scheduleController.daysInMonth.length;
-                DateTime day = _scheduleController.daysInMonth[realIndex];
-
-                // Kiểm tra có phải hôm nay không
-                bool isToday = day.day ==
-                        _scheduleController.currentDate.value.day &&
-                    day.month == _scheduleController.currentDate.value.month &&
-                    day.year == _scheduleController.currentDate.value.year;
-
-                // // Danh sách ngày highlight (tùy bạn)
-                // List<int> highlightedDays = [
-                //   6,
-                //   10,
-                //   _scheduleController.currentDate.value.day,
-                //   22,
-                //   26,
-                //   29
-                // ];
-                bool isHighlight =
-                    _scheduleController.highlightedDays.contains(day.day);
-
-                return _ItemDayOfWeek(
-                  day: day.day.toString(),
-                  weekdays: _scheduleController.getWeekdayShortName(day),
-                  statusToday: isToday,
-                  statusScheduleHighlight: isHighlight,
-                );
-              });
-            },
-          ),
-        ),
-        SizedBox(height: 5.w),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 16),
-        //   child: Column(
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     children: [
-        //       Text(
-        //         l10n.txtTripColectionTodayD,
-        //         style:
-        //             PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
-        //       ),
-        //       SizedBox(height: 5.w),
-        //       SizedBox(
-        //         height: 42.w,
-        //         child: CustomScrollView(
-        //           slivers: [
-        //             Obx(
-        //               () => SliverList(
-        //                 delegate: SliverChildBuilderDelegate(
-        //                   (context, index) {
-        //                     final datum =
-        //                         _scheduleController.todaySchedules[index];
-        //                     return Padding(
-        //                       padding: EdgeInsets.only(bottom: 5.w),
-        //                       child: GestureDetector(
-        //                         onTap: () {
-        //                           Get.toNamed(AppRoutes.map,
-        //                               arguments: datum.wasteType);
-        //                         },
-        //                         child: _ItemTripToday(
-        //                           hour: "8:00",
-        //                           addressBusiness: datum.locationDetails,
-        //                         ),
-        //                       ),
-        //                     );
-        //                   },
-        //                   childCount: _scheduleController.todaySchedules.length,
-        //                 ),
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
-      ],
-    );
-  }
-}
-
 class _HeaderDriverScreen extends StatelessWidget {
   const _HeaderDriverScreen({
     super.key,
@@ -305,6 +186,7 @@ class _HeaderDriverScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = loginController.infoUser.value;
+    final items = getStatisticalItems(l10n);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -375,23 +257,6 @@ class _HeaderDriverScreen extends StatelessWidget {
             ),
           ],
         ),
-        // Text(
-        //   "51C - 7373",
-        //   style: PrimaryFont.headerTextBold().copyWith(color: Colors.black),
-        // ),
-        // SizedBox(
-        //   height: 2.w,
-        // ),
-        // ClipRRect(
-        //   borderRadius: BorderRadius.circular(5.w),
-        //   child: Image.asset(
-        //     "assets/image/banner_app.png",
-        //     width: 100.w,
-
-        //     fit: BoxFit.fill,
-
-        //   ),
-        // // ),
         SizedBox(
           height: 3.w,
         ),
@@ -401,10 +266,10 @@ class _HeaderDriverScreen extends StatelessWidget {
           margin: EdgeInsets.only(bottom: 5.w),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.bottomRight,
-                colors: [kPrimaryColor.withOpacity(0.4), Colors.white]),
-            //color: kPrimaryColor.withOpacity(0.2),
+              begin: Alignment.centerLeft,
+              end: Alignment.bottomRight,
+              colors: [kPrimaryColor.withOpacity(0.4), Colors.white],
+            ),
             borderRadius: BorderRadius.circular(5.w),
           ),
           child: Row(
@@ -452,184 +317,37 @@ class _HeaderDriverScreen extends StatelessWidget {
               )
             ],
           ),
-          // Row(
-          //   children: [
-          //     SizedBox(
-          //       width: 6.w,
-          //     ),
-          //     const PieChartSample3(),
-          //     const Spacer(),
-          //     Column(
-          //       crossAxisAlignment: CrossAxisAlignment.start,
-          //       children: [
-          //         SizedBox(
-          //           height: 2.w,
-          //         ),
-          //         const Spacer(),
-          //         Row(
-          //           children: [
-          //             Container(
-          //               width: 3.w,
-          //               height: 3.w,
-          //               color: const Color(0xFF56E1E9),
-          //             ),
-          //             SizedBox(
-          //               width: 2.w,
-          //             ),
-          //             Text(
-          //               "Khối lượng",
-          //               style: PrimaryFont.bodyTextMedium()
-          //                   .copyWith(color: Colors.black),
-          //             )
-          //           ],
-          //         ),
-          //         Row(
-          //           children: [
-          //             Container(
-          //               width: 3.w,
-          //               height: 3.w,
-          //               color: const Color(0xFF112C71),
-          //             ),
-          //             SizedBox(
-          //               width: 2.w,
-          //             ),
-          //             Text(
-          //               "Điểm gom",
-          //               style: PrimaryFont.bodyTextMedium()
-          //                   .copyWith(color: Colors.black),
-          //             )
-          //           ],
-          //         ),
-          //         Row(
-          //           children: [
-          //             Container(
-          //               width: 3.w,
-          //               height: 3.w,
-          //               color: const Color(0xFF5B58EB),
-          //             ),
-          //             SizedBox(
-          //               width: 2.w,
-          //             ),
-          //             Text(
-          //               "Ngày làm",
-          //               style: PrimaryFont.bodyTextMedium()
-          //                   .copyWith(color: Colors.black),
-          //             )
-          //           ],
-          //         ),
-          //         Row(
-          //           children: [
-          //             Container(
-          //               width: 3.w,
-          //               height: 3.w,
-          //               color: const Color(0xFFBB63FF),
-          //             ),
-          //             SizedBox(
-          //               width: 2.w,
-          //             ),
-          //             Text(
-          //               "Tổng chuyến",
-          //               style: PrimaryFont.bodyTextMedium()
-          //                   .copyWith(color: Colors.black),
-          //             )
-          //           ],
-          //         ),
-          //         Row(
-          //           children: [
-          //             Container(
-          //               width: 3.w,
-          //               height: 3.w,
-          //               color: const Color(0xFF0A2353),
-          //             ),
-          //             SizedBox(
-          //               width: 2.w,
-          //             ),
-          //             Text(
-          //               "Hoàn tất",
-          //               style: PrimaryFont.bodyTextMedium()
-          //                   .copyWith(color: Colors.black),
-          //             )
-          //           ],
-          //         ),
-          //         Row(
-          //           children: [
-          //             Container(width: 3.w, height: 3.w, color: kPrimaryColor),
-          //             SizedBox(
-          //               width: 2.w,
-          //             ),
-          //             Text(
-          //               "Đúng giờ",
-          //               style: PrimaryFont.bodyTextMedium()
-          //                   .copyWith(color: Colors.black),
-          //             )
-          //           ],
-          //         ),
-          //         SizedBox(
-          //           height: 3.w,
-          //         ),
-          //       ],
-          //     ),
-          //     Padding(
-          //       padding: const EdgeInsets.all(8.0),
-          //       child: Column(
-          //         children: [
-          //           Align(
-          //             alignment: Alignment.topRight,
-          //             child: Icon(
-          //               HugeIcons.strokeRoundedFilter,
-          //               size: 5.w,
-          //               color: Colors.black,
-          //             ),
-          //           ),
-          //           Container(
-          //             width: 12.w,
-          //             height: 20.w,
-          //             margin: EdgeInsets.only(top: 1.w),
-          //             decoration: BoxDecoration(
-          //               color: Colors.white,
-          //               borderRadius: BorderRadius.circular(2.w),
-          //               boxShadow: const [
-          //                 BoxShadow(
-          //                   blurRadius: 4,
-          //                   offset: Offset(0, 3),
-          //                   color: Colors.black
-          //                 )
-          //               ]
-          //             ),
-          //             child: Column(
-          //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //               crossAxisAlignment: CrossAxisAlignment.center,
-          //               children: [
-          //                 Text(
-          //                   "Ngày",
-          //                   style: PrimaryFont.bodyTextMedium()
-          //                       .copyWith(color: Colors.black),
-          //                 ),
-          //                 Text(
-          //                   "Tuần",
-          //                   style: PrimaryFont.bodyTextMedium()
-          //                       .copyWith(color: Colors.black),
-          //                 ),
-          //                 Text(
-          //                   "Tháng",
-          //                   style: PrimaryFont.bodyTextMedium()
-          //                       .copyWith(color: Colors.black),
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ),
-         Text(
-          "Phân tích hoạt động",
+        Text(
+          "Tổng quan",
           style: PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
         ),
-        SizedBox(height: 3.w,),
-        StatisticalChartWidget(),
+        SizedBox(
+          height: 3.w,
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: List.generate(
+              items.length,
+              (index) {
+                final item = items[index];
+                return Padding(
+                  padding: const EdgeInsets.only(right: 16.0),
+                  child: _itemStatisticalByCircle(
+                    title: item.title,
+                    subTitle: item.subTitle,
+                    icon: item.icon,
+                    colorIcon: item.colorIcon,
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 5.w,
+        ),
         Text(
           l10n.txtUtilDriverD,
           style: PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
@@ -641,7 +359,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                 Get.toNamed(AppRoutes.schedule);
               },
               child: _UtilDriver(
-                color: Color(0xFF79F3FF),
+                color: const Color(0xFF79F3FF),
                 icon: HugeIcons.strokeRoundedCalendar03,
                 title: l10n.txtTitleScheduleColectionD,
                 subTitle: l10n.txtSubTitleScheduleColectionD,
@@ -656,7 +374,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                 Get.toNamed(AppRoutes.scheduleHistory);
               },
               child: _UtilDriver(
-                color: Color(0xFF529DFF),
+                color: const Color(0xFF529DFF),
                 icon: HugeIcons.strokeRoundedSmartPhone01,
                 title: l10n.txtTitleHistoryD,
                 subTitle: l10n.txtSubTitleHistoryD,
@@ -664,9 +382,6 @@ class _HeaderDriverScreen extends StatelessWidget {
             )
           ],
         ),
-        // SizedBox(
-        //   height: 5.w,
-        // ),
       ],
     );
   }
@@ -707,57 +422,6 @@ class _ItemTripToday extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _ItemDayOfWeek extends StatelessWidget {
-  const _ItemDayOfWeek({
-    super.key,
-    required this.day,
-    required this.weekdays,
-    required this.statusToday,
-    required this.statusScheduleHighlight,
-  });
-
-  final String day, weekdays;
-  final bool statusToday, statusScheduleHighlight;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 13.w,
-      height: 20.w,
-      decoration: BoxDecoration(
-        color:
-            statusToday ? kPrimaryColor.withOpacity(0.1) : Colors.transparent,
-        borderRadius: BorderRadius.circular(5.w),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            day,
-            style: PrimaryFont.headerTextBold()
-                .copyWith(color: statusToday ? Colors.red : Colors.black),
-          ),
-          Text(
-            weekdays,
-            style: PrimaryFont.bodyTextMedium()
-                .copyWith(color: statusToday ? Colors.red : Colors.black),
-          ),
-          statusScheduleHighlight
-              ? Container(
-                  width: 2.w,
-                  height: 2.w,
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(2.w),
-                  ),
-                )
-              : const SizedBox(),
-        ],
-      ),
     );
   }
 }
@@ -811,6 +475,77 @@ class _UtilDriver extends StatelessWidget {
             style: PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _itemStatisticalByCircle extends StatelessWidget {
+  const _itemStatisticalByCircle({
+    required this.title,
+    required this.subTitle,
+    required this.icon,
+    required this.colorIcon,
+  });
+  final String title, subTitle;
+  final Color colorIcon;
+  final IconData icon;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 50.w - 24,
+      height: 30.w,
+      padding: EdgeInsets.only(bottom: 1.w),
+      decoration: BoxDecoration(
+        color: kPrimaryColor.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(5.w),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            width: 100.w,
+            height: 20.w,
+            padding: EdgeInsets.all(3.w),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(5.w),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      title,
+                      style: PrimaryFont.titleTextBold()
+                          .copyWith(color: Colors.black),
+                    ),
+                    const Spacer(),
+                    Icon(
+                      HugeIcons.strokeRoundedArrowRight02,
+                      size: 5.w,
+                      color: kPrimaryColor,
+                    ),
+                  ],
+                ),
+                Text(
+                  subTitle,
+                  style: PrimaryFont.bodyTextMedium()
+                      .copyWith(color: Colors.grey, height: 2),
+                ),
+              ],
+            ),
+          ),
+          Center(
+            child: Icon(
+              icon,
+              size: 7.w,
+              color: colorIcon,
+            ),
           ),
         ],
       ),

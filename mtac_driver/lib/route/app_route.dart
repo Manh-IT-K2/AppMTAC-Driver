@@ -4,6 +4,7 @@ class AppRoutes {
   static const login = "/login";
   static const splash = "/splash";
   static const schedule = "/schedule";
+  static const detailStatistical = "/detailStatistical";
   static const map = "/map";
   static const feedback = "/feedback";
   static const handoverRecord = "/handoverRecord";

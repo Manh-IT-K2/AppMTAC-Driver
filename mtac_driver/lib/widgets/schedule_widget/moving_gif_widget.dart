@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 class MovingGifWidget extends StatefulWidget {
-  const MovingGifWidget({Key? key}) : super(key: key);
+  const MovingGifWidget({super.key});
 
   @override
   _MovingGifWidgetState createState() => _MovingGifWidgetState();
@@ -14,7 +14,7 @@ class _MovingGifWidgetState extends State<MovingGifWidget>
   late Animation<double> _animation;
 
   final double containerWidth = 180; // tổng chiều rộng
-  final double gifWidth = 8.w;        // chiều rộng của gif
+  final double gifWidth = 8.w; // chiều rộng của gif
 
   @override
   void initState() {

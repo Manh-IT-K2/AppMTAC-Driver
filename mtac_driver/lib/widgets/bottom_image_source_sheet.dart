@@ -10,8 +10,10 @@ class BottomImageSourceSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //
+    // initial HandoverRecordController
     final imageController = Get.find<HandoverRecordController>();
+
+    // initial AppLocalizations
     final l10n = AppLocalizations.of(context)!;
     return Wrap(
       children: [
