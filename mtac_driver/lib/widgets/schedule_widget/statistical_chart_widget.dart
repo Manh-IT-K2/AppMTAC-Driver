@@ -395,7 +395,7 @@ class LegendDot extends StatelessWidget {
   final Color? color;
   final String label;
 
-  LegendDot({super.key, required this.color, required this.label});
+  const LegendDot({super.key, required this.color, required this.label});
 
   @override
   Widget build(BuildContext context) {

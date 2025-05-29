@@ -502,6 +502,7 @@ class _itemStatisticalByCircle extends StatelessWidget {
       height: 30.w,
       padding: EdgeInsets.only(bottom: 1.w),
       decoration: BoxDecoration(
+        border: const Border.symmetric(horizontal: BorderSide(width: 1, color: kPrimaryColor)),
         color: kPrimaryColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(5.w),
       ),
@@ -515,6 +516,7 @@ class _itemStatisticalByCircle extends StatelessWidget {
             padding: EdgeInsets.all(3.w),
             decoration: BoxDecoration(
               color: Colors.grey.shade100,
+              border: const Border.symmetric(vertical: BorderSide(width: 1, color: Colors.grey)),
               borderRadius: BorderRadius.circular(5.w),
             ),
             child: Column(

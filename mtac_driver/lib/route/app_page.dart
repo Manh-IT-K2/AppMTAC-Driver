@@ -16,6 +16,7 @@ import 'package:mtac_driver/view/user/feedback_screen.dart';
 import 'package:mtac_driver/view/user/privacy_policy_screen.dart';
 import 'package:mtac_driver/view/user/login_screen.dart';
 import 'package:mtac_driver/view/user/profile_screen.dart';
+import 'package:mtac_driver/view/user/setting_notify/setting_notification_screen.dart';
 import 'package:mtac_driver/view/user/setting_user/manager_password_screen.dart';
 import 'package:mtac_driver/view/user/setting_user/setting_screen.dart';
 
@@ -103,6 +104,11 @@ class AppPages {
     GetPage(
       name: AppRoutes.detailStatistical,
       page: () => const DetailStatisticalScreen(),
+      middlewares: [NetworkCheckMiddlewareController()],
+    ),
+    GetPage(
+      name: AppRoutes.settingNotify,
+      page: () => const SettingNotificationScreen(),
       middlewares: [NetworkCheckMiddlewareController()],
     ),
   ];

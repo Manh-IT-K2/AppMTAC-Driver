@@ -27,7 +27,9 @@ class SettingScreen extends StatelessWidget {
               arrowRight: true,
               color: Colors.black,
               icon: HugeIcons.strokeRoundedNotification03,
-              ontap: () {},
+              ontap: () {
+                Get.toNamed(AppRoutes.settingNotify);
+              },
             ),
             _itemSettingAccount(
               title: l10n.txtPasswordManagementSU,

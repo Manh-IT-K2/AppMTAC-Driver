@@ -14,7 +14,7 @@ class DetailStatisticalScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<int> tripsPerDay = [2, 3, 1, 4, 2, 3, 2];
-    final List<String> days = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+    final List<String> days = ['8h', '10h', '12h', '14h', '16h', '18h', '20h'];
     List<BarChartGroupData> generateBarGroups(List<int> data) {
       return List.generate(data.length, (index) {
         return BarChartGroupData(
@@ -22,7 +22,12 @@ class DetailStatisticalScreen extends StatelessWidget {
           barRods: [
             BarChartRodData(
               toY: data[index].toDouble(),
-              color: Colors.red,
+              gradient: const LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [kPrimaryColor, Colors.green],
+              ),
+              //color: kPrimaryColor,
               width: 16,
               borderRadius: BorderRadius.circular(10.w),
             )
@@ -235,23 +240,23 @@ class DetailStatisticalScreen extends StatelessWidget {
                           colorDot: Color(0xFF56E1E9),
                         ),
                         _itemNoteCircleChart(
-                            title: "Chất thải sinh hoạt",
+                          title: "Chất thải sinh hoạt",
                           colorDot: Color(0xFF112C71),
                         ),
                         _itemNoteCircleChart(
-                            title: "Chất thải nguy hại",
+                          title: "Chất thải nguy hại",
                           colorDot: Color(0xFF5B58EB),
                         ),
                         _itemNoteCircleChart(
-                            title: "Chất thải y tế",
+                          title: "Chất thải y tế",
                           colorDot: Color(0xFFBB63FF),
                         ),
                         _itemNoteCircleChart(
-                            title: "Chất thải điện tử",
+                          title: "Chất thải điện tử",
                           colorDot: Color(0xFF0A2353),
                         ),
                         _itemNoteCircleChart(
-                            title: "Chất thải gỗ",
+                          title: "Chất thải gỗ",
                           colorDot: kPrimaryColor,
                         ),
                       ],
