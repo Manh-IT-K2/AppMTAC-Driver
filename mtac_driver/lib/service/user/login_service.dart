@@ -70,7 +70,6 @@ class LoginService {
   // Call api from server with function checkLoginStatus
   Future<bool> checkLoginStatus() async {
     final accessToken = await getToken();
-
     if (accessToken == "unknown") {
       return false;
     }

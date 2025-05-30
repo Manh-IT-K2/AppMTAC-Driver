@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/route/app_page.dart';
 import 'package:mtac_driver/route/app_route.dart';
@@ -13,8 +14,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main() async {
   // only portrait
   WidgetsFlutterBinding.ensureInitialized();
-  final loginController = Get.put(LoginController());
-  await loginController.loadSavedLanguage();
+  final scheduleController = Get.put(ScheduleController());
+  await scheduleController.loadSavedLanguage();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then((_) {
@@ -34,14 +35,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loginController = Get.find<LoginController>();
+    final scheduleController = Get.find<ScheduleController>();
     return Sizer(
       builder: (context, orientation, deviceType) {
         return GetMaterialApp(
             // useInheritedMediaQuery: true,
             // locale: DevicePreview.locale(context),
             // builder: DevicePreview.appBuilder,
-            locale: loginController.currentLocale.value,
+            locale: scheduleController.currentLocale.value,
             localizationsDelegates: const [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,

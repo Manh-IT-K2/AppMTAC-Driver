@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
@@ -11,7 +12,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AccountScreen extends StatelessWidget {
   AccountScreen({super.key});
-  final loginController = Get.find<LoginController>();
+  final loginController = Get.put(LoginController());
+  final scheduleController = Get.find<ScheduleController>();
   @override
   Widget build(BuildContext context) {
     //
@@ -25,7 +27,7 @@ class AccountScreen extends StatelessWidget {
             children: [
               Obx(
                 () {
-                  final user = loginController.infoUser.value;
+                  final user = scheduleController.userDriver.value;
                   if (user == null) {
                     return Image.asset(
                       "assets/image/loadingDot.gif",
@@ -186,19 +188,19 @@ class AccountScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      final newLang = loginController.isEnglish ? 'vi' : 'en';
-                      loginController.changeLanguage(newLang);
+                      final newLang = scheduleController.isEnglish ? 'vi' : 'en';
+                      scheduleController.changeLanguage(newLang);
                     },
                     child: Container(
                       width: 10.w,
                       height: 5.w,
                       decoration: BoxDecoration(
-                        color: loginController.isEnglish ? kPrimaryColor : Colors.grey[400],
+                        color: scheduleController.isEnglish ? kPrimaryColor : Colors.grey[400],
                         borderRadius: BorderRadius.circular(5.w),
                       ),
                       child: Obx(
                         () => Align(
-                          alignment: loginController.isEnglish
+                          alignment: scheduleController.isEnglish
                               ? Alignment.centerRight
                               : Alignment.centerLeft,
                           child: Container(
@@ -210,7 +212,7 @@ class AccountScreen extends StatelessWidget {
                             ),
                             child: Center(
                               child: Text(
-                                loginController.isEnglish ? "en" : "vi",
+                                scheduleController.isEnglish ? "en" : "vi",
                                 textAlign: TextAlign.center,
                                 style: PrimaryFont.bold(2.w)
                                     .copyWith(color: Colors.black),

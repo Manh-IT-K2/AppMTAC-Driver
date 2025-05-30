@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:mtac_driver/common/appbar/app_bar_common.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
+import 'package:mtac_driver/shared/schedule/schedule_shared.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
@@ -31,6 +32,7 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
         hasMenu: true,
         title: l10n.txtTitleS,
         onTap: () {
+          //removeGroupedScheduleFromLocal();
           // _scheduleController.removeCollectionStatus();
           // _scheduleController.removeSchedule();
         },

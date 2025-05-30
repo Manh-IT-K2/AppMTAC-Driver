@@ -13,6 +13,9 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+  bool _isHelpLoaded = false;
+  bool _isAccountLoaded = false;
+
   final PageController _pageController = PageController();
 
   void _onItemTapped(int index) {
@@ -38,12 +41,14 @@ class _MainScreenState extends State<MainScreen> {
         onPageChanged: (index) {
           setState(() {
             _selectedIndex = index;
+            if (index == 1) _isHelpLoaded = true;
+            if (index == 2) _isAccountLoaded = true;
           });
         },
         children: [
           HomeScreen(),
-          HelpScreen(),
-          AccountScreen(),
+          _isHelpLoaded ? HelpScreen() : const SizedBox(),
+          _isAccountLoaded ? AccountScreen() : const SizedBox(),
         ],
       ),
       bottomNavigationBar: BottomNavBar(

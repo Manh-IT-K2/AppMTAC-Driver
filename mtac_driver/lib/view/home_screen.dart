@@ -15,8 +15,7 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   // initial ScheduleController
-  final ScheduleController _scheduleController = Get.put(ScheduleController());
-  final LoginController loginController = Get.find<LoginController>();
+  final ScheduleController _scheduleController = Get.find<ScheduleController>();
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -30,7 +29,6 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _HeaderDriverScreen(
-                loginController: loginController,
                 l10n: l10n,
                 scheduleController: _scheduleController,
               ),
@@ -178,14 +176,12 @@ class _HeaderDriverScreen extends StatelessWidget {
     super.key,
     required this.scheduleController,
     required this.l10n,
-    required this.loginController,
   });
   final ScheduleController scheduleController;
   final AppLocalizations l10n;
-  final LoginController loginController;
   @override
   Widget build(BuildContext context) {
-    final user = loginController.infoUser.value;
+   final user = scheduleController.userDriver.value;
     final items = getStatisticalItems(l10n);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

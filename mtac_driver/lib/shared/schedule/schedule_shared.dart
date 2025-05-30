@@ -40,10 +40,10 @@ Future<void> getGroupedScheduleFromLocal(
 
 // Remove Grouped Schedule From Local
 Future<void> removeGroupedScheduleFromLocal(
-    RxMap<String, List<Datum>> schedulesByWasteType) async {
+    ) async {
   final prefs = await SharedPreferences.getInstance();
   await prefs.remove('grouped_schedule_today');
-  schedulesByWasteType.clear();
+  //schedulesByWasteType.clear();
 }
 
 // Check data local exist

@@ -39,10 +39,12 @@ void initState() {
 final controller = Get.put(LoginController(), permanent: true);
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     //
     final l10n = AppLocalizations.of(context)!;
+    
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -50,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Center(
           child: SingleChildScrollView(
             child: Form(
-              key: controller.formKeyLogin,
+              key: _formKey,
               child: Obx(
                 () => controller.isLoading.value
                     ? Image.asset(
@@ -136,7 +138,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           SizedBox(
                             width: 100.w,
                             child: ElevatedButton(
-                              onPressed: controller.login,
+                              onPressed: (){
+                                if(_formKey.currentState!.validate()){
+                                  controller.login();
+                                  print("mmm");
+                                }
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: kPrimaryColor,
                                 shape: RoundedRectangleBorder(

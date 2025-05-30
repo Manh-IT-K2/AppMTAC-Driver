@@ -2,6 +2,9 @@ import 'dart:io';
 import 'dart:math';
 import 'package:get/get.dart';
 import 'package:mtac_driver/common/notify/show_notify_snackbar.dart';
+import 'package:mtac_driver/model/user_model.dart';
+import 'package:mtac_driver/shared/language_shared.dart';
+import 'package:mtac_driver/shared/token_shared.dart';
 import 'package:mtac_driver/shared/user/user_shared.dart';
 import 'package:mtac_driver/widgets/schedule_widget/statistical_chart_widget.dart';
 import 'package:sizer/sizer.dart';
@@ -37,8 +40,8 @@ class ScheduleController extends GetxController {
     "Tái chế",
     "Công nghiệp"
   ];
-  static const int _totalItemCount = 9999;
-  static final double _itemWidth = 13.w;
+  // static const int _totalItemCount = 9999;
+  // static final double _itemWidth = 13.w;
 
   // Observables
   final isSelectedSatistical = 0.obs;
@@ -56,6 +59,11 @@ class ScheduleController extends GetxController {
   var currentFilter = 'day'.obs;
   var stats = <CollectionStats>[].obs;
   var summary = StatisticalSummary(0, 0, 0).obs;
+  // initial variable change language
+  bool get isEnglish => currentLocale.value.languageCode == 'en';
+  Rx<Locale> currentLocale = const Locale('vi').obs;
+  // infor user
+  final Rxn<UserModel> userDriver = Rxn<UserModel>();
 
   // State
   final collectionStatus = <int, Rx<CollectionStatus>>{};
@@ -78,18 +86,19 @@ class ScheduleController extends GetxController {
 
   // Initialization
   void _initialize() {
-    _setupScrollController();
+    //_setupScrollController();
     _loadInitialData();
   }
 
-  void _setupScrollController() {
-    daysInMonth.value = _generateDaysInMonth(currentDate.value);
-    _scrollOffset = _calculateScrollOffset();
-    scrollController = ScrollController(initialScrollOffset: _scrollOffset);
-  }
+  // void _setupScrollController() {
+  //   daysInMonth.value = _generateDaysInMonth(currentDate.value);
+  //   _scrollOffset = _calculateScrollOffset();
+  //   scrollController = ScrollController(initialScrollOffset: _scrollOffset);
+  // }
 
   Future<void> _loadInitialData() async {
     await Future.wait([
+      loadUserModel(),
       loadUsername(),
       _loadTodaySchedules(),
       _loadArrangedSchedules(),
@@ -101,6 +110,28 @@ class ScheduleController extends GetxController {
   // Data loading methods
   Future<void> loadUsername() async {
     username.value = await getUsername() ?? "Unknown";
+  }
+
+  // load user model
+  Future<void> loadUserModel() async {
+    final user = await getUserModel();
+    if (user != null) {
+      userDriver.value = user;
+    }
+  }
+
+  //
+  Future<void> changeLanguage(String langCode) async {
+    await setLanguage(langCode);
+    currentLocale.value = Locale(langCode);
+    Get.updateLocale(currentLocale.value);
+  }
+
+  //
+  Future<void> loadSavedLanguage() async {
+    final langCode = await getLanguage();
+    currentLocale.value = Locale(langCode);
+    Get.updateLocale(currentLocale.value);
   }
 
   Future<void> _loadTodaySchedules() async {
@@ -217,14 +248,14 @@ class ScheduleController extends GetxController {
     return days.toList()..sort();
   }
 
-  double _calculateScrollOffset() {
-    final todayIndex =
-        daysInMonth.indexWhere((day) => day.isSameDate(currentDate.value));
-    final middleItem = _totalItemCount ~/ 2;
-    final targetIndex =
-        middleItem - (middleItem % daysInMonth.length) + todayIndex;
-    return (targetIndex * _itemWidth) - ((100.w - 32) / 2) + (_itemWidth / 2);
-  }
+  // double _calculateScrollOffset() {
+  //   final todayIndex =
+  //       daysInMonth.indexWhere((day) => day.isSameDate(currentDate.value));
+  //   final middleItem = _totalItemCount ~/ 2;
+  //   final targetIndex =
+  //       middleItem - (middleItem % daysInMonth.length) + todayIndex;
+  //   return (targetIndex * _itemWidth) - ((100.w - 32) / 2) + (_itemWidth / 2);
+  // }
 
   List<DateTime> _generateDaysInMonth(DateTime date) {
     final daysCount = DateTime(date.year, date.month + 1, 0).day;
@@ -236,6 +267,7 @@ class ScheduleController extends GetxController {
     if (error.toString().contains('401')) {
       showError('Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
       Get.offAllNamed(AppRoutes.login);
+      removeToken();
     } else {
       showError(defaultMessage);
     }

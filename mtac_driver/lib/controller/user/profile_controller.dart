@@ -9,6 +9,7 @@ import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/model/user_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/service/user/user_service.dart';
+import 'package:mtac_driver/shared/token_shared.dart';
 
 class ProfileController extends GetxController {
   //
@@ -62,7 +63,7 @@ class ProfileController extends GetxController {
         Get.snackbar(
             'Lỗi', 'Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.',
             snackPosition: SnackPosition.TOP, colorText: Colors.red);
-        Get.offAllNamed(AppRoutes.login);
+        Get.offAllNamed(AppRoutes.main);
       }
       if (kDebugMode) {
         print("Error fetching user: $e");
@@ -82,6 +83,7 @@ class ProfileController extends GetxController {
       if (e.toString().contains('401')) {
         showError('Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
         Get.offAllNamed(AppRoutes.login);
+        removeToken();
       }
       if (kDebugMode) {
         print("Error fetching user: $e");
@@ -100,6 +102,7 @@ class ProfileController extends GetxController {
       if (e.toString().contains('401')) {
         showError('Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
         Get.offAllNamed(AppRoutes.login);
+        removeToken();
       }
       if (kDebugMode) {
         print("Error fetching user: $e");
