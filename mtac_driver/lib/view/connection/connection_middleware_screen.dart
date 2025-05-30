@@ -27,8 +27,7 @@ class ConnectionMiddlewareScreen extends StatelessWidget {
             SizedBox(height: 4.h),
             ElevatedButton(
               onPressed: () {
-                NetworkCheckMiddlewareController.instance
-                    .checkConnectionAndRedirect();
+                NetworkCheckMiddlewareController.instance.checkConnection();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,

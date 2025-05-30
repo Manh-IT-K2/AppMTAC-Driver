@@ -7,7 +7,6 @@ import 'package:mtac_driver/shared/language_shared.dart';
 import 'package:mtac_driver/shared/token_shared.dart';
 import 'package:mtac_driver/shared/user/user_shared.dart';
 import 'package:mtac_driver/widgets/schedule_widget/statistical_chart_widget.dart';
-import 'package:sizer/sizer.dart';
 import 'package:flutter/material.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
@@ -266,7 +265,7 @@ class ScheduleController extends GetxController {
   void _handleApiError(dynamic error, String defaultMessage) {
     if (error.toString().contains('401')) {
       showError('Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
-      Get.offAllNamed(AppRoutes.login);
+      Get.toNamed(AppRoutes.splash);
       removeToken();
     } else {
       showError(defaultMessage);

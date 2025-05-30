@@ -12,23 +12,35 @@ class NetworkCheckMiddlewareController extends GetMiddleware {
   factory NetworkCheckMiddlewareController() => instance;
 
   @override
-  Widget Function()? onPageBuildStart(Widget Function()? page) {
-    checkConnectionAndRedirect();
-    return page;
+  RouteSettings? redirect(String? route) {
+    // Start async check but return synchronously
+    checkConnection();
+    return null; // No immediate redirect
   }
 
-  Future<void> checkConnectionAndRedirect() async {
-    final connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult.isEmpty ||
-        connectivityResult.first == ConnectivityResult.none) {
-      if (Get.currentRoute != AppRoutes.noConnection) {
-        Get.offAllNamed(AppRoutes.noConnection);
+  Future<void> checkConnection() async {
+    try {
+      final connectivityResult = await Connectivity().checkConnectivity();
+      final currentRoute = Get.currentRoute;
+
+      if (connectivityResult.isEmpty || 
+          connectivityResult.contains(ConnectivityResult.none)) {
+        if (currentRoute != AppRoutes.noConnection) {
+          Get.offAllNamed(AppRoutes.noConnection);
+        }
+      } else {
+        if (currentRoute == AppRoutes.noConnection) {
+          Get.offAllNamed(AppRoutes.splash);
+        }
       }
-    } else {
-      // Nếu đang ở màn mất kết nối mà đã có mạng thì quay về splash
-      if (Get.currentRoute == AppRoutes.noConnection) {
-        Get.offAllNamed(AppRoutes.splash);
-      }
+    } catch (e) {
+      debugPrint('Network check error: $e');
     }
+  }
+
+  @override
+  Widget Function()? onPageBuildStart(Widget Function()? page) {
+    checkConnection(); // Additional check when page builds
+    return page;
   }
 }

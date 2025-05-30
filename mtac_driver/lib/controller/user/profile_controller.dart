@@ -63,7 +63,7 @@ class ProfileController extends GetxController {
         Get.snackbar(
             'Lỗi', 'Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.',
             snackPosition: SnackPosition.TOP, colorText: Colors.red);
-        Get.offAllNamed(AppRoutes.main);
+        Get.toNamed(AppRoutes.splash);
       }
       if (kDebugMode) {
         print("Error fetching user: $e");
@@ -82,7 +82,7 @@ class ProfileController extends GetxController {
     } catch (e) {
       if (e.toString().contains('401')) {
         showError('Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
-        Get.offAllNamed(AppRoutes.login);
+        Get.toNamed(AppRoutes.splash);
         removeToken();
       }
       if (kDebugMode) {
@@ -101,7 +101,7 @@ class ProfileController extends GetxController {
     } catch (e) {
       if (e.toString().contains('401')) {
         showError('Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
-        Get.offAllNamed(AppRoutes.login);
+        Get.toNamed(AppRoutes.splash);
         removeToken();
       }
       if (kDebugMode) {

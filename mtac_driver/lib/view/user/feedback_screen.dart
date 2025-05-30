@@ -17,123 +17,126 @@ class FeedbackScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: const AppBarCommon(hasMenu: false, title: "Phản hồi"),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Dánh giá trải nghiệm của bạn",
-              style:
-                  PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
-            ),
-            Obx(
-              () => Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: List.generate(
-                  _controller.rate.length,
-                  (index) {
-                    final title = _controller.rate[index];
-                    final icon = _controller.iconRate[index];
-                    final isSelected =
-                        _controller.isSellectedRate.value == index;
-                    return _itemRateExperience(
-                      title: title,
-                      isSelectedRate: isSelected,
-                      onTap: () {
-                        _controller.sellectedItemRate(index);
-                      },
-                      icon: icon,
-                    );
-                  },
-                ),
+        padding: const EdgeInsets.all(20.0),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Đánh giá trải nghiệm của bạn",
+                style:
+                    PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
               ),
-            ),
-            SizedBox(
-              height: 5.w,
-            ),
-            Text(
-              "Bạn thích cái gì?",
-              style:
-                  PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
-            ),
-            SizedBox(
-              height: 3.w,
-            ),
-            Obx(
-              () => Column(
-                children: List.generate(
-                  _controller.goodRate.length,
-                  (index) {
-                    final title = _controller.goodRate[index];
-                    final selected =
-                        _controller.selectedRateIndices.contains(index);
-                    return _itemGoodRateChoice(
-                      title: title,
-                      isSeletedRateGood: selected,
-                      onTap: () => _controller.toggleSelectedRateGood(index),
-                    );
-                  },
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 5.h,
-            ),
-            Text(
-              "Đóng góp ý kiến của bạn",
-              style:
-                  PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
-            ),
-            SizedBox(
-              height: 3.w,
-            ),
-            SizedBox(
-              width: 100.w,
-              child: TextField(
-                maxLines: null,
-                minLines: 5,
-                cursorColor: kPrimaryColor.withOpacity(0.6),
-                decoration: InputDecoration(
-                  hintText: "Viết ý kiến của bạn ở đây",
-                  hintStyle: PrimaryFont.bodyTextMedium(),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                        color: Colors.grey.withOpacity(0.5), width: 0.1),
+              Obx(
+                () => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: List.generate(
+                    _controller.rate.length,
+                    (index) {
+                      final title = _controller.rate[index];
+                      final icon = _controller.iconRate[index];
+                      final isSelected =
+                          _controller.isSellectedRate.value == index;
+                      return _itemRateExperience(
+                        title: title,
+                        isSelectedRate: isSelected,
+                        onTap: () {
+                          _controller.sellectedItemRate(index);
+                        },
+                        icon: icon,
+                      );
+                    },
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: kPrimaryColor),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
                 ),
               ),
-            ),
-            GestureDetector(
-              onTap: () {},
-              child: Container(
+              SizedBox(
+                height: 5.w,
+              ),
+              Text(
+                "Bạn thích cái gì?",
+                style:
+                    PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
+              ),
+              SizedBox(
+                height: 3.w,
+              ),
+              Obx(
+                () => Column(
+                  children: List.generate(
+                    _controller.goodRate.length,
+                    (index) {
+                      final title = _controller.goodRate[index];
+                      final selected =
+                          _controller.selectedRateIndices.contains(index);
+                      return _itemGoodRateChoice(
+                        title: title,
+                        isSeletedRateGood: selected,
+                        onTap: () => _controller.toggleSelectedRateGood(index),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 5.h,
+              ),
+              Text(
+                "Đóng góp ý kiến của bạn",
+                style:
+                    PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
+              ),
+              SizedBox(
+                height: 3.w,
+              ),
+              SizedBox(
                 width: 100.w,
-                height: 10.w,
-                margin: EdgeInsets.only(top: 10.w),
-                decoration: BoxDecoration(
-                  color: kPrimaryColor,
-                  borderRadius: BorderRadius.circular(10.w),
-                ),
-                child: Center(
-                  child: Text(
-                    "Gửi",
-                    textAlign: TextAlign.center,
-                    style: PrimaryFont.bodyTextBold()
-                        .copyWith(color: Colors.white),
+                child: TextField(
+                  maxLines: null,
+                  minLines: 5,
+                  cursorColor: kPrimaryColor.withOpacity(0.6),
+                  decoration: InputDecoration(
+                    hintText: "Viết ý kiến của bạn ở đây",
+                    hintStyle: PrimaryFont.bodyTextMedium(),
+                    contentPadding:
+                        const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(
+                          color: Colors.grey.withOpacity(0.5), width: 0.1),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: kPrimaryColor),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
                   ),
                 ),
               ),
-            ),
-          ],
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  width: 100.w,
+                  height: 10.w,
+                  margin: EdgeInsets.only(top: 10.w),
+                  decoration: BoxDecoration(
+                    color: kPrimaryColor,
+                    borderRadius: BorderRadius.circular(10.w),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Gửi",
+                      textAlign: TextAlign.center,
+                      style: PrimaryFont.bodyTextBold()
+                          .copyWith(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

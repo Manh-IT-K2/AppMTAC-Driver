@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
-import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/model/ui_model/statistical_ui_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
@@ -31,6 +30,13 @@ class HomeScreen extends StatelessWidget {
               _HeaderDriverScreen(
                 l10n: l10n,
                 scheduleController: _scheduleController,
+              ),
+              SizedBox(
+                height: 5.w,
+              ),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(5.w),
+                child: Image.asset("assets/image/banner_app.png"),
               ),
               SizedBox(
                 height: 5.w,
@@ -181,7 +187,7 @@ class _HeaderDriverScreen extends StatelessWidget {
   final AppLocalizations l10n;
   @override
   Widget build(BuildContext context) {
-   final user = scheduleController.userDriver.value;
+    final user = scheduleController.userDriver.value;
     final items = getStatisticalItems(l10n);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,7 +264,7 @@ class _HeaderDriverScreen extends StatelessWidget {
         ),
         Container(
           width: 100.w,
-          height: 45.w,
+          height: 42.w,
           margin: EdgeInsets.only(bottom: 5.w),
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -297,7 +303,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                 children: [
                   Text(
                     "20˚",
-                    style: PrimaryFont.bold(15.w).copyWith(color: Colors.white),
+                    style: PrimaryFont.bold(12.w).copyWith(color: Colors.white),
                   ),
                   Text(
                     "Cảm thấy như 25˚",
@@ -498,7 +504,8 @@ class _itemStatisticalByCircle extends StatelessWidget {
       height: 30.w,
       padding: EdgeInsets.only(bottom: 1.w),
       decoration: BoxDecoration(
-        border: const Border.symmetric(horizontal: BorderSide(width: 1, color: kPrimaryColor)),
+        border: const Border.symmetric(
+            horizontal: BorderSide(width: 1, color: kPrimaryColor)),
         color: kPrimaryColor.withOpacity(0.1),
         borderRadius: BorderRadius.circular(5.w),
       ),
@@ -512,7 +519,8 @@ class _itemStatisticalByCircle extends StatelessWidget {
             padding: EdgeInsets.all(3.w),
             decoration: BoxDecoration(
               color: Colors.grey.shade100,
-              border: const Border.symmetric(vertical: BorderSide(width: 1, color: Colors.grey)),
+              border: const Border.symmetric(
+                  vertical: BorderSide(width: 1, color: Colors.grey)),
               borderRadius: BorderRadius.circular(5.w),
             ),
             child: Column(

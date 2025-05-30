@@ -24,7 +24,7 @@ void main() async {
     //   builder: (context) => const MyApp(), // Wrap your app
     // ));
 
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     Get.config(enableLog: false);
     runApp(const MyApp());
   });

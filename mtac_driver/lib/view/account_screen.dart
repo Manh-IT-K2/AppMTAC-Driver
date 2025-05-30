@@ -27,7 +27,7 @@ class AccountScreen extends StatelessWidget {
             children: [
               Obx(
                 () {
-                  final user = scheduleController.userDriver.value;
+                  final user = loginController.infoUser.value;
                   if (user == null) {
                     return Image.asset(
                       "assets/image/loadingDot.gif",
