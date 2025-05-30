@@ -316,7 +316,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                     height: 19.w,
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -382,7 +382,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                 title: l10n.txtTitleHistoryD,
                 subTitle: l10n.txtSubTitleHistoryD,
               ),
-            )
+            ),
           ],
         ),
       ],

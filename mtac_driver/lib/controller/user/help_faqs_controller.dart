@@ -5,6 +5,7 @@ import 'package:mtac_driver/model/help_faqs_model.dart';
 
 class HelpFAQController extends GetxController {
   // initial varialbe search help & FQAs
+  final PageController pageController = PageController();
   List<String> helpTitles = [
     'Tất cả',
     'Tổng quan',
@@ -13,7 +14,7 @@ class HelpFAQController extends GetxController {
     'Dịch vụ',
     'Tài khoản'
   ];
-    List<String> goodRate = [
+  List<String> goodRate = [
     'Lộ trình hiển thị rõ ràng, dễ đi đúng tuyến.',
     'Thông báo nhiệm vụ và điểm thu gom rất chính xác.',
     'Ứng dụng mượt, không bị giật lag khi sử dụng.',
@@ -31,10 +32,9 @@ class HelpFAQController extends GetxController {
   ];
 
   // obs
-  final isSelectedHelp = 0.obs;
+  final selectedHelpGeneral = 'Tất cả'.obs;
   final isSellectedRate = 0.obs;
   final selectedRateIndices = <int>[].obs;
-
 
   // sellected item rate
   void sellectedItemRate(int index) {
@@ -43,17 +43,30 @@ class HelpFAQController extends GetxController {
 
   // sellected item rate
   void toggleSelectedRateGood(int index) {
-  if (selectedRateIndices.contains(index)) {
-    selectedRateIndices.remove(index);
-  } else {
-    selectedRateIndices.add(index);
+    if (selectedRateIndices.contains(index)) {
+      selectedRateIndices.remove(index);
+    } else {
+      selectedRateIndices.add(index);
+    }
   }
-}
-
 
   // selected item help & FQAs
-  void selectedItemHelpFQA(int index) {
-    isSelectedHelp.value = index;
+  void selectedItemHelpFQA(String title) {
+    final index = helpTitles.indexOf(title);
+    if (index != -1) {
+      selectedHelpGeneral.value = title;
+      pageController.animateToPage(
+        index,
+        duration: 300.milliseconds,
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void onPageChanged(int index) {
+    if (index >= 0 && index < helpTitles.length) {
+      selectedHelpGeneral.value = helpTitles[index];
+    }
   }
 
   // list FQAs

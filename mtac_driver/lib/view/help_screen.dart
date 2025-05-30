@@ -53,50 +53,49 @@ class HelpScreen extends StatelessWidget {
                   fillColor: Colors.white,
                 ),
               ),
-              Obx(
-                () => SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: List.generate(
-                      _helpFAQController.helpTitles.length,
-                      (index) {
-                        final title = _helpFAQController.helpTitles[index];
-                        final isSelected =
-                            _helpFAQController.isSelectedHelp.value == index;
-                        return Padding(
-                          padding: EdgeInsets.only(right: 3.w),
-                          child: _itemTitleHelpFQAs(
-                            title: title,
-                            isSelectedHelp: isSelected,
-                            onTap: () {
-                              _helpFAQController.selectedItemHelpFQA(index);
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: _helpFAQController.helpTitles
+                      .map(
+                        (title) => _itemTitleHelpFQAs(
+                          title: title,
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
-              Obx(
-                () => SizedBox(
-                  width: 100.w,
-                  height: 70.h,
-                  child: ListView.builder(
-                    padding: EdgeInsets.only(bottom: 5.h),
-                    itemCount: _helpFAQController.faqList.length,
-                    itemBuilder: (context, index) {
-                      final item = _helpFAQController.faqList[index];
-                      return Obx(
-                        () => _itemHelpFQAsAccount(
-                          arrowDownPrivew: item.isExpanded.value,
-                          title: item.title,
-                          subTitle: item.subTitle,
-                          ontap: () => _helpFAQController.toggleExpand(index),
-                        ),
+              SizedBox(
+                width: 100.w,
+                height: 60.h,
+                child: PageView(
+                  controller: _helpFAQController.pageController,
+                  onPageChanged: _helpFAQController.onPageChanged,
+                  children: _helpFAQController.helpTitles.map(
+                    (title) {
+                      return CustomScrollView(
+                        slivers: [
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                final item = _helpFAQController.faqList[index];
+                                return Obx(
+                                  () => _itemHelpFQAsAccount(
+                                    arrowDownPrivew: item.isExpanded.value,
+                                    title: item.title,
+                                    subTitle: item.subTitle,
+                                    ontap: () =>
+                                        _helpFAQController.toggleExpand(index),
+                                  ),
+                                );
+                              },
+                              childCount: _helpFAQController.faqList.length,
+                            ),
+                          ),
+                        ],
                       );
                     },
-                  ),
+                  ).toList(),
                 ),
               ),
             ],
@@ -108,35 +107,39 @@ class HelpScreen extends StatelessWidget {
 }
 
 class _itemTitleHelpFQAs extends StatelessWidget {
-  const _itemTitleHelpFQAs({
+  _itemTitleHelpFQAs({
     super.key,
     required this.title,
-    required this.isSelectedHelp,
-    this.onTap,
   });
   final String title;
-  final bool isSelectedHelp;
-  final Function()? onTap;
+
+  final _helpController = Get.find<HelpFAQController>();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 20.w,
-        height: 10.w,
-        alignment: Alignment.center,
-        margin: EdgeInsets.symmetric(vertical: 5.w),
-        decoration: BoxDecoration(
-          color: isSelectedHelp ? kPrimaryColor : Colors.grey[200],
-          borderRadius: BorderRadius.circular(10.w),
-        ),
-        child: Text(
-          title,
-          textAlign: TextAlign.center,
-          style: PrimaryFont.bodyTextMedium().copyWith(
-            color: isSelectedHelp ? Colors.white : Colors.black,
-          ),
-        ),
+      onTap: () => _helpController.selectedItemHelpFQA(title),
+      child: Obx(
+        () {
+          bool isSelectedHelp =
+              _helpController.selectedHelpGeneral.value == title;
+          return Container(
+            width: 20.w,
+            height: 10.w,
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(top: 5.w, bottom: 5.w, right: 5.w),
+            decoration: BoxDecoration(
+              color: isSelectedHelp ? kPrimaryColor : Colors.grey[200],
+              borderRadius: BorderRadius.circular(10.w),
+            ),
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: PrimaryFont.bodyTextMedium().copyWith(
+                color: isSelectedHelp ? Colors.white : Colors.black,
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -161,6 +164,7 @@ class _itemHelpFQAsAccount extends StatelessWidget {
       width: 100.w,
       height: arrowDownPrivew ? 40.w : 12.w,
       margin: EdgeInsets.only(bottom: 3.w),
+      padding: EdgeInsets.symmetric(horizontal: 5.w),
       decoration: BoxDecoration(
         border: Border.all(
           width: 1,
@@ -168,62 +172,53 @@ class _itemHelpFQAsAccount extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(3.w),
       ),
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 5.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    style: PrimaryFont.bodyTextMedium()
-                        .copyWith(color: Colors.black),
-                  ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: PrimaryFont.bodyTextMedium()
+                      .copyWith(color: Colors.black),
                 ),
-                GestureDetector(
-                  onTap: ontap,
-                  child: Icon(
-                    arrowDownPrivew
-                        ? HugeIcons.strokeRoundedArrowUp01
-                        : HugeIcons.strokeRoundedArrowDown01,
-                    size: 5.w,
-                    color: Colors.black,
-                  ),
+              ),
+              SizedBox(
+                width: 5.w,
+              ),
+              GestureDetector(
+                onTap: ontap,
+                child: Icon(
+                  arrowDownPrivew
+                      ? HugeIcons.strokeRoundedArrowUp01
+                      : HugeIcons.strokeRoundedArrowDown01,
+                  size: 5.w,
+                  color: Colors.black,
                 ),
-              ],
-            ),
-            arrowDownPrivew
-                ? Container(
-                    width: 100.w,
-                    height: 0.2,
-                    color: Colors.grey,
-                    margin: EdgeInsets.symmetric(vertical: 3.w),
-                  )
-                : const SizedBox(),
-            arrowDownPrivew
-                ? Row(
-                    children: [
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            subTitle,
-                            maxLines: 4,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: PrimaryFont.bodyTextThin().copyWith(
-                              color: Colors.black.withOpacity(0.6),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                : const SizedBox(),
-          ],
-        ),
+              ),
+            ],
+          ),
+          arrowDownPrivew
+              ? Container(
+                  width: 100.w,
+                  height: 0.2,
+                  color: Colors.grey,
+                  margin: EdgeInsets.symmetric(vertical: 3.w),
+                )
+              : const SizedBox(),
+          arrowDownPrivew
+              ? Text(
+                  subTitle,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: PrimaryFont.bodyTextThin().copyWith(
+                    color: Colors.black.withOpacity(0.6),
+                  ),
+                )
+              : const SizedBox(),
+        ],
       ),
     );
   }
