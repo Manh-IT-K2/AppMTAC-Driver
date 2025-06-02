@@ -104,7 +104,7 @@ class PrimaryFont {
   }
 
   // text note
-  static TextStyle thin(double size) {
+  static TextStyle textCustomThin(double size) {
     return TextStyle(
       fontFamily: fontfamily,
       fontWeight: FontWeight.w100,
@@ -112,7 +112,7 @@ class PrimaryFont {
     );
   }
 
-  static TextStyle light(double size) {
+  static TextStyle textCustomLight(double size) {
     return TextStyle(
       fontFamily: fontfamily,
       fontWeight: FontWeight.w300,
@@ -120,7 +120,7 @@ class PrimaryFont {
     );
   }
 
-  static TextStyle medium(double size) {
+  static TextStyle textCustomMedium(double size) {
     return TextStyle(
       fontFamily: fontfamily,
       fontWeight: FontWeight.w500,
@@ -128,7 +128,7 @@ class PrimaryFont {
     );
   }
 
-  static TextStyle bold(double size) {
+  static TextStyle textCustomBold(double size) {
     return TextStyle(
       fontFamily: fontfamily,
       fontWeight: FontWeight.w700,

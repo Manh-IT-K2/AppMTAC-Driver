@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   // initial ScheduleController
-  final ScheduleController _scheduleController = Get.find<ScheduleController>();
+  final _scheduleController = Get.put(ScheduleController());
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -143,7 +143,7 @@ class _itemHightScheduleCollection extends StatelessWidget {
                     // ),
                     Text(
                       "Công ty LG Electronics",
-                      style: PrimaryFont.bold(3.5.w),
+                      style: PrimaryFont.textCustomBold(3.5.w),
                     ),
                     Text(
                       "KCN Tràng Duệ, Bắc Ninh",
@@ -180,14 +180,13 @@ class _itemHightScheduleCollection extends StatelessWidget {
 class _HeaderDriverScreen extends StatelessWidget {
   const _HeaderDriverScreen({
     super.key,
-    required this.scheduleController,
     required this.l10n,
+    required this.scheduleController,
   });
   final ScheduleController scheduleController;
   final AppLocalizations l10n;
   @override
   Widget build(BuildContext context) {
-    final user = scheduleController.userDriver.value;
     final items = getStatisticalItems(l10n);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,8 +197,9 @@ class _HeaderDriverScreen extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Obx(
-              () => Row(
+            Obx(() {
+              final user = scheduleController.userDriver.value;
+              return Row(
                 children: [
                   Container(
                     width: 10.w,
@@ -211,7 +211,11 @@ class _HeaderDriverScreen extends StatelessWidget {
                       ),
                       shape: BoxShape.circle,
                     ),
-                    child: ClipOval(child: buildAvatar(user!)),
+                    child: user == null
+                        ? const SizedBox()
+                        : ClipOval(
+                            child: buildAvatar(user),
+                          ),
                   ),
                   SizedBox(
                     width: 3.w,
@@ -231,8 +235,8 @@ class _HeaderDriverScreen extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
-            ),
+              );
+            }),
             Stack(
               children: [
                 Center(
@@ -303,7 +307,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                 children: [
                   Text(
                     "20˚",
-                    style: PrimaryFont.bold(12.w).copyWith(color: Colors.white),
+                    style: PrimaryFont.textCustomBold(12.w).copyWith(color: Colors.white),
                   ),
                   Text(
                     "Cảm thấy như 25˚",

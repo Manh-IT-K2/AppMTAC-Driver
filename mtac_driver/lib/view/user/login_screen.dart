@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           Text(
                             "MTAC-Driver",
-                            style: PrimaryFont.bold(8.w).copyWith(
+                            style: PrimaryFont.textCustomBold(8.w).copyWith(
                               color: kPrimaryColor,
                             ),
                           ),
@@ -141,7 +141,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               onPressed: (){
                                 if(_formKey.currentState!.validate()){
                                   controller.login();
-                                  print("mmm");
                                 }
                               },
                               style: ElevatedButton.styleFrom(

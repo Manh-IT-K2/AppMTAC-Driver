@@ -4,9 +4,11 @@ import 'package:mtac_driver/common/notify/show_notify_snackbar.dart';
 import 'package:mtac_driver/model/user_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/service/user/login_service.dart';
+import 'package:mtac_driver/shared/language_shared.dart';
 import 'package:mtac_driver/shared/user/user_shared.dart';
 
 class LoginController extends GetxController {
+  
   // inital variable
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
@@ -26,6 +28,10 @@ class LoginController extends GetxController {
   final arrowDownFacebook = false.obs;
   final arrowDownInstagram = false.obs;
 
+  // initial variable change language
+  bool get isEnglish => currentLocale.value.languageCode == 'en';
+  Rx<Locale> currentLocale = const Locale('vi').obs;
+
   // infor user
   final Rxn<UserModel> infoUser = Rxn<UserModel>();
 
@@ -42,6 +48,20 @@ class LoginController extends GetxController {
     if (user != null) {
       infoUser.value = user;
     }
+  }
+
+  //
+  Future<void> changeLanguage(String langCode) async {
+    await setLanguage(langCode);
+    currentLocale.value = Locale(langCode);
+    Get.updateLocale(currentLocale.value);
+  }
+
+  //
+  Future<void> loadSavedLanguage() async {
+    final langCode = await getLanguage();
+    currentLocale.value = Locale(langCode);
+    Get.updateLocale(currentLocale.value);
   }
 
   // arrow down service visibility

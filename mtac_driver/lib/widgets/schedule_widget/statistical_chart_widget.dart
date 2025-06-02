@@ -461,7 +461,7 @@ class _itemStatisticalByCircle extends StatelessWidget {
               ),
             ],
           ),
-          Container(
+          SizedBox(
             width: 40.w,
             height: 15.w,
             // decoration: BoxDecoration(
@@ -475,7 +475,7 @@ class _itemStatisticalByCircle extends StatelessWidget {
                 Text(
                   subTitle0,
                   // textAlign: TextAlign.center,
-                  style: PrimaryFont.bold(3.w).copyWith(color: Colors.grey),
+                  style: PrimaryFont.textCustomBold(3.w).copyWith(color: Colors.grey),
                 ),
                 // Icon(
                 //   icon,

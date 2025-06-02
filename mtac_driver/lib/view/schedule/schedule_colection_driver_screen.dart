@@ -124,7 +124,6 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
                 onPageChanged: _scheduleController.onPageChanged,
                 children: _scheduleController.wasteTypes.map(
                   (title) {
-                    //final data = controller.todaySchedules[0];
                     return Obx(() {
                       final scheduleMap =
                           _scheduleController.schedulesByWasteType;
@@ -148,11 +147,11 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
                                 final wasteType = entries[index].key;
                                 final datum = entries[index]
                                     .value
-                                    .first; // Lấy địa điểm đầu tiên của loại chất thải đó
+                                    .first;
 
                                 return _ItemTripWork(
                                   nameWaste:
-                                      wasteType, // hoặc datum.companyName nếu bạn muốn
+                                      wasteType,
                                   addressBusiness: datum.locationDetails,
                                   day: DateFormat('yyyy-MM-dd')
                                       .format(datum.collectionDate),

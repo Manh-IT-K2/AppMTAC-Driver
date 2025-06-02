@@ -14,8 +14,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main() async {
   // only portrait
   WidgetsFlutterBinding.ensureInitialized();
-  final scheduleController = Get.put(ScheduleController());
-  await scheduleController.loadSavedLanguage();
+  final loginController = Get.put(LoginController());
+  await loginController.loadSavedLanguage();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then((_) {
@@ -35,14 +35,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scheduleController = Get.find<ScheduleController>();
+    final loginController = Get.find<LoginController>();
     return Sizer(
       builder: (context, orientation, deviceType) {
         return GetMaterialApp(
             // useInheritedMediaQuery: true,
             // locale: DevicePreview.locale(context),
             // builder: DevicePreview.appBuilder,
-            locale: scheduleController.currentLocale.value,
+            locale: loginController.currentLocale.value,
             localizationsDelegates: const [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,

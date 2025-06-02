@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hugeicons/hugeicons.dart';
 import 'package:intl/intl.dart';
 import 'package:mtac_driver/common/appbar/app_bar_common.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
@@ -15,47 +16,116 @@ class ScheduleHistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //
-    final l10n = AppLocalizations.of(context)!; 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBarCommon(hasMenu: false, title:  l10n.txtTitleSH),
-      body: Obx(
-        () {
-          final list = _scheduleController.historySchedules;
-          return CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              SliverPadding(
-                padding: const EdgeInsets.all(16),
-                sliver: SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final item = list[index];
-                      return _ItemScheduleHistory(
-                        l10n: l10n,
-                        companyName: item.companyName,
-                        wastype: item.wasteType,
-                        collectionDate: DateFormat('yyyy-MM-dd')
-                            .format(item.collectionDate),
-                        code: item.code,
-                        onTap: () {
-                          Get.toNamed(AppRoutes.detailScheduleHistory, arguments: item);
-                        },
+    final l10n = AppLocalizations.of(context)!;
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: AppBarCommon(hasMenu: false, title: l10n.txtTitleSH),
+        body: Column(
+          children: [
+            TabBar(
+              indicatorColor: kPrimaryColor,
+              dividerColor: Colors.grey,
+              labelStyle:
+                  PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
+              tabs: const [
+                Tab(
+                  text: "Hoàn thành",
+                ),
+                Tab(
+                  text: "Đang thu gom",
+                ),
+              ],
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  Obx(
+                    () {
+                      final list = _scheduleController.historySchedules;
+                      return Expanded(
+                        child: CustomScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          slivers: [
+                            SliverPadding(
+                              padding: const EdgeInsets.all(16),
+                              sliver: SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                  (context, index) {
+                                    final item = list[index];
+                                    return _ItemScheduleHistory(
+                                      l10n: l10n,
+                                      companyName: item.companyName,
+                                      wastype: item.wasteType,
+                                      collectionDate: DateFormat('yyyy-MM-dd')
+                                          .format(item.collectionDate),
+                                      code: item.code,
+                                      onTap: () {
+                                        Get.toNamed(
+                                            AppRoutes.detailScheduleHistory,
+                                            arguments: item);
+                                      },
+                                    );
+                                  },
+                                  childCount: list.length,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     },
-                    childCount: list.length,
                   ),
-                ),
+
+                  ///
+                  ///
+                  Obx(
+                    () {
+                      final list = _scheduleController.historySchedules;
+                      return Expanded(
+                        child: CustomScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          slivers: [
+                            SliverPadding(
+                              padding: const EdgeInsets.all(16),
+                              sliver: SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                  (context, index) {
+                                    final item = list[index];
+                                    return _ItemScheduleHistory(
+                                      l10n: l10n,
+                                      companyName: item.companyName,
+                                      wastype: item.wasteType,
+                                      collectionDate: DateFormat('yyyy-MM-dd')
+                                          .format(item.collectionDate),
+                                      code: item.code,
+                                      onTap: () {
+                                        Get.toNamed(
+                                            AppRoutes.detailScheduleHistory,
+                                            arguments: item);
+                                      },
+                                    );
+                                  },
+                                  childCount: list.length,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
-            ],
-          );
-        },
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-// ignore: must_be_immutable
 class _ItemScheduleHistory extends StatelessWidget {
   _ItemScheduleHistory({
     super.key,
@@ -63,7 +133,8 @@ class _ItemScheduleHistory extends StatelessWidget {
     required this.wastype,
     required this.collectionDate,
     required this.code,
-    this.onTap, required this.l10n,
+    this.onTap,
+    required this.l10n,
   });
   final AppLocalizations l10n;
   Function()? onTap;
@@ -117,8 +188,8 @@ class _ItemScheduleHistory extends StatelessWidget {
                 children: [
                   Text(
                     companyName,
-                    style:
-                        PrimaryFont.bold(3.5.w).copyWith(color: Colors.black),
+                    style: PrimaryFont.textCustomBold(3.5.w)
+                        .copyWith(color: Colors.black),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),

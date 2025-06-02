@@ -32,7 +32,6 @@ class LoginService {
         setToken(data['access_token']);
         setUsername(data['user']?['name']);
         setUserModel(userModel);
-
         return true;
       } catch (e) {
         if (kDebugMode) {

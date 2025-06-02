@@ -58,9 +58,6 @@ class ScheduleController extends GetxController {
   var currentFilter = 'day'.obs;
   var stats = <CollectionStats>[].obs;
   var summary = StatisticalSummary(0, 0, 0).obs;
-  // initial variable change language
-  bool get isEnglish => currentLocale.value.languageCode == 'en';
-  Rx<Locale> currentLocale = const Locale('vi').obs;
   // infor user
   final Rxn<UserModel> userDriver = Rxn<UserModel>();
 
@@ -117,20 +114,6 @@ class ScheduleController extends GetxController {
     if (user != null) {
       userDriver.value = user;
     }
-  }
-
-  //
-  Future<void> changeLanguage(String langCode) async {
-    await setLanguage(langCode);
-    currentLocale.value = Locale(langCode);
-    Get.updateLocale(currentLocale.value);
-  }
-
-  //
-  Future<void> loadSavedLanguage() async {
-    final langCode = await getLanguage();
-    currentLocale.value = Locale(langCode);
-    Get.updateLocale(currentLocale.value);
   }
 
   Future<void> _loadTodaySchedules() async {

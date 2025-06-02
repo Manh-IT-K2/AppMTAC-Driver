@@ -49,7 +49,7 @@ class SettingLocationScreen extends StatelessWidget {
                 color: kPrimaryColor,
                 decoration: TextDecoration.underline,
                 decorationColor: kPrimaryColor,
-                decorationThickness: 5
+                decorationThickness: 2
               ),
             ),
             SizedBox(
@@ -98,8 +98,8 @@ class _itemSettingLocation extends StatelessWidget {
           ),
         ),
         Container(
-          width: 16.w,
-          height: 8.w,
+          width: 12.w,
+          height: 6.w,
           margin: EdgeInsets.only(left: 5.w),
           decoration: BoxDecoration(
             color: enableStatus ? kPrimaryColor : Colors.grey,
@@ -109,8 +109,8 @@ class _itemSettingLocation extends StatelessWidget {
             alignment:
                 enableStatus ? Alignment.centerRight : Alignment.centerLeft,
             child: Container(
-              width: 8.w,
-              height: 8.w,
+              width: 6.w,
+              height: 6.w,
               margin: const EdgeInsets.all(2),
               decoration: const BoxDecoration(
                   shape: BoxShape.circle, color: Colors.white),

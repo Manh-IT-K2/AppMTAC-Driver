@@ -77,8 +77,8 @@ class _itemSettingNotify extends StatelessWidget {
           ),
         ),
         Container(
-          width: 16.w,
-          height: 8.w,
+          width: 12.w,
+          height: 6.w,
           margin: EdgeInsets.only(left: 5.w),
           decoration: BoxDecoration(
             color: enableStatus ? kPrimaryColor : Colors.grey,
@@ -87,8 +87,8 @@ class _itemSettingNotify extends StatelessWidget {
           child: Align(
             alignment: enableStatus ? Alignment.centerRight : Alignment.centerLeft,
             child: Container(
-              width: 8.w,
-              height: 8.w,
+              width: 6.w,
+              height: 6.w,
               margin: const EdgeInsets.all(2),
               decoration: const BoxDecoration(
                   shape: BoxShape.circle, color: Colors.white),
