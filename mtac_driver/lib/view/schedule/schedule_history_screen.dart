@@ -27,6 +27,7 @@ class ScheduleHistoryScreen extends StatelessWidget {
             TabBar(
               indicatorColor: kPrimaryColor,
               dividerColor: Colors.grey,
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               labelStyle:
                   PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
               tabs: const [
@@ -147,7 +148,7 @@ class _ItemScheduleHistory extends StatelessWidget {
       height: 35.w,
       decoration: BoxDecoration(
         color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(5.w),
+        borderRadius: BorderRadius.circular(2.w),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -179,6 +180,7 @@ class _ItemScheduleHistory extends StatelessWidget {
               ],
             ),
           ),
+          VerticalDivider(color: Colors.grey.shade300),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(10.0),

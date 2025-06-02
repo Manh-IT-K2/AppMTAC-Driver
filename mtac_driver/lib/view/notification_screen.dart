@@ -156,12 +156,12 @@ class _itemNotification extends StatelessWidget {
       height: 20.w,
       decoration: BoxDecoration(
         color: isReaded ? Colors.white : Colors.grey[100],
-        border: Border.symmetric(
-          horizontal: BorderSide(
-            width: 1,
-            color: isReaded ? Colors.white : kPrimaryColor.withOpacity(0.1),
-          ),
-        ),
+        // border: Border.symmetric(
+        //   horizontal: BorderSide(
+        //     width: 1,
+        //     color: isReaded ? Colors.white : kPrimaryColor.withOpacity(0.1),
+        //   ),
+        // ),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),

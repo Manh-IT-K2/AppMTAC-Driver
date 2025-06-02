@@ -70,19 +70,19 @@ class HomeScreen extends StatelessWidget {
               SizedBox(
                 height: 3.w,
               ),
-               const _itemHightScheduleCollection(
+              const _itemHightScheduleCollection(
                 colorStatus: Colors.orange,
                 icon: HugeIcons.strokeRoundedLoading02,
               ),
               SizedBox(
                 height: 3.w,
               ),
-                SizedBox(
+              SizedBox(
                 height: 3.w,
               ),
-               const _itemHightScheduleCollection(
+              const _itemHightScheduleCollection(
                 colorStatus: Colors.red,
-                icon:HugeIcons.strokeRoundedCancel02,
+                icon: HugeIcons.strokeRoundedCancel02,
               ),
               SizedBox(
                 height: 3.w,
@@ -258,65 +258,96 @@ class _HeaderDriverScreen extends StatelessWidget {
         SizedBox(
           height: 3.w,
         ),
-        Container(
-          width: 100.w,
-          height: 42.w,
-          margin: EdgeInsets.only(bottom: 5.w),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.bottomRight,
-              colors: [kPrimaryColor.withOpacity(0.4), Colors.white],
+        Obx(() {
+          if (scheduleController.isLoading.value) {
+            return Center(
+              child: Image.asset(
+                "assets/image/loadingDot.gif",
+                width: 70,
+                height: 70,
+                fit: BoxFit.cover,
+              ),
+            );
+          }
+
+          if (scheduleController.errorMessage.isNotEmpty) {
+            return Text(scheduleController.errorMessage.value);
+          }
+
+          final weather = scheduleController.weatherData.value;
+          if (weather == null) return const SizedBox();
+
+          final temp = weather['current']['temp_c'];
+          final feelLike = weather['current']['feelslike_c'];
+          final status = weather['current']['condition']['text'];
+          //final iconUrl = "https:${weather['current']['condition']['icon']}";
+          //final city = weather['location']['name'];
+
+          return Container(
+            width: 100.w,
+            height: 42.w,
+            margin: EdgeInsets.only(bottom: 5.w),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.bottomRight,
+                colors: [kPrimaryColor.withOpacity(0.4), Colors.white],
+              ),
+              borderRadius: BorderRadius.circular(5.w),
             ),
-            borderRadius: BorderRadius.circular(5.w),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    "assets/image/sun_cloud.png",
-                    width: 30.w,
-                    height: 30.w,
-                    fit: BoxFit.cover,
-                  ),
-                  Text(
-                    "Mưa phùn",
-                    style: PrimaryFont.titleTextBold()
-                        .copyWith(color: Colors.white),
-                  ),
-                  Text(
-                    "Hôm nay",
-                    style: PrimaryFont.bodyTextMedium()
-                        .copyWith(color: Colors.white),
-                  ),
-                ],
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "20˚",
-                    style: PrimaryFont.textCustomBold(12.w)
-                        .copyWith(color: Colors.white),
-                  ),
-                  Text(
-                    "Cảm thấy như 25˚",
-                    style: PrimaryFont.bodyTextMedium()
-                        .copyWith(color: Colors.white),
-                  ),
-                  Image.asset(
-                    "assets/image/bg_weather.png",
-                    width: 30.w,
-                    height: 19.w,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/image/animation_rain_storm.gif",
+                      width: 30.w,
+                      height: 28.w,
+                      fit: BoxFit.cover,
+                    ),
+                    Text(
+                      status,
+                      style: PrimaryFont.titleTextBold()
+                          .copyWith(color: Colors.white),
+                    ),
+                    Text(
+                      "Hôm nay",
+                      style: PrimaryFont.bodyTextMedium()
+                          .copyWith(color: Colors.white),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "$temp˚",
+                      style: PrimaryFont.textCustomBold(12.w)
+                          .copyWith(color: Colors.white),
+                    ),
+                    Text(
+                      "Cảm thấy như $feelLike˚",
+                      style: PrimaryFont.bodyTextMedium()
+                          .copyWith(color: Colors.white),
+                    ),
+                    Image.asset(
+                      "assets/image/bg_weather.png",
+                      width: 30.w,
+                      height: 19.w,
+                    ),
+                    // Text(
+                    //   "$city",
+                    //   style: PrimaryFont.bodyTextMedium()
+                    //       .copyWith(color: Colors.black),
+                    // ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        }),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
