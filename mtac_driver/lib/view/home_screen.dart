@@ -49,34 +49,40 @@ class HomeScreen extends StatelessWidget {
               SizedBox(
                 height: 3.w,
               ),
-              _itemHightScheduleCollection(
-                icon: HugeIcons.strokeRoundedTick01,
-                colorBackIcon: const Color(0xFF00B7FF).withOpacity(0.6),
-                colorStatus: const Color(0xFF0099FE),
+              const _itemHightScheduleCollection(
+                icon: HugeIcons.strokeRoundedTick04,
+                colorStatus: Colors.green,
               ),
               SizedBox(
                 height: 3.w,
               ),
               const _itemHightScheduleCollection(
-                colorStatus: kPrimaryColor,
-                colorBackIcon: Color(0xFF0A7BC1),
+                colorStatus: Colors.orange,
                 icon: HugeIcons.strokeRoundedLoading02,
-              ),
-              SizedBox(
-                height: 3.w,
-              ),
-              _itemHightScheduleCollection(
-                icon: HugeIcons.strokeRoundedTick01,
-                colorBackIcon: const Color(0xFF00B7FF).withOpacity(0.6),
-                colorStatus: const Color(0xFF0099FE),
               ),
               SizedBox(
                 height: 3.w,
               ),
               const _itemHightScheduleCollection(
-                colorStatus: kPrimaryColor,
-                colorBackIcon: Color(0xFF0A7BC1),
+                icon: HugeIcons.strokeRoundedTick04,
+                colorStatus: Colors.green,
+              ),
+              SizedBox(
+                height: 3.w,
+              ),
+               const _itemHightScheduleCollection(
+                colorStatus: Colors.orange,
                 icon: HugeIcons.strokeRoundedLoading02,
+              ),
+              SizedBox(
+                height: 3.w,
+              ),
+                SizedBox(
+                height: 3.w,
+              ),
+               const _itemHightScheduleCollection(
+                colorStatus: Colors.red,
+                icon:HugeIcons.strokeRoundedCancel02,
               ),
               SizedBox(
                 height: 3.w,
@@ -94,10 +100,9 @@ class _itemHightScheduleCollection extends StatelessWidget {
     super.key,
     required this.icon,
     required this.colorStatus,
-    required this.colorBackIcon,
   });
   final IconData icon;
-  final Color colorStatus, colorBackIcon;
+  final Color colorStatus;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -120,7 +125,7 @@ class _itemHightScheduleCollection extends StatelessWidget {
                   height: 15.w,
                   margin: EdgeInsets.only(left: 3.w, right: 3.w),
                   decoration: BoxDecoration(
-                    color: kPrimaryColor.withOpacity(0.3),
+                    color: kPrimaryColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(2.w),
                   ),
                   child: Icon(
@@ -129,18 +134,10 @@ class _itemHightScheduleCollection extends StatelessWidget {
                     color: kPrimaryColor,
                   ),
                 ),
-                //               code": "TG-019",
-                // "company_name": "Công ty LG Electronics",
-                // "location_details": "KCN Tràng Duệ, Bắc Ninh",
-                // "waste_type": "Chất thải điện tử",
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Text(
-                    //   "TG-019",
-                    //   style: PrimaryFont.bodyTextMedium(),
-                    // ),
                     Text(
                       "Công ty LG Electronics",
                       style: PrimaryFont.textCustomBold(3.5.w),
@@ -159,12 +156,7 @@ class _itemHightScheduleCollection extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            width: 8.w,
-            height: 8.w,
-            margin: EdgeInsets.only(left: 4.w),
-            decoration:
-                BoxDecoration(color: colorBackIcon, shape: BoxShape.circle),
+          Expanded(
             child: Icon(
               icon,
               size: 5.w,
@@ -307,7 +299,8 @@ class _HeaderDriverScreen extends StatelessWidget {
                 children: [
                   Text(
                     "20˚",
-                    style: PrimaryFont.textCustomBold(12.w).copyWith(color: Colors.white),
+                    style: PrimaryFont.textCustomBold(12.w)
+                        .copyWith(color: Colors.white),
                   ),
                   Text(
                     "Cảm thấy như 25˚",
@@ -324,14 +317,32 @@ class _HeaderDriverScreen extends StatelessWidget {
             ],
           ),
         ),
-        Text(
-          "Tổng quan",
-          style: PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Tổng quan",
+              style:
+                  PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
+            ),
+            GestureDetector(
+              onTap: () {
+                scheduleController.scrollStatisticalController.animateTo(
+                    scheduleController.scrollStatisticalController.offset +
+                        50.w,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOut);
+              },
+              child: Icon(HugeIcons.strokeRoundedArrowRightDouble,
+                  size: 5.w, color: Colors.black),
+            ),
+          ],
         ),
         SizedBox(
           height: 3.w,
         ),
         SingleChildScrollView(
+          controller: scheduleController.scrollStatisticalController,
           scrollDirection: Axis.horizontal,
           child: Row(
             children: List.generate(
@@ -366,7 +377,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                 Get.toNamed(AppRoutes.schedule);
               },
               child: _UtilDriver(
-                color: const Color(0xFF79F3FF),
+                color: const Color(0xFF8DD8FF),
                 icon: HugeIcons.strokeRoundedCalendar03,
                 title: l10n.txtTitleScheduleColectionD,
                 subTitle: l10n.txtSubTitleScheduleColectionD,
@@ -381,7 +392,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                 Get.toNamed(AppRoutes.scheduleHistory);
               },
               child: _UtilDriver(
-                color: const Color(0xFF529DFF),
+                color: const Color(0xFFBBFBFF),
                 icon: HugeIcons.strokeRoundedSmartPhone01,
                 title: l10n.txtTitleHistoryD,
                 subTitle: l10n.txtSubTitleHistoryD,
@@ -503,67 +514,57 @@ class _itemStatisticalByCircle extends StatelessWidget {
   final Function()? onTap;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 50.w - 24,
-      height: 30.w,
-      padding: EdgeInsets.only(bottom: 1.w),
-      decoration: BoxDecoration(
-        border: const Border.symmetric(
-            horizontal: BorderSide(width: 1, color: kPrimaryColor)),
-        color: kPrimaryColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(5.w),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            width: 100.w,
-            height: 20.w,
-            padding: EdgeInsets.all(3.w),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              border: const Border.symmetric(
-                  vertical: BorderSide(width: 1, color: Colors.grey)),
-              borderRadius: BorderRadius.circular(5.w),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 50.w - 24,
+        height: 30.w,
+        padding: EdgeInsets.all(3.w),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(5.w),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      title,
-                      style: PrimaryFont.titleTextBold()
-                          .copyWith(color: Colors.black),
-                    ),
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: onTap,
-                      child: Icon(
-                        HugeIcons.strokeRoundedArrowRight02,
-                        size: 5.w,
-                        color: kPrimaryColor,
-                      ),
-                    ),
-                  ],
-                ),
                 Text(
-                  subTitle,
-                  style: PrimaryFont.bodyTextMedium()
-                      .copyWith(color: Colors.grey, height: 2),
+                  title,
+                  style:
+                      PrimaryFont.titleTextBold().copyWith(color: Colors.black),
+                ),
+                Icon(
+                  HugeIcons.strokeRoundedArrowRight02,
+                  size: 5.w,
+                  color: kPrimaryColor,
                 ),
               ],
             ),
-          ),
-          Center(
-            child: Icon(
-              icon,
-              size: 7.w,
-              color: colorIcon,
+            Text(
+              subTitle,
+              style: PrimaryFont.bodyTextMedium()
+                  .copyWith(color: Colors.grey, height: 2),
             ),
-          ),
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(
+                  icon,
+                  size: 7.w,
+                  color: colorIcon,
+                ),
+                Text(
+                  "705 kg",
+                  style:
+                      PrimaryFont.titleTextBold().copyWith(color: Colors.black),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -21,6 +21,8 @@ class ScheduleController extends GetxController {
 
   // Controllers
   late final ScrollController scrollController;
+  final ScrollController scrollStatisticalController = ScrollController();
+
   final PageController pageController = PageController();
 
   // Constants
@@ -313,18 +315,18 @@ class ScheduleController extends GetxController {
   }
 
   // UI methods
-  void scrollToToday() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (scrollController.hasClients) {
-        scrollController.animateTo(
-          _scrollOffset,
-          duration: 500.milliseconds,
-          curve: Curves.easeInOut,
-        );
-        debugPrint('>> Scroll to today offset: $_scrollOffset');
-      }
-    });
-  }
+  // void scrollToToday() {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     if (scrollController.hasClients) {
+  //       scrollController.animateTo(
+  //         _scrollOffset,
+  //         duration: 500.milliseconds,
+  //         curve: Curves.easeInOut,
+  //       );
+  //       debugPrint('>> Scroll to today offset: $_scrollOffset');
+  //     }
+  //   });
+  // }
 
   void selectWasteType(String type) {
     final index = _wasteTypes.indexOf(type);
