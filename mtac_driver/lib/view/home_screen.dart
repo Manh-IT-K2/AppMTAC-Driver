@@ -14,7 +14,7 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   // initial ScheduleController
-  final _scheduleController = Get.put(ScheduleController());
+  final _scheduleController = Get.find<ScheduleController>();
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -302,7 +302,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      "assets/image/animation_rain_storm.gif",
+                      "assets/image/animation_sunny.gif",
                       width: 30.w,
                       height: 28.w,
                       fit: BoxFit.cover,

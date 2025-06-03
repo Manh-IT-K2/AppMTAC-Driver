@@ -12,6 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AccountScreen extends StatelessWidget {
   AccountScreen({super.key});
+  //
   final _loginController = Get.find<LoginController>();
   final _scheduleController = Get.find<ScheduleController>();
   @override
@@ -75,10 +76,11 @@ class AccountScreen extends StatelessWidget {
                                 child: ClipOval(child: buildAvatar(user)),
                               ),
                               Text(
-                                user.user.name,
-                                style: PrimaryFont.titleTextBold()
-                                    .copyWith(color: Colors.black),
-                              ),
+                                  _scheduleController.username.value,
+                                  style: PrimaryFont.titleTextBold()
+                                      .copyWith(color: Colors.black),
+                                ),
+                              
                               Text(
                                 user.user.email,
                                 style: PrimaryFont.bodyTextBold()
@@ -113,7 +115,7 @@ class AccountScreen extends StatelessWidget {
                                 ),
                               ),
                               GestureDetector(
-                                onTap: () =>() => _loginController.logOut(),
+                                onTap: () => _loginController.logOut(),
                                 child: Container(
                                   width: 50.w - 16,
                                   height: 10.w,

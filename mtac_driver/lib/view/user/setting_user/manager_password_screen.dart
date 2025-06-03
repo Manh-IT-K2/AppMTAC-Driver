@@ -11,7 +11,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ManagerPasswordScreen extends StatelessWidget {
   ManagerPasswordScreen({super.key});
-  final ProfileController _profileController = Get.put(ProfileController());
+  final _profileController = Get.find<ProfileController>();
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;

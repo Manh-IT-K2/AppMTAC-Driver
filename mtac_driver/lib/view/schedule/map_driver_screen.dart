@@ -19,15 +19,14 @@ class MapDriverScreen extends StatelessWidget {
   MapDriverScreen({super.key});
 
   // initial MapDriverController
-  final MapDriverController controller = Get.put(MapDriverController());
+  final controller = Get.find<MapDriverController>();
   final scheduleController = Get.find<ScheduleController>();
 
   //final int tripId = Get.arguments as int;
-  final HandoverRecordController handoverController =
-      Get.put(HandoverRecordController());
+  final handoverController = Get.find<HandoverRecordController>();
   @override
   Widget build(BuildContext context) {
-       //
+    //
     final l10n = AppLocalizations.of(context)!;
     double screenHeight = 100.h;
     //final destinationsData = controller.getDestinationsByTripId(controller.tripId);
@@ -52,7 +51,11 @@ class MapDriverScreen extends StatelessWidget {
                         fit: BoxFit.fill,
                       ),
                       const SizedBox(height: 16),
-                      Text(l10n.txtOptimizingM, style: PrimaryFont.headerTextBold().copyWith(color: Colors.black),),
+                      Text(
+                        l10n.txtOptimizingM,
+                        style: PrimaryFont.headerTextBold()
+                            .copyWith(color: Colors.black),
+                      ),
                     ],
                   );
                 }
@@ -789,7 +792,8 @@ class _ItemDestination extends StatelessWidget {
     required this.distanceTime,
     required this.scheduleId,
     required this.controller,
-    this.onTap, required this.l10n,
+    this.onTap,
+    required this.l10n,
   });
 
   final String nameBusiness, typeWate, area, distanceTime;

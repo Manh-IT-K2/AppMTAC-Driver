@@ -22,7 +22,7 @@ class ProfileScreen extends StatelessWidget {
   final taxCodeController = TextEditingController();
   final addressController = TextEditingController();
 
-  final ProfileController _profileController = Get.put(ProfileController());
+  final _profileController = Get.find<ProfileController>();
   @override
   Widget build(BuildContext context) {
     //

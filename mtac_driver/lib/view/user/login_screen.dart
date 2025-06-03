@@ -36,7 +36,7 @@ void initState() {
 }
 
 //
-final controller = Get.put(LoginController(), permanent: true);
+final controller = Get.find<LoginController>();
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();

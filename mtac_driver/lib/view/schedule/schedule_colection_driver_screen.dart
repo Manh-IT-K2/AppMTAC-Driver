@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:mtac_driver/common/appbar/app_bar_common.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
-import 'package:mtac_driver/shared/schedule/schedule_shared.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
@@ -13,7 +12,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class ScheduleColectionDriverScreen extends StatelessWidget {
   ScheduleColectionDriverScreen({super.key});
 
-  final ScheduleController _scheduleController = Get.put(ScheduleController());
+  final _scheduleController = Get.find<ScheduleController>();
 
   @override
   Widget build(BuildContext context) {

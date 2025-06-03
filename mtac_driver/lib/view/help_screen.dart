@@ -11,7 +11,7 @@ class HelpScreen extends StatelessWidget {
   HelpScreen({super.key});
 
   // initial HelpFAQController
-  final HelpFAQController _helpFAQController = Get.put(HelpFAQController());
+  final _helpFAQController = Get.find<HelpFAQController>();
 
   @override
   Widget build(BuildContext context) {

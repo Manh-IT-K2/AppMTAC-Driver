@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/route/app_page.dart';
 import 'package:mtac_driver/route/app_route.dart';
@@ -39,24 +38,25 @@ class MyApp extends StatelessWidget {
     return Sizer(
       builder: (context, orientation, deviceType) {
         return GetMaterialApp(
-            // useInheritedMediaQuery: true,
-            // locale: DevicePreview.locale(context),
-            // builder: DevicePreview.appBuilder,
-            locale: loginController.currentLocale.value,
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en'),
-              Locale('vi'),
-            ],
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(scaffoldBackgroundColor: Colors.white),
-            initialRoute: AppRoutes.splash,
-            getPages: AppPages.routes);
+          // useInheritedMediaQuery: true,
+          // locale: DevicePreview.locale(context),
+          // builder: DevicePreview.appBuilder,
+          locale: loginController.currentLocale.value,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en'),
+            Locale('vi'),
+          ],
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+          initialRoute: AppRoutes.splash,
+          getPages: AppPages.routes,
+        );
       },
     );
   }
