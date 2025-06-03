@@ -30,6 +30,9 @@ class ScheduleController extends GetxController {
   final schedulesByWasteType = <String, List<Datum>>{}.obs;
   final todaySchedules = <Datum>[].obs;
   final historySchedules = <Datum>[].obs;
+  final isSelectedFilScheduleHistory = 0.obs;
+  final isDayScheduleHistory = DateTime.now().obs;
+  final isLoadingScheduleHistory = false.obs;
 
   // State
   final collectionStatus = <int, Rx<CollectionStatus>>{};
@@ -97,10 +100,13 @@ class ScheduleController extends GetxController {
     }
   }
 
-  Future<void> getListScheduleHistory() async {
+  Future<void> getListScheduleHistory({DateTime? filterDate}) async {
     try {
-      final schedule = await _scheduleService.getListScheduleHistory();
+      isLoadingScheduleHistory.value = true;
+      await Future.delayed(const Duration(milliseconds: 1000));
+      final schedule = await _scheduleService.getListScheduleHistory(filterDate: filterDate);
       historySchedules.assignAll(schedule);
+      isLoadingScheduleHistory.value = false;
     } catch (e) {
       _handleApiError(e, 'Không thể tải lịch sử');
     }
@@ -178,6 +184,10 @@ class ScheduleController extends GetxController {
         curve: Curves.easeInOut,
       );
     }
+  }
+
+  void selectFilterScheduleHistory(int index){
+    isSelectedFilScheduleHistory.value = index;
   }
 
   void onPageChanged(int index) {

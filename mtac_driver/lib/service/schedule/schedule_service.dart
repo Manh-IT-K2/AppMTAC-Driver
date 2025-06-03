@@ -36,7 +36,7 @@ class ScheduleService {
   }
 
   // Call api get list schedule history
-  Future<List<Datum>> getListScheduleHistory() async {
+  Future<List<Datum>> getListScheduleHistory({DateTime? filterDate}) async {
     final url = Uri.parse('$baseUrl/api/driver/history');
     final token = await getToken();
 
@@ -49,9 +49,20 @@ class ScheduleService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final List<dynamic> rawList = data["data"];
-        final List<Datum> scheduleList =
+        final List<Datum> allScheduleList =
             rawList.map((item) => Datum.fromJson(item)).toList();
-        return scheduleList;
+
+        // Nếu filterDate != null thì lọc
+        if (filterDate != null) {
+          return allScheduleList.where((datum) {
+            final collectionDate = datum.collectionDate;
+            return collectionDate.year == filterDate.year &&
+                collectionDate.month == filterDate.month &&
+                collectionDate.day == filterDate.day;
+          }).toList();
+        } else {
+          return allScheduleList;
+        }
       } else {
         throw Exception(
             'Failed to load schedule history. Status code: ${response.statusCode}');

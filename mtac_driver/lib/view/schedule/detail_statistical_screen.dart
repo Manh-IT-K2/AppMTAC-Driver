@@ -247,18 +247,18 @@ class DetailStatisticalScreen extends StatelessWidget {
                           title: "Chất thải nguy hại",
                           colorDot: Color(0xFF5B58EB),
                         ),
-                        _itemNoteCircleChart(
-                          title: "Chất thải y tế",
-                          colorDot: Color(0xFFBB63FF),
-                        ),
-                        _itemNoteCircleChart(
-                          title: "Chất thải điện tử",
-                          colorDot: Color(0xFF0A2353),
-                        ),
-                        _itemNoteCircleChart(
-                          title: "Chất thải gỗ",
-                          colorDot: kPrimaryColor,
-                        ),
+                        // _itemNoteCircleChart(
+                        //   title: "Chất thải y tế",
+                        //   colorDot: Color(0xFFBB63FF),
+                        // ),
+                        // _itemNoteCircleChart(
+                        //   title: "Chất thải điện tử",
+                        //   colorDot: Color(0xFF0A2353),
+                        // ),
+                        // _itemNoteCircleChart(
+                        //   title: "Chất thải gỗ",
+                        //   colorDot: kPrimaryColor,
+                        // ),
                       ],
                     ),
                   ],

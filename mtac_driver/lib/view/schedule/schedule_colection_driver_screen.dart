@@ -78,21 +78,20 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
             // ),
             SizedBox(height: 1.w,),
             Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Row(
+                
                   children: [
                     Text(
-                      "Hôm nay",
+                      "Hôm nay: ",
                       style: PrimaryFont.bodyTextMedium()
                           .copyWith(color: Colors.grey),
                     ),
-                    SizedBox(height: 1.w,),
+                    SizedBox(width: 1.w,),
                     Text(
-                      "Thứ 3, Ngày 27 Tháng 5 Năm 2025",
+                      today,
                       style: PrimaryFont.bodyTextBold()
-                          .copyWith(color: Colors.black),
+                          .copyWith(color: kPrimaryColor),
                     ),
                   ],
                 ),
@@ -104,7 +103,7 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
-                height: 5.h,
+                height: 10.w,
                 color: Colors.white,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -177,7 +176,6 @@ class ScheduleColectionDriverScreen extends StatelessWidget {
 class _ItemTripWork extends StatelessWidget {
   const _ItemTripWork({
     super.key,
-    // required this.title,
     required this.nameWaste,
     required this.addressBusiness,
     required this.day,
@@ -194,16 +192,7 @@ class _ItemTripWork extends StatelessWidget {
       margin: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.grey.shade100,
-        //border: Border.all(color: Colors.grey),
         borderRadius: BorderRadius.circular(5.w),
-        // boxShadow: [
-        //   BoxShadow(
-        //     color: Colors.black.withOpacity(0.1),
-        //     spreadRadius: 2,
-        //     blurRadius: 1,
-        //     offset: const Offset(1, 4),
-        //   ),
-        // ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -215,29 +204,6 @@ class _ItemTripWork extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Container(
-                  //   width: 30.w,
-                  //   height: 10.w,
-                  //   decoration: BoxDecoration(
-                  //     color: title.contains("Khoán")
-                  //         ? const Color(0xFF22C7E4)
-                  //         : title.contains("Cân")
-                  //             ? Colors.orange
-                  //             : kPrimaryColor,
-                  //     borderRadius: BorderRadius.circular(5.w),
-                  //   ),
-                  //   child: Center(
-                  //     child: Text(
-                  //       title,
-                  //       style: PrimaryFont.bodyTextBold()
-                  //           .copyWith(color: Colors.white),
-                  //       textAlign: TextAlign.center,
-                  //     ),
-                  //   ),
-                  // ),
-                  // SizedBox(
-                  //   height: 3.w,
-                  // ),
                   Text(
                     nameWaste,
                     style:
@@ -285,14 +251,6 @@ class _ItemTripWork extends StatelessWidget {
                   topRight: Radius.circular(5.w),
                   bottomRight: Radius.circular(5.w),
                 ),
-                // boxShadow: [
-                //   BoxShadow(
-                //     color: Colors.black.withOpacity(0.3),
-                //     spreadRadius: 2,
-                //     blurRadius: 1,
-                //     offset: const Offset(1, 4),
-                //   ),
-                // ],
               ),
               child: Center(
                 child: RotatedBox(
@@ -341,12 +299,6 @@ class _ItemListTrip extends StatelessWidget {
                     color: isSelected ? Colors.white : Colors.grey,
                   ),
                 ),
-                // Container(
-                //   color: isSelected ? Colors.blue : Colors.transparent,
-                //   height: 2,
-                //   width: isSelected ? double.infinity : 0,
-                //   margin: const EdgeInsets.only(top: 5),
-                // ),
               ],
             ),
           ),

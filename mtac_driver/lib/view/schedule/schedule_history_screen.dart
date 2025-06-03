@@ -15,110 +15,169 @@ class ScheduleHistoryScreen extends StatelessWidget {
   final _scheduleController = Get.find<ScheduleController>();
   @override
   Widget build(BuildContext context) {
-    //
+    // initial AppLocalizations
     final l10n = AppLocalizations.of(context)!;
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBarCommon(hasMenu: false, title: l10n.txtTitleSH),
-        body: Column(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBarCommon(hasMenu: false, title: l10n.txtTitleSH),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
           children: [
-            TabBar(
-              indicatorColor: kPrimaryColor,
-              dividerColor: Colors.grey,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              labelStyle:
-                  PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
-              tabs: const [
-                Tab(
-                  text: "Hoàn thành",
-                ),
-                Tab(
-                  text: "Đang thu gom",
-                ),
-              ],
+            Obx(
+              () {
+                final isSelected =
+                    _scheduleController.isSelectedFilScheduleHistory.value;
+                final dateFormatted = DateFormat('dd/MM/yyyy')
+                    .format(_scheduleController.isDayScheduleHistory.value);
+                return Row(
+                  children: [
+                    Text(
+                      "Tổng hợp",
+                      style: PrimaryFont.titleTextMedium()
+                          .copyWith(color: Colors.black),
+                    ),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () {
+                        _scheduleController.selectFilterScheduleHistory(0);
+                        _scheduleController.getListScheduleHistory();
+                      },
+                      child: Container(
+                        width: 12.w,
+                        height: 8.w,
+                        margin: EdgeInsets.only(right: 3.w),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: isSelected == 0 ? kPrimaryColor : Colors.white,
+                          border: Border.all(
+                              color: isSelected == 0
+                                  ? Colors.transparent
+                                  : Colors.black,
+                              width: 1),
+                          borderRadius: BorderRadius.circular(4.w),
+                        ),
+                        child: Text(
+                          "Tất cả",
+                          style: PrimaryFont.bodyTextMedium().copyWith(
+                              color: isSelected == 0
+                                  ? Colors.white
+                                  : Colors.black),
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        _scheduleController.isDayScheduleHistory.value =
+                            (await showDatePicker(
+                                  context: context,
+                                  initialDate: _scheduleController
+                                      .isDayScheduleHistory.value,
+                                  firstDate: DateTime(2000),
+                                  lastDate: DateTime(2101),
+                                  helpText: 'Chọn ngày',
+                                  cancelText: 'Hủy',
+                                  confirmText: 'Xác nhận',
+                                )) ??
+                                DateTime.now();
+                        _scheduleController.selectFilterScheduleHistory(1);
+                        _scheduleController.getListScheduleHistory(
+                            filterDate:
+                                _scheduleController.isDayScheduleHistory.value);
+                      },
+                      child: Container(
+                        width: 30.w,
+                        height: 8.w,
+                        decoration: BoxDecoration(
+                          color: isSelected == 1 ? kPrimaryColor : Colors.white,
+                          border: Border.all(
+                              color: isSelected == 1
+                                  ? Colors.transparent
+                                  : Colors.black,
+                              width: 1),
+                          borderRadius: BorderRadius.circular(4.w),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              isSelected == 1 ? dateFormatted : "Chọn ngày",
+                              style: PrimaryFont.bodyTextMedium().copyWith(
+                                  color: isSelected == 1
+                                      ? Colors.white
+                                      : Colors.black),
+                            ),
+                            Icon(
+                              HugeIcons.strokeRoundedCalendar03,
+                              size: 5.w,
+                              color:
+                                  isSelected == 1 ? Colors.white : Colors.black,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  Obx(
-                    () {
-                      final list = _scheduleController.historySchedules;
-                      return Expanded(
+            SizedBox(
+              height: 5.w,
+            ),
+            Obx(
+              () {
+                final list = _scheduleController.historySchedules;
+                if (_scheduleController.isLoadingScheduleHistory.value) {
+                  return Expanded(
+                    child: Center(
+                      child: Image.asset(
+                        "assets/image/loadingDot.gif",
+                        width: 70,
+                        height: 70,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                }
+                return _scheduleController.historySchedules.isEmpty
+                    ? Expanded(
+                        child: Center(
+                          child: Text(
+                            "Không có lịch nào",
+                            style: PrimaryFont.bodyTextMedium()
+                                .copyWith(color: Colors.black),
+                          ),
+                        ),
+                      )
+                    : Expanded(
                         child: CustomScrollView(
                           physics: const BouncingScrollPhysics(),
                           slivers: [
-                            SliverPadding(
-                              padding: const EdgeInsets.all(16),
-                              sliver: SliverList(
-                                delegate: SliverChildBuilderDelegate(
-                                  (context, index) {
-                                    final item = list[index];
-                                    return _ItemScheduleHistory(
-                                      l10n: l10n,
-                                      companyName: item.companyName,
-                                      wastype: item.wasteType,
-                                      collectionDate: DateFormat('yyyy-MM-dd')
-                                          .format(item.collectionDate),
-                                      code: item.code,
-                                      onTap: () {
-                                        Get.toNamed(
-                                            AppRoutes.detailScheduleHistory,
-                                            arguments: item);
-                                      },
-                                    );
-                                  },
-                                  childCount: list.length,
-                                ),
+                            SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  final item = list[index];
+                                  return _ItemScheduleHistory(
+                                    l10n: l10n,
+                                    companyName: item.companyName,
+                                    wastype: item.wasteType,
+                                    collectionDate: DateFormat('yyyy-MM-dd')
+                                        .format(item.collectionDate),
+                                    code: item.code,
+                                    onTap: () {
+                                      Get.toNamed(
+                                          AppRoutes.detailScheduleHistory,
+                                          arguments: item);
+                                    },
+                                  );
+                                },
+                                childCount: list.length,
                               ),
                             ),
                           ],
                         ),
                       );
-                    },
-                  ),
-
-                  ///
-                  ///
-                  Obx(
-                    () {
-                      final list = _scheduleController.historySchedules;
-                      return Expanded(
-                        child: CustomScrollView(
-                          physics: const BouncingScrollPhysics(),
-                          slivers: [
-                            SliverPadding(
-                              padding: const EdgeInsets.all(16),
-                              sliver: SliverList(
-                                delegate: SliverChildBuilderDelegate(
-                                  (context, index) {
-                                    final item = list[index];
-                                    return _ItemScheduleHistory(
-                                      l10n: l10n,
-                                      companyName: item.companyName,
-                                      wastype: item.wasteType,
-                                      collectionDate: DateFormat('yyyy-MM-dd')
-                                          .format(item.collectionDate),
-                                      code: item.code,
-                                      onTap: () {
-                                        Get.toNamed(
-                                            AppRoutes.detailScheduleHistory,
-                                            arguments: item);
-                                      },
-                                    );
-                                  },
-                                  childCount: list.length,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
+              },
             ),
           ],
         ),
@@ -128,7 +187,7 @@ class ScheduleHistoryScreen extends StatelessWidget {
 }
 
 class _ItemScheduleHistory extends StatelessWidget {
-  _ItemScheduleHistory({
+  const _ItemScheduleHistory({
     super.key,
     required this.companyName,
     required this.wastype,
@@ -138,7 +197,7 @@ class _ItemScheduleHistory extends StatelessWidget {
     required this.l10n,
   });
   final AppLocalizations l10n;
-  Function()? onTap;
+  final Function()? onTap;
   final String companyName, wastype, collectionDate, code;
   @override
   Widget build(BuildContext context) {
@@ -147,16 +206,8 @@ class _ItemScheduleHistory extends StatelessWidget {
       width: 100.w,
       height: 35.w,
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        border: Border.all(width: 1, color: kPrimaryColor.withOpacity(0.2)),
         borderRadius: BorderRadius.circular(2.w),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            spreadRadius: 2,
-            blurRadius: 2,
-            offset: const Offset(1, 1),
-          ),
-        ],
       ),
       child: Row(
         children: [
@@ -180,7 +231,7 @@ class _ItemScheduleHistory extends StatelessWidget {
               ],
             ),
           ),
-          VerticalDivider(color: Colors.grey.shade300),
+          VerticalDivider(color: kPrimaryColor.withOpacity(0.2)),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(10.0),
@@ -195,11 +246,6 @@ class _ItemScheduleHistory extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  //  Text(
-                  //   area,
-                  //   style:
-                  //       PrimaryFont.bodyTextBold().copyWith(color: Colors.black),
-                  // ),
                   Text(
                     wastype,
                     style:
