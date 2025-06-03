@@ -1,9 +1,7 @@
-// import 'package:device_preview/device_preview.dart';
-// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mtac_driver/controller/user/login_controller.dart';
+import 'package:mtac_driver/controller/setting/language_controller.dart';
 import 'package:mtac_driver/route/app_page.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:sizer/sizer.dart';
@@ -13,16 +11,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 void main() async {
   // only portrait
   WidgetsFlutterBinding.ensureInitialized();
-  final loginController = Get.put(LoginController());
-  await loginController.loadSavedLanguage();
+  final _languageController = Get.put(LanguageController());
+  await _languageController.loadSavedLanguage();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then((_) {
-    // runApp(DevicePreview(
-    //   enabled: !kReleaseMode,
-    //   builder: (context) => const MyApp(), // Wrap your app
-    // ));
-
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     Get.config(enableLog: false);
     runApp(const MyApp());
@@ -34,14 +27,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loginController = Get.find<LoginController>();
+    final _languageController = Get.find<LanguageController>();
     return Sizer(
       builder: (context, orientation, deviceType) {
         return GetMaterialApp(
-          // useInheritedMediaQuery: true,
-          // locale: DevicePreview.locale(context),
-          // builder: DevicePreview.appBuilder,
-          locale: loginController.currentLocale.value,
+          locale: _languageController.currentLocale.value,
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:mtac_driver/controller/home_controller.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/model/ui_model/statistical_ui_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
@@ -14,6 +15,7 @@ class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   // initial ScheduleController
+  final _homeController = Get.find<Homecontroller>();
   final _scheduleController = Get.find<ScheduleController>();
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               _HeaderDriverScreen(
                 l10n: l10n,
+                homeController: _homeController,
                 scheduleController: _scheduleController,
               ),
               SizedBox(
@@ -174,7 +177,9 @@ class _HeaderDriverScreen extends StatelessWidget {
     super.key,
     required this.l10n,
     required this.scheduleController,
+    required this.homeController,
   });
+  final Homecontroller homeController;
   final ScheduleController scheduleController;
   final AppLocalizations l10n;
   @override
@@ -190,12 +195,12 @@ class _HeaderDriverScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Obx(() {
-              final user = scheduleController.userDriver.value;
+              final user = homeController.userDriver.value;
               return Row(
                 children: [
                   Container(
-                    width: 10.w,
-                    height: 10.w,
+                    width: 12.w,
+                    height: 12.w,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: const Color.fromRGBO(238, 238, 238, 1),
@@ -219,7 +224,7 @@ class _HeaderDriverScreen extends StatelessWidget {
                           .copyWith(color: Colors.grey, height: 1.5),
                       children: <TextSpan>[
                         TextSpan(
-                          text: scheduleController.username.value,
+                          text: homeController.username.value,
                           style: PrimaryFont.titleTextMedium()
                               .copyWith(color: Colors.black),
                         ),
@@ -259,7 +264,7 @@ class _HeaderDriverScreen extends StatelessWidget {
           height: 3.w,
         ),
         Obx(() {
-          if (scheduleController.isLoading.value) {
+          if (homeController.isLoading.value) {
             return Center(
               child: Image.asset(
                 "assets/image/loadingDot.gif",
@@ -270,11 +275,40 @@ class _HeaderDriverScreen extends StatelessWidget {
             );
           }
 
-          if (scheduleController.errorMessage.isNotEmpty) {
-            return Text(scheduleController.errorMessage.value);
+          if (homeController.errorMessage.isNotEmpty) {
+            return Container(
+              width: 100.w,
+              height: 42.w,
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(bottom: 5.w),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.bottomRight,
+                  colors: [kPrimaryColor.withOpacity(0.4), Colors.white],
+                ),
+                borderRadius: BorderRadius.circular(5.w),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Hãy bật vị trí cho App để hiện thông tin thời tiết",
+                    style: PrimaryFont.bodyTextMedium()
+                        .copyWith(color: Colors.black),
+                  ),
+                  Image.asset(
+                    "assets/image/animation_sunny.gif",
+                    width: 30.w,
+                    height: 25.w,
+                    fit: BoxFit.cover,
+                  ),
+                ],
+              ),
+            );
           }
 
-          final weather = scheduleController.weatherData.value;
+          final weather = homeController.weatherData.value;
           if (weather == null) return const SizedBox();
 
           final temp = weather['current']['temp_c'];
@@ -337,11 +371,6 @@ class _HeaderDriverScreen extends StatelessWidget {
                       width: 30.w,
                       height: 19.w,
                     ),
-                    // Text(
-                    //   "$city",
-                    //   style: PrimaryFont.bodyTextMedium()
-                    //       .copyWith(color: Colors.black),
-                    // ),
                   ],
                 ),
               ],
@@ -358,9 +387,8 @@ class _HeaderDriverScreen extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                scheduleController.scrollStatisticalController.animateTo(
-                    scheduleController.scrollStatisticalController.offset +
-                        50.w,
+                homeController.scrollStatisticalController.animateTo(
+                    homeController.scrollStatisticalController.offset + 50.w,
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeOut);
               },
@@ -373,7 +401,7 @@ class _HeaderDriverScreen extends StatelessWidget {
           height: 3.w,
         ),
         SingleChildScrollView(
-          controller: scheduleController.scrollStatisticalController,
+          controller: homeController.scrollStatisticalController,
           scrollDirection: Axis.horizontal,
           child: Row(
             children: List.generate(

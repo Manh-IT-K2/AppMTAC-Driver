@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mtac_driver/common/notify/show_notify_snackbar.dart';
-import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
+import 'package:mtac_driver/controller/home_controller.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/model/user_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
@@ -18,7 +18,7 @@ class ProfileController extends GetxController {
   final Rxn<UserModel> infoUser = Rxn<UserModel>();
   final Rx<File?> imagePath = Rx<File?>(null);
   final loginController = Get.find<LoginController>();
-  final scheduleController = Get.find<ScheduleController>();
+  final _homeController = Get.find<Homecontroller>();
 
   // inital variable manager password
   final passwordNewController = TextEditingController();
@@ -95,8 +95,8 @@ class ProfileController extends GetxController {
   Future<void> updateUser(Map<String, dynamic> updateUser) async {
     try {
       await UserService().updateUser(updateUser);
-      loginController.loadUserModel();
-      scheduleController.loadUsername();
+      _homeController.loadUserModel();
+      _homeController.loadUsername();
       showSuccess('Thông tin của bạn đã được cập nhật.');
     } catch (e) {
       if (e.toString().contains('401')) {

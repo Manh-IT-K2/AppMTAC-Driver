@@ -1,14 +1,7 @@
 import 'dart:io';
-import 'dart:math';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:mtac_driver/common/notify/show_notify_snackbar.dart';
-import 'package:mtac_driver/model/user_model.dart';
-import 'package:mtac_driver/service/wheather/wheather_service.dart';
-import 'package:mtac_driver/shared/language_shared.dart';
 import 'package:mtac_driver/shared/token_shared.dart';
-import 'package:mtac_driver/shared/user/user_shared.dart';
-import 'package:mtac_driver/widgets/schedule_widget/statistical_chart_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
@@ -20,126 +13,60 @@ enum CollectionStatus { idle, started, ended }
 class ScheduleController extends GetxController {
   // Services
   final ScheduleService _scheduleService = ScheduleService();
-  final _weatherService = WeatherService();
 
   // Controllers
-  //late final ScrollController scrollController;
-  final ScrollController scrollStatisticalController = ScrollController();
-
   final PageController pageController = PageController();
 
   // Constants
-  static const List<String> _weekdays = [
-    "Mo",
-    "Tu",
-    "We",
-    "Th",
-    "Fr",
-    "Sa",
-    "Su"
-  ];
   static const List<String> _wasteTypes = [
     "Tất cả",
     "Nguy hại",
     "Tái chế",
     "Công nghiệp"
   ];
-  // static const int _totalItemCount = 9999;
-  // static final double _itemWidth = 13.w;
 
   // Observables
-  final isSelectedSatistical = 0.obs;
-  final currentDate = DateTime.now().obs;
-  final daysInMonth = <DateTime>[].obs;
-  final username = ''.obs;
   final selectedWasteType = "Tất cả".obs;
   final schedulesByWasteType = <String, List<Datum>>{}.obs;
   final todaySchedules = <Datum>[].obs;
   final historySchedules = <Datum>[].obs;
-  final checkTodaySchedules = <Datum>[].obs;
-  final highlightedDays = <int>[].obs;
-  final tripTimes = List.generate(
-      12, (index) => '${(index * 2).toString().padLeft(2, '0')}:00');
-  var currentFilter = 'day'.obs;
-  var stats = <CollectionStats>[].obs;
-  var summary = StatisticalSummary(0, 0, 0).obs;
-  // infor user
-  final Rxn<UserModel> userDriver = Rxn<UserModel>();
-  var weatherData = Rxn<Map<String, dynamic>>();
-  var isLoading = false.obs;
-  var errorMessage = ''.obs;
 
   // State
   final collectionStatus = <int, Rx<CollectionStatus>>{};
   final tripStartTimes = <int, DateTime>{};
-  //late final double _scrollOffset;
 
   @override
   void onInit() {
     super.onInit();
     _initialize();
-    updateData();
   }
 
   @override
   void onClose() {
     pageController.dispose();
-    //scrollController.dispose();
     super.onClose();
   }
 
   // Initialization
   void _initialize() {
-    //_setupScrollController();
     _loadInitialData();
   }
 
-  // void _setupScrollController() {
-  //   daysInMonth.value = _generateDaysInMonth(currentDate.value);
-  //   _scrollOffset = _calculateScrollOffset();
-  //   scrollController = ScrollController(initialScrollOffset: _scrollOffset);
-  // }
-
   Future<void> _loadInitialData() async {
     await Future.wait([
-      loadUserModel(),
-      loadUsername(),
-      loadWeather(),
       _loadTodaySchedules(),
-      _loadArrangedSchedules(),
       _checkAndLoadSchedule(),
       _loadCollectionStatuses(),
     ]);
   }
 
   // Data loading methods
-  Future<void> loadUsername() async {
-    username.value = await getUsername() ?? "Unknown";
-  }
-
-  // load user model
-  Future<void> loadUserModel() async {
-    final user = await getUserModel();
-    if (user != null) {
-      userDriver.value = user;
-    }
-  }
 
   Future<void> _loadTodaySchedules() async {
     await getGroupedScheduleFromLocal(schedulesByWasteType);
     todaySchedules
         .assignAll(schedulesByWasteType.values.expand((e) => e).toList());
     debugPrint('✅ Today schedules loaded: ${todaySchedules.length}');
-  }
-
-  Future<void> _loadArrangedSchedules() async {
-    try {
-      final schedules = await _scheduleService.getListScheduleArranged();
-      highlightedDays.value = _getValidCollectionDays(schedules);
-      debugPrint('✅ Arranged schedules loaded: ${schedules.length}');
-    } catch (e) {
-      _handleApiError(e, 'Không thể tải lịch đã sắp');
-    }
   }
 
   Future<void> _checkAndLoadSchedule() async {
@@ -155,79 +82,6 @@ class ScheduleController extends GetxController {
 
   Future<void> _loadCollectionStatuses() async {
     await getCollectionStatusesFromLocal(collectionStatus);
-  }
-
-  Future<Position> determinePosition() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // 1. Kiểm tra dịch vụ vị trí có bật không
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      // Gợi ý bật GPS
-      Get.snackbar(
-        'GPS đang tắt',
-        'Vui lòng bật GPS trong cài đặt để tiếp tục',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-      throw Exception('Dịch vụ định vị chưa được bật');
-    }
-
-    // 2. Kiểm tra quyền truy cập vị trí
-    permission = await Geolocator.checkPermission();
-
-    // Trường hợp chưa cấp -> xin quyền
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-
-      if (permission == LocationPermission.denied) {
-        Get.snackbar(
-          'Quyền bị từ chối',
-          'Ứng dụng cần quyền vị trí để hoạt động',
-          snackPosition: SnackPosition.BOTTOM,
-        );
-        throw Exception('Không có quyền truy cập vị trí');
-      }
-    }
-
-    // Trường hợp từ chối vĩnh viễn
-    if (permission == LocationPermission.deniedForever) {
-      Get.defaultDialog(
-        title: 'Quyền vị trí bị từ chối vĩnh viễn',
-        middleText:
-            'Vui lòng vào Cài đặt > Quyền ứng dụng để bật lại quyền vị trí cho ứng dụng.',
-        textConfirm: 'Mở cài đặt',
-        textCancel: 'Đóng',
-        onConfirm: () {
-          Geolocator.openAppSettings();
-          Get.back();
-        },
-      );
-      throw Exception('Quyền vị trí bị từ chối vĩnh viễn');
-    }
-    // OK – có thể lấy vị trí
-    return await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-  }
-
-  //
-  Future<void> loadWeather() async {
-    try {
-      isLoading.value = true;
-      errorMessage.value = '';
-
-      final position = await determinePosition();
-      final lat = position.latitude;
-      final lon = position.longitude;
-
-      final data = await _weatherService.fetchWeather('$lat,$lon');
-      weatherData.value = data;
-    } catch (e) {
-      errorMessage.value = 'Lỗi: $e';
-    } finally {
-      isLoading.value = false;
-    }
   }
 
   // API operations
@@ -302,31 +156,6 @@ class ScheduleController extends GetxController {
   }
 
   // Helper methods
-  List<int> _getValidCollectionDays(List<Datum> schedules) {
-    final now = DateTime.now();
-    final days = schedules
-        .where((s) => s.collectionDate.isSameMonthAndYear(now))
-        .map((s) => s.collectionDate.day)
-        .toSet()
-      ..add(now.day);
-    return days.toList()..sort();
-  }
-
-  // double _calculateScrollOffset() {
-  //   final todayIndex =
-  //       daysInMonth.indexWhere((day) => day.isSameDate(currentDate.value));
-  //   final middleItem = _totalItemCount ~/ 2;
-  //   final targetIndex =
-  //       middleItem - (middleItem % daysInMonth.length) + todayIndex;
-  //   return (targetIndex * _itemWidth) - ((100.w - 32) / 2) + (_itemWidth / 2);
-  // }
-
-  List<DateTime> _generateDaysInMonth(DateTime date) {
-    final daysCount = DateTime(date.year, date.month + 1, 0).day;
-    return List.generate(
-        daysCount, (i) => DateTime(date.year, date.month, i + 1));
-  }
-
   void _handleApiError(dynamic error, String defaultMessage) {
     if (error.toString().contains('401')) {
       showError('Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
@@ -338,76 +167,7 @@ class ScheduleController extends GetxController {
     debugPrint('Error: $error');
   }
 
-  void changeFilter(String filter) {
-    currentFilter.value = filter;
-    updateData();
-  }
-
-  void updateData() {
-    if (currentFilter.value == 'day') {
-      stats.value = generateHourlyData();
-    } else if (currentFilter.value == 'week') {
-      stats.value = generateWeeklyData();
-    } else {
-      stats.value = generateMonthlyData();
-    }
-    summary.value = generateSummary(stats);
-  }
-
-  StatisticalSummary generateSummary(List<CollectionStats> data) {
-    final totalKg =
-        data.fold(0, (sum, e) => sum + Random().nextInt(100)); // giả lập
-    final totalPoints = data.length;
-    final totalDays = currentFilter.value == 'day'
-        ? 1
-        : currentFilter.value == 'week'
-            ? 7
-            : 30;
-
-    return StatisticalSummary(totalKg, totalPoints, totalDays);
-  }
-
-  List<CollectionStats> generateHourlyData() {
-    return List.generate(8, (index) {
-      final hour = 6 + index * 2;
-      return CollectionStats(
-          '${hour}h', Random().nextInt(2), Random().nextInt(3), 1);
-    });
-  }
-
-  List<CollectionStats> generateWeeklyData() {
-    final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return days.map((day) {
-      final total = Random().nextInt(3) + 1;
-      final completed = Random().nextInt(total + 1);
-      final onTime = Random().nextInt(completed + 1);
-      return CollectionStats(day, onTime, completed, total);
-    }).toList();
-  }
-
-  List<CollectionStats> generateMonthlyData() {
-    return List.generate(12, (i) {
-      final total = Random().nextInt(3) + 1;
-      final completed = Random().nextInt(total + 1);
-      final onTime = Random().nextInt(completed + 1);
-      return CollectionStats('T${i + 1}', onTime, completed, total);
-    });
-  }
-
   // UI methods
-  // void scrollToToday() {
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     if (scrollController.hasClients) {
-  //       scrollController.animateTo(
-  //         _scrollOffset,
-  //         duration: 500.milliseconds,
-  //         curve: Curves.easeInOut,
-  //       );
-  //       debugPrint('>> Scroll to today offset: $_scrollOffset');
-  //     }
-  //   });
-  // }
-
   void selectWasteType(String type) {
     final index = _wasteTypes.indexOf(type);
     if (index != -1) {
@@ -420,10 +180,6 @@ class ScheduleController extends GetxController {
     }
   }
 
-  void selectedItemStatistical(int index) {
-    isSelectedSatistical.value = index;
-  }
-
   void onPageChanged(int index) {
     if (index >= 0 && index < _wasteTypes.length) {
       selectedWasteType.value = _wasteTypes[index];
@@ -431,16 +187,7 @@ class ScheduleController extends GetxController {
   }
 
   // Getters
-  String getWeekdayShortName(DateTime date) => _weekdays[date.weekday - 1];
   List<Datum> getSchedulesByWasteType(String wasteType) =>
       schedulesByWasteType[wasteType] ?? [];
   List<String> get wasteTypes => _wasteTypes;
-}
-
-// Extensions
-extension DateUtils on DateTime {
-  bool isSameDate(DateTime other) =>
-      year == other.year && month == other.month && day == other.day;
-  bool isSameMonthAndYear(DateTime other) =>
-      year == other.year && month == other.month;
 }

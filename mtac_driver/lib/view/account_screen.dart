@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
+import 'package:mtac_driver/controller/home_controller.dart';
+import 'package:mtac_driver/controller/setting/language_controller.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
@@ -14,7 +15,8 @@ class AccountScreen extends StatelessWidget {
   AccountScreen({super.key});
   //
   final _loginController = Get.find<LoginController>();
-  final _scheduleController = Get.find<ScheduleController>();
+  final _homeController= Get.find<Homecontroller>();
+  final _languageController = Get.find<LanguageController>();
   @override
   Widget build(BuildContext context) {
     // initial AppLocalizations
@@ -28,7 +30,7 @@ class AccountScreen extends StatelessWidget {
             children: [
               Obx(
                 () {
-                  final user = _scheduleController.userDriver.value;
+                  final user = _homeController.userDriver.value;
                   if (user == null) {
                     return Image.asset(
                       "assets/image/loadingDot.gif",
@@ -76,7 +78,7 @@ class AccountScreen extends StatelessWidget {
                                 child: ClipOval(child: buildAvatar(user)),
                               ),
                               Text(
-                                  _scheduleController.username.value,
+                                  _homeController.username.value,
                                   style: PrimaryFont.titleTextBold()
                                       .copyWith(color: Colors.black),
                                 ),
@@ -190,19 +192,19 @@ class AccountScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      final newLang = _loginController.isEnglish ? 'vi' : 'en';
-                      _loginController.changeLanguage(newLang);
+                      final newLang = _languageController.isEnglish ? 'vi' : 'en';
+                      _languageController.changeLanguage(newLang);
                     },
                     child: Container(
                       width: 10.w,
                       height: 5.w,
                       decoration: BoxDecoration(
-                        color: _loginController.isEnglish ? kPrimaryColor : Colors.grey[400],
+                        color: _languageController.isEnglish ? kPrimaryColor : Colors.grey[400],
                         borderRadius: BorderRadius.circular(5.w),
                       ),
                       child: Obx(
                         () => Align(
-                          alignment: _loginController.isEnglish
+                          alignment: _languageController.isEnglish
                               ? Alignment.centerRight
                               : Alignment.centerLeft,
                           child: Container(
@@ -214,7 +216,7 @@ class AccountScreen extends StatelessWidget {
                             ),
                             child: Center(
                               child: Text(
-                                _loginController.isEnglish ? "en" : "vi",
+                                _languageController.isEnglish ? "en" : "vi",
                                 textAlign: TextAlign.center,
                                 style: PrimaryFont.textCustomBold(2.w)
                                     .copyWith(color: Colors.black),
