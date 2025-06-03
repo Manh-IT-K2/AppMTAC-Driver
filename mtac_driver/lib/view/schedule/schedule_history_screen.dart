@@ -78,6 +78,28 @@ class ScheduleHistoryScreen extends StatelessWidget {
                                   helpText: 'Chọn ngày',
                                   cancelText: 'Hủy',
                                   confirmText: 'Xác nhận',
+                                  builder:
+                                      (BuildContext context, Widget? child) {
+                                    return Theme(
+                                      data: Theme.of(context).copyWith(
+                                        colorScheme: const ColorScheme.light(
+                                          primary:
+                                              kPrimaryColor, // Màu tiêu đề, chọn ngày
+                                          onPrimary: Colors
+                                              .white, // Màu chữ trên primary
+                                          onSurface: Colors
+                                              .black, // Màu chữ ngày tháng
+                                        ),
+                                        textButtonTheme: TextButtonThemeData(
+                                          style: TextButton.styleFrom(
+                                            foregroundColor:
+                                                kPrimaryColor, // Màu nút "Hủy", "Xác nhận"
+                                          ),
+                                        ),
+                                      ),
+                                      child: child!,
+                                    );
+                                  },
                                 )) ??
                                 DateTime.now();
                         _scheduleController.selectFilterScheduleHistory(1);
@@ -201,6 +223,17 @@ class _ItemScheduleHistory extends StatelessWidget {
   final String companyName, wastype, collectionDate, code;
   @override
   Widget build(BuildContext context) {
+    String image;
+    switch (wastype) {
+      case 'Chất thải công nghiệp':
+        image = "waste_industrial.jpeg";
+        break;
+      case 'Chất thải sinh hoạt':
+        image = "waste_household.jpeg";
+        break;
+      default:
+        image = "waste_hazardous.jpeg";
+    }
     return Container(
       margin: EdgeInsets.only(bottom: 5.w),
       width: 100.w,
@@ -216,7 +249,7 @@ class _ItemScheduleHistory extends StatelessWidget {
             child: Column(
               children: [
                 Image.asset(
-                  'assets/image/icon_package.png',
+                  'assets/image/$image',
                   width: 100,
                   height: 80,
                 ),
