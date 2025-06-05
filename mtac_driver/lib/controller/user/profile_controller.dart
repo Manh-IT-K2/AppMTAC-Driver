@@ -23,8 +23,8 @@ class ProfileController extends GetxController {
   // inital variable manager password
   final passwordNewController = TextEditingController();
   final passwordNewConfirmController = TextEditingController();
-  // final passwordController = TextEditingController();
-  // final obscurePassword = true.obs;
+  final passwordController = TextEditingController();
+  final obscurePassword = true.obs;
   final obscurePasswordNew = true.obs;
   final obscurePasswordNewConfirm = true.obs;
 
@@ -35,10 +35,10 @@ class ProfileController extends GetxController {
     getInforUser();
   }
 
-// password visibility
-  // void togglePasswordVisibility() {
-  //   obscurePassword.value = !obscurePassword.value;
-  // }
+  // password visibility
+  void togglePasswordVisibility() {
+    obscurePassword.value = !obscurePassword.value;
+  }
 
   // password new visibility
   void togglePasswordNewVisibility() {

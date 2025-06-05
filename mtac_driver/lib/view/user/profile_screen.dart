@@ -7,7 +7,7 @@ import 'package:mtac_driver/controller/user/profile_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:mtac_driver/widgets/user_widget/build_avatar_widget.dart';
-import 'package:mtac_driver/widgets/user_widget/input_form_widget.dart';
+import 'package:mtac_driver/common/input/input_form_widget.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
