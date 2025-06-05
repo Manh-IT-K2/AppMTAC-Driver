@@ -106,7 +106,7 @@
   "txtPhone": "Phone",
   "txtEmailPU": "Email",
   "txtAddressPU": "Address",
-  "txtCarIDPU": "ID number",
+  "txtCarIDPU": "Card ID",
   "txtTaxCodePU": "Tax code",
   "txtVehicleLicensePU": "Driver license",
   "txtUpdateProfilePU": "Update information",

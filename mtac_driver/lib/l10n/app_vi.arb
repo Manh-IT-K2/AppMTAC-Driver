@@ -106,9 +106,9 @@
   "txtPhone": "Điện thoại",
   "txtEmailPU": "E-mail",
   "txtAddressPU": "Địa chỉ",
-  "txtCarIDPU": "Số CCCD",
+  "txtCarIDPU": "CCCD",
   "txtTaxCodePU": "Mã số thuế",
-  "txtVehicleLicensePU": "Giấy phép lái xe",
+  "txtVehicleLicensePU": "GPLX",
   "txtUpdateProfilePU": "Cập nhật thông tin",
 
   "txtWelcomToL": "Chào mừng đến",

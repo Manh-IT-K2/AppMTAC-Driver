@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
+import 'package:sizer/sizer.dart';
 
 // ignore: must_be_immutable
 class InputForm extends StatelessWidget {
@@ -50,7 +51,7 @@ class InputForm extends StatelessWidget {
         labelText: title,
         labelStyle:
             PrimaryFont.bodyTextMedium().copyWith(color: Colors.blueAccent),
-        prefixIcon: Icon(iconStart, color: Colors.blueAccent),
+        prefixIcon: Icon(iconStart, color: Colors.blueAccent, size: 5.w,),
         filled: true,
         fillColor: Colors.blue.shade50,
         contentPadding:

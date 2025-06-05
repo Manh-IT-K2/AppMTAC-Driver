@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -26,7 +24,7 @@ class ProfileScreen extends StatelessWidget {
   final _profileController = Get.find<ProfileController>();
   @override
   Widget build(BuildContext context) {
-    //
+    // initial AppLocalizations
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: kPrimaryColor.withOpacity(0.8),
@@ -55,55 +53,114 @@ class ProfileScreen extends StatelessWidget {
           children: [
             Positioned(
               top: 0,
-              child: Container(
+              child: SizedBox(
                 width: 100.w,
-                margin: EdgeInsets.only(left: 16.0, top: 10.h, right: 16.0),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => Get.back(),
-                      child: Icon(
-                        HugeIcons.strokeRoundedArrowLeft01,
-                        color: Colors.white,
-                        size: 8.w,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 7.h, left: 16.0, right: 16.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () => Get.back(),
+                            child: Icon(
+                              HugeIcons.strokeRoundedArrowLeft01,
+                              color: Colors.white,
+                              size: 8.w,
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              l10n.txtMyProfileAU,
+                              textAlign: TextAlign.center,
+                              style: PrimaryFont.headerTextBold().copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 8.w,
+                          ),
+                        ],
                       ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        l10n.txtMyProfileAU,
-                        textAlign: TextAlign.center,
-                        style: PrimaryFont.headerTextBold().copyWith(
-                          color: Colors.white,
+                      Container(
+                        width: 30.w,
+                        height: 30.w,
+                        margin: EdgeInsets.symmetric(vertical: 3.w),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white, width: 1),
+                          borderRadius: BorderRadius.circular(
+                            15.w,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15.w),
+                          child: buildAvatar(userModel),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      width: 16.w,
-                    ),
-                  ],
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          "Joined on 12/5/2023",
+                          style: PrimaryFont.textCustomBold(2.w).copyWith(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      // Align(
+                      //   alignment: Alignment.centerRight,
+                      //   child: Image.asset(
+                      //     'assets/image/icon_change_color.png',
+                      //     width: 8.w,
+                      //     height: 8.w,
+                      //   ),
+                      // ),
+                    ],
+                  ),
                 ),
               ),
             ),
             Positioned(
-              right: 5.w,
-              top: 34.w,
-              child: Image.asset(
-                'assets/image/icon_change_color.png',
-                width: 8.w,
-                height: 8.w,
+              top: 22.h,
+              right: 16.h,
+              child: GestureDetector(
+                onTap: () {
+                  _profileController.pickImageFromGallery();
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: kPrimaryColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.camera_alt,
+                    size: 18,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
             Positioned(
               bottom: 0,
               child: Container(
                 width: 100.w,
-                height: 80.h,
+                height: 70.h,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(5.w),
-                    topRight: Radius.circular(5.w),
+                    topLeft: Radius.circular(10.w),
+                    topRight: Radius.circular(10.w),
                   ),
+                  boxShadow: const [
+                    BoxShadow(
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                      blurStyle: BlurStyle.outer,
+                      color: Colors.white,
+                      offset: Offset(0, 0),
+                    )
+                  ],
                 ),
                 child: Padding(
                   padding: EdgeInsets.only(left: 16.0, top: 10.w, right: 16.0),
@@ -111,136 +168,93 @@ class ProfileScreen extends StatelessWidget {
                     physics: const BouncingScrollPhysics(),
                     child: Column(
                       children: [
-                        SizedBox(
-                          width: 80,
-                          height: 90,
-                          child: Stack(
-                            children: [
-                              SizedBox(
-                                width: 80,
-                                height: 80,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(5.w),
-                                  child: buildAvatar(userModel),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _profileController.pickImageFromGallery();
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                      color: kPrimaryColor.withOpacity(0.8),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(
-                                      Icons.camera_alt,
-                                      size: 18,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 3.w,
-                        ),
-                        Text(
-                          "Joined on 12/5/2023",
-                          style: PrimaryFont.bodyTextMedium().copyWith(
-                            color: Colors.grey.withOpacity(0.5),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Thông tin cá nhân",
+                            style: PrimaryFont.bodyTextMedium().copyWith(
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                         SizedBox(
                           height: 5.w,
                         ),
-                        Container(
-                          width: 100.w,
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(5.w),
-                          ),
-                          child: Column(
-                            children: [
-                              InputForm(
-                                readOnly: false,
-                                controller: nameController,
-                                title: l10n.txtNamePU,
-                                obscureText: false,
-                              ),
-                              SizedBox(
-                                height: 5.w,
-                              ),
-                              InputForm(
-                                readOnly: false,
-                                controller: phoneController,
-                                title: l10n.txtPhone,
-                                obscureText: false,
-                              ),
-                              SizedBox(
-                                height: 5.w,
-                              ),
-                              InputForm(
-                                readOnly: false,
-                                controller: emailController,
-                                title: l10n.txtEmailPU,
-                                obscureText: false,
-                                suffixIcon: IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    HugeIcons.strokeRoundedAlert02,
-                                    size: 5.w,
-                                    color: Colors.orange.withOpacity(0.5),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5.w,
-                              ),
-                              InputForm(
-                                readOnly: false,
-                                controller: addressController,
-                                title: l10n.txtAddressPU,
-                                obscureText: false,
-                              ),
-                            ],
+                        InputForm(
+                          iconStart: HugeIcons.strokeRoundedUserEdit01,
+                          readOnly: false,
+                          controller: nameController,
+                          title: l10n.txtNamePU,
+                          obscureText: false,
+                        ),
+                        SizedBox(
+                          height: 5.w,
+                        ),
+                        InputForm(
+                          readOnly: false,
+                          iconStart: HugeIcons.strokeRoundedUserAccount,
+                          controller: nummberIDController,
+                          title: l10n.txtCarIDPU,
+                          obscureText: false,
+                        ),
+                        SizedBox(
+                          height: 5.w,
+                        ),
+                        InputForm(
+                          readOnly: false,
+                          iconStart: HugeIcons.strokeRoundedIdentityCard,
+                          controller: numberVehicleController,
+                          title: l10n.txtVehicleLicensePU,
+                          obscureText: false,
+                        ),
+                        SizedBox(
+                          height: 5.w,
+                        ),
+                        InputForm(
+                          readOnly: false,
+                          iconStart: HugeIcons.strokeRoundedLocation06,
+                          controller: addressController,
+                          title: l10n.txtAddressPU,
+                          obscureText: false,
+                        ),
+                        SizedBox(
+                          height: 10.w,
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Thông tin liên hệ",
+                            style: PrimaryFont.bodyTextMedium().copyWith(
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                         SizedBox(
                           height: 5.w,
                         ),
-                        Container(
-                          width: 100.w,
-                          padding: const EdgeInsets.all(16.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(5.w),
-                          ),
-                          child: Column(
-                            children: [
-                              InputForm(
-                                readOnly: false,
-                                controller: nummberIDController,
-                                title: l10n.txtCarIDPU,
-                                obscureText: false,
-                              ),
-                              SizedBox(
-                                height: 5.w,
-                              ),
-                              InputForm(
-                                readOnly: false,
-                                controller: numberVehicleController,
-                                title: l10n.txtVehicleLicensePU,
-                                obscureText: false,
-                              ),
-                            ],
+                        InputForm(
+                          readOnly: false,
+                          iconStart: HugeIcons.strokeRoundedSmartPhone01,
+                          controller: phoneController,
+                          title: l10n.txtPhone,
+                          obscureText: false,
+                        ),
+                        SizedBox(
+                          height: 5.w,
+                        ),
+                        InputForm(
+                          readOnly: false,
+                          iconStart: HugeIcons.strokeRoundedMail01,
+                          controller: emailController,
+                          title: l10n.txtEmailPU,
+                          obscureText: false,
+                          suffixIcon: IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              HugeIcons.strokeRoundedAlert02,
+                              size: 5.w,
+                              color: Colors.orange.withOpacity(0.5),
+                            ),
                           ),
                         ),
                         SizedBox(

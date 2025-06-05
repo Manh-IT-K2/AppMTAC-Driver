@@ -44,7 +44,7 @@ class ScheduleHistoryScreen extends StatelessWidget {
                         _scheduleController.getListScheduleHistory();
                       },
                       child: Container(
-                        width: 12.w,
+                        width: 15.w,
                         height: 8.w,
                         margin: EdgeInsets.only(right: 3.w),
                         alignment: Alignment.center,
