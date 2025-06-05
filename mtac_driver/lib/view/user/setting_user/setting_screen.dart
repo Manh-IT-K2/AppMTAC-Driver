@@ -79,35 +79,35 @@ class _itemSettingAccount extends StatelessWidget {
   final bool arrowRight;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 5.w),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            size: 5.w,
-            color: color,
-          ),
-          SizedBox(
-            width: 3.w,
-          ),
-          Expanded(
-            child: Text(
-              title,
-              style: PrimaryFont.bodyTextMedium().copyWith(color: color),
+    return GestureDetector(
+      onTap: ontap,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 5.w),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 5.w,
+              color: color,
             ),
-          ),
-          arrowRight
-              ? GestureDetector(
-                  onTap: ontap,
-                  child: Icon(
+            SizedBox(
+              width: 3.w,
+            ),
+            Expanded(
+              child: Text(
+                title,
+                style: PrimaryFont.bodyTextMedium().copyWith(color: color),
+              ),
+            ),
+            arrowRight
+                ? Icon(
                     HugeIcons.strokeRoundedArrowRight01,
                     size: 5.w,
                     color: color,
-                  ),
-                )
-              : const SizedBox(),
-        ],
+                  )
+                : const SizedBox(),
+          ],
+        ),
       ),
     );
   }

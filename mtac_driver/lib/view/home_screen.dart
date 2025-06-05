@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:mtac_driver/common/banner/banner_slider.dart';
 import 'package:mtac_driver/controller/home_controller.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
 import 'package:mtac_driver/model/ui_model/statistical_ui_model.dart';
@@ -10,6 +11,7 @@ import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:mtac_driver/widgets/user_widget/build_avatar_widget.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -37,10 +39,37 @@ class HomeScreen extends StatelessWidget {
               SizedBox(
                 height: 5.w,
               ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(5.w),
-                child: Image.asset("assets/image/banner_app.png"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Về chúng tôi",
+                    style: PrimaryFont.titleTextMedium()
+                        .copyWith(color: Colors.black),
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      final url = Uri.parse('https://www.moitruongachau.com');
+                      if (await canLaunchUrl(url)) {
+                        await launchUrl(url,mode: LaunchMode.externalApplication);
+                      } else {
+                        throw 'Không thể mở URL: $url';
+                      }
+                    },
+                    child: Text(
+                      "Xem thêm",
+                      style: PrimaryFont.bodyTextMedium().copyWith(
+                          color: kPrimaryColor,
+                          decoration: TextDecoration.underline,
+                          decorationColor: kPrimaryColor),
+                    ),
+                  ),
+                ],
               ),
+              SizedBox(
+                height: 3.w,
+              ),
+              const BannerSlider(),
               SizedBox(
                 height: 5.w,
               ),
@@ -48,6 +77,26 @@ class HomeScreen extends StatelessWidget {
                 l10n.txtTripColectionTodayD,
                 style:
                     PrimaryFont.titleTextMedium().copyWith(color: Colors.black),
+              ),
+              SizedBox(
+                height: 3.w,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const CollectionNoteDot(
+                      color: Colors.green, label: "Hoàn thành"),
+                  SizedBox(
+                    width: 3.w,
+                  ),
+                  const CollectionNoteDot(
+                      color: Colors.orange, label: "Đang thu gom"),
+                  SizedBox(
+                    width: 3.w,
+                  ),
+                  const CollectionNoteDot(
+                      color: Colors.red, label: "Chuyến bị huỷ"),
+                ],
               ),
               SizedBox(
                 height: 3.w,
@@ -94,6 +143,28 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CollectionNoteDot extends StatelessWidget {
+  final Color? color;
+  final String label;
+
+  const CollectionNoteDot(
+      {super.key, required this.color, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(width: 10, height: 10, color: color),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: PrimaryFont.textCustomBold(2.w).copyWith(color: Colors.black),
+        ),
+      ],
     );
   }
 }
