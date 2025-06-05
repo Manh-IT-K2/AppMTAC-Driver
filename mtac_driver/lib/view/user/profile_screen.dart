@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:mtac_driver/common/button/button_long.dart';
 import 'package:mtac_driver/controller/user/profile_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:mtac_driver/widgets/user_widget/build_avatar_widget.dart';
-import 'package:mtac_driver/common/input/input_form_widget.dart';
+import 'package:mtac_driver/common/input/input_form.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -168,7 +169,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
-                              InputFormWidget(
+                              InputForm(
                                 readOnly: false,
                                 controller: nameController,
                                 title: l10n.txtNamePU,
@@ -177,7 +178,7 @@ class ProfileScreen extends StatelessWidget {
                               SizedBox(
                                 height: 5.w,
                               ),
-                              InputFormWidget(
+                              InputForm(
                                 readOnly: false,
                                 controller: phoneController,
                                 title: l10n.txtPhone,
@@ -186,7 +187,7 @@ class ProfileScreen extends StatelessWidget {
                               SizedBox(
                                 height: 5.w,
                               ),
-                              InputFormWidget(
+                              InputForm(
                                 readOnly: false,
                                 controller: emailController,
                                 title: l10n.txtEmailPU,
@@ -203,7 +204,7 @@ class ProfileScreen extends StatelessWidget {
                               SizedBox(
                                 height: 5.w,
                               ),
-                              InputFormWidget(
+                              InputForm(
                                 readOnly: false,
                                 controller: addressController,
                                 title: l10n.txtAddressPU,
@@ -224,7 +225,7 @@ class ProfileScreen extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
-                              InputFormWidget(
+                              InputForm(
                                 readOnly: false,
                                 controller: nummberIDController,
                                 title: l10n.txtCarIDPU,
@@ -233,7 +234,7 @@ class ProfileScreen extends StatelessWidget {
                               SizedBox(
                                 height: 5.w,
                               ),
-                              InputFormWidget(
+                              InputForm(
                                 readOnly: false,
                                 controller: numberVehicleController,
                                 title: l10n.txtVehicleLicensePU,
@@ -245,33 +246,21 @@ class ProfileScreen extends StatelessWidget {
                         SizedBox(
                           height: 10.w,
                         ),
-                        ElevatedButton(
+                        ButtonLong(
+                          title: l10n.txtUpdateProfilePU,
                           onPressed: () {
-                            _profileController.updateUser({
-                              "name": nameController.text.trim(),
-                              "email": emailController.text.trim(),
-                              "masothue": null,
-                              "phone": phoneController.text.trim(),
-                              "soCCCD": nummberIDController.text.trim(),
-                              "adress": addressController.text.trim(),
-                              "soGPLX": numberVehicleController.text.trim(),
-                            });
+                            _profileController.updateUser(
+                              {
+                                "name": nameController.text.trim(),
+                                "email": emailController.text.trim(),
+                                "masothue": null,
+                                "phone": phoneController.text.trim(),
+                                "soCCCD": nummberIDController.text.trim(),
+                                "adress": addressController.text.trim(),
+                                "soGPLX": numberVehicleController.text.trim(),
+                              },
+                            );
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: kPrimaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50.w),
-                            ),
-                            elevation: 4,
-                            shadowColor: Colors.black.withOpacity(0.3),
-                          ),
-                          child: Text(
-                            l10n.txtUpdateProfilePU,
-                            style: PrimaryFont.bodyTextMedium().copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
                         ),
                         SizedBox(
                           height: 10.w,

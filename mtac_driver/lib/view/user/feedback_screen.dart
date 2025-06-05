@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/common/appbar/app_bar_common.dart';
+import 'package:mtac_driver/common/button/button_long.dart';
 import 'package:mtac_driver/controller/user/help_faqs_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
@@ -99,8 +100,8 @@ class FeedbackScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     hintText: "Viết ý kiến của bạn ở đây",
                     hintStyle: PrimaryFont.bodyTextMedium(),
-                    contentPadding:
-                        const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 16),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
@@ -115,25 +116,12 @@ class FeedbackScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              GestureDetector(
-                onTap: () {},
-                child: Container(
-                  width: 100.w,
-                  height: 10.w,
-                  margin: EdgeInsets.only(top: 10.w),
-                  decoration: BoxDecoration(
-                    color: kPrimaryColor,
-                    borderRadius: BorderRadius.circular(10.w),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "Gửi",
-                      textAlign: TextAlign.center,
-                      style: PrimaryFont.bodyTextBold()
-                          .copyWith(color: Colors.white),
-                    ),
-                  ),
-                ),
+              SizedBox(
+                height: 10.w,
+              ),
+              ButtonLong(
+                title: "Gửi",
+                onPressed: () {},
               ),
             ],
           ),

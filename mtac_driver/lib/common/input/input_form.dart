@@ -4,8 +4,8 @@ import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 
 // ignore: must_be_immutable
-class InputFormWidget extends StatelessWidget {
-  InputFormWidget(
+class InputForm extends StatelessWidget {
+  InputForm(
       {super.key,
       required this.controller,
       required this.title,

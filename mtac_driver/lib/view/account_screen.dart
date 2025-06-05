@@ -15,7 +15,7 @@ class AccountScreen extends StatelessWidget {
   AccountScreen({super.key});
   //
   final _loginController = Get.find<LoginController>();
-  final _homeController= Get.find<Homecontroller>();
+  final _homeController = Get.find<Homecontroller>();
   final _languageController = Get.find<LanguageController>();
   @override
   Widget build(BuildContext context) {
@@ -75,14 +75,16 @@ class AccountScreen extends StatelessWidget {
                                   ),
                                   shape: BoxShape.circle,
                                 ),
-                                child: ClipOval(child: buildAvatar(user)),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(9.w),
+                                  child: buildAvatar(user),
+                                ),
                               ),
                               Text(
-                                  _homeController.username.value,
-                                  style: PrimaryFont.titleTextBold()
-                                      .copyWith(color: Colors.black),
-                                ),
-                              
+                                _homeController.username.value,
+                                style: PrimaryFont.titleTextBold()
+                                    .copyWith(color: Colors.black),
+                              ),
                               Text(
                                 user.user.email,
                                 style: PrimaryFont.bodyTextBold()
@@ -130,7 +132,7 @@ class AccountScreen extends StatelessWidget {
                                   ),
                                   child: Center(
                                     child: Text(
-                                     l10n.txtLogoutAU,
+                                      l10n.txtLogoutAU,
                                       style: PrimaryFont.bodyTextBold()
                                           .copyWith(color: Colors.red),
                                     ),
@@ -192,14 +194,17 @@ class AccountScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      final newLang = _languageController.isEnglish ? 'vi' : 'en';
+                      final newLang =
+                          _languageController.isEnglish ? 'vi' : 'en';
                       _languageController.changeLanguage(newLang);
                     },
                     child: Container(
                       width: 10.w,
                       height: 5.w,
                       decoration: BoxDecoration(
-                        color: _languageController.isEnglish ? kPrimaryColor : Colors.grey[400],
+                        color: _languageController.isEnglish
+                            ? kPrimaryColor
+                            : Colors.grey[400],
                         borderRadius: BorderRadius.circular(5.w),
                       ),
                       child: Obx(

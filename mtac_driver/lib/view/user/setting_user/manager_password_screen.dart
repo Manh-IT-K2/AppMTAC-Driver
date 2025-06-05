@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/common/appbar/app_bar_common.dart';
+import 'package:mtac_driver/common/button/button_long.dart';
 import 'package:mtac_driver/controller/user/profile_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
-import 'package:mtac_driver/common/input/input_form_widget.dart';
+import 'package:mtac_driver/common/input/input_form.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -43,10 +44,10 @@ class ManagerPasswordScreen extends StatelessWidget {
                   height: 3.w,
                 ),
                 Obx(
-                  () => InputFormWidget(
+                  () => InputForm(
                     readOnly: false,
                     title: l10n.txtPasswordL,
-                    controller: _profileController.passwordController,
+                    controller: _profileController.passwordOldController,
                     obscureText: _profileController.obscurePassword.value,
                     iconStart: HugeIcons.strokeRoundedLockPassword,
                     suffixIcon: IconButton(
@@ -83,7 +84,7 @@ class ManagerPasswordScreen extends StatelessWidget {
                   height: 3.w,
                 ),
                 Obx(
-                  () => InputFormWidget(
+                  () => InputForm(
                     readOnly: false,
                     title: l10n.txtPasswordL,
                     controller: _profileController.passwordNewController,
@@ -112,7 +113,7 @@ class ManagerPasswordScreen extends StatelessWidget {
                   height: 3.w,
                 ),
                 Obx(
-                  () => InputFormWidget(
+                  () => InputForm(
                       readOnly: false,
                       title: l10n.txtPasswordL,
                       controller:
@@ -141,35 +142,46 @@ class ManagerPasswordScreen extends StatelessWidget {
                 SizedBox(
                   height: 15.w,
                 ),
-                SizedBox(
-                  width: 100.w,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      _profileController.updatePassword(
-                        {
-                          "password": _profileController
-                              .passwordNewController.text
-                              .trim()
-                        },
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: kPrimaryColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.w),
-                      ),
-                      elevation: 4,
-                      shadowColor: Colors.black.withOpacity(0.3),
-                    ),
-                    child: Text(
-                      l10n.txtChangePasswordMP,
-                      style: PrimaryFont.bodyTextMedium().copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                ButtonLong(
+                  title: l10n.txtChangePasswordMP,
+                  onPressed: () {
+                    _profileController.updatePassword(
+                      {
+                        "password":
+                            _profileController.passwordNewController.text.trim()
+                      },
+                    );
+                  },
                 ),
+                // SizedBox(
+                //   width: 100.w,
+                //   child: ElevatedButton(
+                //     onPressed: () {
+                //       _profileController.updatePassword(
+                //         {
+                //           "password": _profileController
+                //               .passwordNewController.text
+                //               .trim()
+                //         },
+                //       );
+                //     },
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: kPrimaryColor,
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(50.w),
+                //       ),
+                //       elevation: 4,
+                //       shadowColor: Colors.black.withOpacity(0.3),
+                //     ),
+                //     child: Text(
+                //       l10n.txtChangePasswordMP,
+                //       style: PrimaryFont.bodyTextMedium().copyWith(
+                //         color: Colors.white,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

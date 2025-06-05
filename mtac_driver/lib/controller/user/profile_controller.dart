@@ -23,7 +23,7 @@ class ProfileController extends GetxController {
   // inital variable manager password
   final passwordNewController = TextEditingController();
   final passwordNewConfirmController = TextEditingController();
-  final passwordController = TextEditingController();
+  final passwordOldController = TextEditingController();
   final obscurePassword = true.obs;
   final obscurePasswordNew = true.obs;
   final obscurePasswordNewConfirm = true.obs;
@@ -33,6 +33,15 @@ class ProfileController extends GetxController {
   void onInit() {
     super.onInit();
     getInforUser();
+  }
+
+   // dispose
+  @override
+  void onClose() {
+    passwordNewController.dispose();
+    passwordNewConfirmController.dispose();
+    passwordOldController.dispose();
+    super.onClose();
   }
 
   // password visibility

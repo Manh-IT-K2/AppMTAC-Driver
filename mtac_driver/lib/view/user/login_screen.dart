@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:mtac_driver/common/button/button_long.dart';
 import 'package:mtac_driver/configs/api_config.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
-import 'package:mtac_driver/common/input/input_form_widget.dart';
+import 'package:mtac_driver/common/input/input_form.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -44,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     //
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -77,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           SizedBox(height: 10.h),
-                          InputFormWidget(
+                          InputForm(
                             readOnly: false,
                             title: l10n.txtPhone,
                             obscureText: false,
@@ -106,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                           ),
                           SizedBox(height: 5.w),
-                          InputFormWidget(
+                          InputForm(
                             readOnly: false,
                             title: l10n.txtPasswordL,
                             controller: controller.passwordController,
@@ -135,30 +136,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           SizedBox(height: 5.w),
-                          SizedBox(
-                            width: 100.w,
-                            child: ElevatedButton(
-                              onPressed: (){
-                                if(_formKey.currentState!.validate()){
-                                  controller.login();
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: kPrimaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50.w),
-                                ),
-                                elevation: 4,
-                                shadowColor: Colors.black.withOpacity(0.3),
-                              ),
-                              child: Text(
-                                l10n.txtSignInL,
-                                style: PrimaryFont.bodyTextMedium().copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
+                          ButtonLong(
+                            title: l10n.txtSignInL,
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                controller.login();
+                              }
+                            },
                           ),
                           SizedBox(height: 10.w),
                           Text(
