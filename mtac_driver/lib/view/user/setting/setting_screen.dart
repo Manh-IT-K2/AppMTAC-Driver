@@ -54,7 +54,9 @@ class SettingScreen extends StatelessWidget {
               arrowRight: true,
               color: Colors.black,
               icon: HugeIcons.strokeRoundedIdentityCard,
-              ontap: () {},
+              ontap: () {
+                Get.toNamed(AppRoutes.settingDriverLicense);
+              },
             ),
              _itemSettingAccount(
               title: "Quản lý  CCCD",

@@ -10,8 +10,8 @@ import 'package:mtac_driver/common/input/input_form.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class ManagerPasswordScreen extends StatelessWidget {
-  ManagerPasswordScreen({super.key});
+class SettingManagerPasswordScreen extends StatelessWidget {
+  SettingManagerPasswordScreen({super.key});
   final _profileController = Get.find<ProfileController>();
   @override
   Widget build(BuildContext context) {
