@@ -38,6 +38,7 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: Colors.white,
       body: PageView(
         controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
         onPageChanged: (index) {
           setState(() {
             _selectedIndex = index;

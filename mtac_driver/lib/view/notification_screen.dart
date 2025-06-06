@@ -154,6 +154,7 @@ class _itemNotification extends StatelessWidget {
     return Container(
       width: 100.w,
       height: 20.w,
+      margin: EdgeInsets.only(bottom: 1.w),
       decoration: BoxDecoration(
         color: isReaded ? Colors.white : Colors.grey[100],
         // border: Border.symmetric(

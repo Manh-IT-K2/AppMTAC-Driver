@@ -49,6 +49,27 @@ class SettingScreen extends StatelessWidget {
                 Get.toNamed(AppRoutes.managerPassword);
               },
             ),
+             _itemSettingAccount(
+              title: "Quản lý GPLX",
+              arrowRight: true,
+              color: Colors.black,
+              icon: HugeIcons.strokeRoundedIdentityCard,
+              ontap: () {},
+            ),
+             _itemSettingAccount(
+              title: "Quản lý  CCCD",
+              arrowRight: true,
+              color: Colors.black,
+              icon: HugeIcons.strokeRoundedUserAccount,
+              ontap: () {},
+            ),
+             _itemSettingAccount(
+              title: "Quản lý  hợp đồng",
+              arrowRight: true,
+              color: Colors.black,
+              icon: HugeIcons.strokeRoundedLegalHammer,
+              ontap: () {},
+            ),
             _itemSettingAccount(
               title: l10n.txtDeleteAcountSU,
               arrowRight: false,

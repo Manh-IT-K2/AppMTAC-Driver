@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mtac_driver/common/appbar/app_bar_common.dart';
+import 'package:mtac_driver/common/button/button_long.dart';
 import 'package:mtac_driver/common/notify/notify_success_dialog.dart';
 import 'package:mtac_driver/controller/schedule/handover_record_controller.dart';
 import 'package:mtac_driver/controller/schedule/schedule_controller.dart';
@@ -30,7 +31,7 @@ class HandoverRecordDriverScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     //final size = context.screenSize;
     return Scaffold(
-      appBar: AppBarCommon(hasMenu: false, title:  l10n.txtTitleHR),
+      appBar: AppBarCommon(hasMenu: false, title: l10n.txtTitleHR),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Container(
@@ -81,7 +82,8 @@ class _BottomHandoverRecordSceen extends StatelessWidget {
     required this.sWidthCon,
     required this.sHeightCon,
     required this.scheduleController,
-    required this.scheduleId, required this.l10n,
+    required this.scheduleId,
+    required this.l10n,
   });
 
   final HandoverRecordController imageController;
@@ -214,35 +216,26 @@ class _BottomHandoverRecordSceen extends StatelessWidget {
         const SizedBox(
           height: 15,
         ),
-        Center(
-          child: ElevatedButton(
-            onPressed: () {
-              if (imageController.selectedImages.isNotEmpty &&
-                  imageController.allInputsValid.value) {
-                imageController.updateSelectedGoods(infoWasteData);
-                NotifySuccessDialog()
-                    .showNotifyPopup(l10n.txtSuccessNotiHR, true, () {
+        ButtonLong(
+          title: l10n.txtButSendHR,
+          onPressed: () {
+            if (imageController.selectedImages.isNotEmpty &&
+                imageController.allInputsValid.value) {
+              imageController.updateSelectedGoods(infoWasteData);
+              NotifySuccessDialog().showNotifyPopup(
+                l10n.txtSuccessNotiHR,
+                true,
+                () {
                   scheduleController.endCollectionTrip(
                       scheduleId,
                       imageController.selectedGoods,
                       imageController.selectedImages);
                   Navigator.pop(context);
                   Get.back();
-                });
-              }
-            },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: kPrimaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                elevation: 5,
-                minimumSize: Size(30.h, 5.h)),
-            child: Text(
-              l10n.txtButSendHR,
-              style: PrimaryFont.bodyTextBold().copyWith(color: Colors.white),
-            ),
-          ),
+                },
+              );
+            }
+          },
         ),
       ],
     );
