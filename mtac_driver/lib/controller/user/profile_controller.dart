@@ -27,6 +27,7 @@ class ProfileController extends GetxController {
   final obscurePassword = true.obs;
   final obscurePasswordNew = true.obs;
   final obscurePasswordNewConfirm = true.obs;
+  final imgPath = "".obs;
 
   // init
   @override

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -5,6 +7,7 @@ import 'package:mtac_driver/common/appbar/app_bar_common.dart';
 import 'package:mtac_driver/configs/api_config.dart';
 import 'package:mtac_driver/controller/user/profile_controller.dart';
 import 'package:mtac_driver/model/user_model.dart';
+import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
@@ -30,6 +33,16 @@ class SettingManagerDriverLisense extends StatelessWidget {
               ),
             );
           }
+         
+          Image imageWidget;
+          if (_profileController.imgPath.value.isEmpty) {
+            imageWidget = Image.network("${ApiConfig.urlImage}${user.user.imgGplxPath}",
+                height: 30.h,);
+          } else {
+            imageWidget =
+                Image.file(File(_profileController.imgPath.value), height: 30.h, fit: BoxFit.cover);
+          }
+
           return Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -43,10 +56,16 @@ class SettingManagerDriverLisense extends StatelessWidget {
                       style: PrimaryFont.titleTextMedium()
                           .copyWith(color: Colors.black),
                     ),
-                    Icon(
-                      HugeIcons.strokeRoundedAddCircle,
-                      size: 8.w,
-                      color: kPrimaryColor,
+                    GestureDetector(
+                      onTap: () async {
+                        _profileController.imgPath.value = await Get.toNamed(
+                            AppRoutes.settingUpdateDriverLicense);
+                      },
+                      child: Icon(
+                        HugeIcons.strokeRoundedAddCircle,
+                        size: 8.w,
+                        color: kPrimaryColor,
+                      ),
                     ),
                   ],
                 ),
@@ -67,10 +86,7 @@ class SettingManagerDriverLisense extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(5.w),
-                    child: Image.network(
-                      "${ApiConfig.urlImage}${user.user.imgGplxPath}",
-                      height: 30.h,
-                    ),
+                    child: imageWidget,
                   ),
                 ),
                 Text(
@@ -124,9 +140,10 @@ class SettingManagerDriverLisense extends StatelessWidget {
                   ),
                   child: Text(
                     "Cập nhật",
-                    style: PrimaryFont.bodyTextBold().copyWith(color: Colors.white ),
+                    style: PrimaryFont.bodyTextBold()
+                        .copyWith(color: Colors.white),
                   ),
-                )
+                ),
               ],
             ),
           );
@@ -157,11 +174,13 @@ class _itemInforDriverLicense extends StatelessWidget {
         children: [
           Text(
             title,
-            style: PrimaryFont.bodyTextMedium().copyWith(color: Colors.black, height: 2),
+            style: PrimaryFont.bodyTextMedium()
+                .copyWith(color: Colors.black, height: 2),
           ),
           Text(
             content,
-            style: PrimaryFont.bodyTextBold().copyWith(color: colorContent, height: 2),
+            style: PrimaryFont.bodyTextBold()
+                .copyWith(color: colorContent, height: 2),
           ),
         ],
       ),

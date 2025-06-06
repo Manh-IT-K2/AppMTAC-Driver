@@ -22,6 +22,7 @@ import 'package:mtac_driver/view/user/setting/setting_manager_driver_lisense.dar
 import 'package:mtac_driver/view/user/setting/setting_notification_screen.dart';
 import 'package:mtac_driver/view/user/setting/setting_manager_password_screen.dart';
 import 'package:mtac_driver/view/user/setting/setting_screen.dart';
+import 'package:mtac_driver/view/user/setting/setting_update_driver_license.dart';
 
 class AppPages {
   static final routes = [
@@ -81,6 +82,12 @@ class AppPages {
     GetPage(
       name: AppRoutes.settingDriverLicense,
       page: () => SettingManagerDriverLisense(),
+      binding: PageBinding(),
+      middlewares: [NetworkCheckMiddlewareController()],
+    ),
+    GetPage(
+      name: AppRoutes.settingUpdateDriverLicense,
+      page: () => const SettingUpdateDriverLicense(),
       binding: PageBinding(),
       middlewares: [NetworkCheckMiddlewareController()],
     ),
