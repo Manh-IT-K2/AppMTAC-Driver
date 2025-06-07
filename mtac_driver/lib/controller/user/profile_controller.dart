@@ -28,6 +28,8 @@ class ProfileController extends GetxController {
   final obscurePasswordNew = true.obs;
   final obscurePasswordNewConfirm = true.obs;
   final imgPath = "".obs;
+  final RxBool isLicenseInFrame = false.obs;
+
 
   // init
   @override

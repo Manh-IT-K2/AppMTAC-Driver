@@ -130,18 +130,27 @@ class SettingManagerDriverLisense extends StatelessWidget {
                 SizedBox(
                   height: 5.h,
                 ),
-                Container(
-                  width: 100.w,
-                  height: 12.w,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: kPrimaryColor,
-                    borderRadius: BorderRadius.circular(15.w),
-                  ),
-                  child: Text(
-                    "Cập nhật",
-                    style: PrimaryFont.bodyTextBold()
-                        .copyWith(color: Colors.white),
+                GestureDetector(
+                  onTap: () {
+                    // if(_profileController.imgPath.value.isNotEmpty){
+                    //   _profileController.updateUser({
+                    //     "img_GPLX_path": _profileController.imgPath.value
+                    //   });
+                    // }
+                  },
+                  child: Container(
+                    width: 100.w,
+                    height: 12.w,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: kPrimaryColor,
+                      borderRadius: BorderRadius.circular(15.w),
+                    ),
+                    child: Text(
+                      "Cập nhật",
+                      style: PrimaryFont.bodyTextBold()
+                          .copyWith(color: Colors.white),
+                    ),
                   ),
                 ),
               ],

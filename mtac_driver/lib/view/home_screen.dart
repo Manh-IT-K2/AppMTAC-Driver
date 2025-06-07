@@ -51,7 +51,8 @@ class HomeScreen extends StatelessWidget {
                     onTap: () async {
                       final url = Uri.parse('https://www.moitruongachau.com');
                       if (await canLaunchUrl(url)) {
-                        await launchUrl(url,mode: LaunchMode.externalApplication);
+                        await launchUrl(url,
+                            mode: LaunchMode.externalApplication);
                       } else {
                         throw 'Không thể mở URL: $url';
                       }
@@ -334,23 +335,64 @@ class _HeaderDriverScreen extends StatelessWidget {
         SizedBox(
           height: 3.w,
         ),
-        Obx(() {
-          if (homeController.isLoading.value) {
-            return Center(
-              child: Image.asset(
-                "assets/image/loadingDot.gif",
-                width: 70,
-                height: 70,
-                fit: BoxFit.cover,
-              ),
-            );
-          }
+        Obx(
+          () {
+            if (homeController.isLoading.value) {
+              return Center(
+                child: Image.asset(
+                  "assets/image/loadingDot.gif",
+                  width: 70,
+                  height: 70,
+                  fit: BoxFit.cover,
+                ),
+              );
+            }
 
-          if (homeController.errorMessage.isNotEmpty) {
+            if (homeController.errorMessage.isNotEmpty) {
+              return Container(
+                width: 100.w,
+                height: 42.w,
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(bottom: 5.w),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.bottomRight,
+                    colors: [kPrimaryColor.withOpacity(0.4), Colors.white],
+                  ),
+                  borderRadius: BorderRadius.circular(5.w),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Hãy bật vị trí cho App để hiện thông tin thời tiết",
+                      style: PrimaryFont.bodyTextMedium()
+                          .copyWith(color: Colors.black),
+                    ),
+                    Image.asset(
+                      "assets/image/animation_sunny.gif",
+                      width: 30.w,
+                      height: 25.w,
+                      fit: BoxFit.cover,
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            final weather = homeController.weatherData.value;
+            if (weather == null) return const SizedBox();
+
+            final temp = weather['current']['temp_c'];
+            final feelLike = weather['current']['feelslike_c'];
+            final status = weather['current']['condition']['text'];
+            //final iconUrl = "https:${weather['current']['condition']['icon']}";
+            //final city = weather['location']['name'];
+
             return Container(
               width: 100.w,
               height: 42.w,
-              alignment: Alignment.center,
               margin: EdgeInsets.only(bottom: 5.w),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -360,94 +402,60 @@ class _HeaderDriverScreen extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(5.w),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Text(
-                    "Hãy bật vị trí cho App để hiện thông tin thời tiết",
-                    style: PrimaryFont.bodyTextMedium()
-                        .copyWith(color: Colors.black),
+                  SizedBox(
+                    width: 50.w,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/image/animation_sunny.gif",
+                          width: 30.w,
+                          height: 28.w,
+                          fit: BoxFit.cover,
+                        ),
+                        Text(
+                          status,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: PrimaryFont.titleTextBold()
+                              .copyWith(color: Colors.white),
+                        ),
+                        Text(
+                          "Hôm nay",
+                          style: PrimaryFont.bodyTextMedium()
+                              .copyWith(color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
-                  Image.asset(
-                    "assets/image/animation_sunny.gif",
-                    width: 30.w,
-                    height: 25.w,
-                    fit: BoxFit.cover,
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "$temp˚",
+                        style: PrimaryFont.textCustomBold(12.w)
+                            .copyWith(color: Colors.white),
+                      ),
+                      Text(
+                        "Cảm thấy như $feelLike˚",
+                        style: PrimaryFont.bodyTextMedium()
+                            .copyWith(color: Colors.white),
+                      ),
+                      Image.asset(
+                        "assets/image/bg_weather.png",
+                        width: 30.w,
+                        height: 19.w,
+                      ),
+                    ],
                   ),
                 ],
               ),
             );
-          }
-
-          final weather = homeController.weatherData.value;
-          if (weather == null) return const SizedBox();
-
-          final temp = weather['current']['temp_c'];
-          final feelLike = weather['current']['feelslike_c'];
-          final status = weather['current']['condition']['text'];
-          //final iconUrl = "https:${weather['current']['condition']['icon']}";
-          //final city = weather['location']['name'];
-
-          return Container(
-            width: 100.w,
-            height: 42.w,
-            margin: EdgeInsets.only(bottom: 5.w),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.bottomRight,
-                colors: [kPrimaryColor.withOpacity(0.4), Colors.white],
-              ),
-              borderRadius: BorderRadius.circular(5.w),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      "assets/image/animation_sunny.gif",
-                      width: 30.w,
-                      height: 28.w,
-                      fit: BoxFit.cover,
-                    ),
-                    Text(
-                      status,
-                      style: PrimaryFont.titleTextBold()
-                          .copyWith(color: Colors.white),
-                    ),
-                    Text(
-                      "Hôm nay",
-                      style: PrimaryFont.bodyTextMedium()
-                          .copyWith(color: Colors.white),
-                    ),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "$temp˚",
-                      style: PrimaryFont.textCustomBold(12.w)
-                          .copyWith(color: Colors.white),
-                    ),
-                    Text(
-                      "Cảm thấy như $feelLike˚",
-                      style: PrimaryFont.bodyTextMedium()
-                          .copyWith(color: Colors.white),
-                    ),
-                    Image.asset(
-                      "assets/image/bg_weather.png",
-                      width: 30.w,
-                      height: 19.w,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        }),
+          },
+        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

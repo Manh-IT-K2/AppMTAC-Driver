@@ -41,15 +41,17 @@ class _MainScreenState extends State<MainScreen> {
         physics: const NeverScrollableScrollPhysics(),
         onPageChanged: (index) {
           setState(() {
-            _selectedIndex = index;
-            if (index == 1) _isHelpLoaded = true;
-            if (index == 2) _isAccountLoaded = true;
+            _selectedIndex;
+            // if (index == 1) 
+            _isHelpLoaded;
+            // if (index == 2)
+             _isAccountLoaded;
           });
         },
         children: [
           HomeScreen(),
-          _isHelpLoaded ? HelpScreen() : const SizedBox(),
-          _isAccountLoaded ? AccountScreen() : const SizedBox(),
+          HelpScreen(),
+          AccountScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavBar(
