@@ -21,6 +21,14 @@ class ProfileController extends GetxController {
   final _homeController = Get.find<Homecontroller>();
 
   // inital variable manager password
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
+  final nummberIDController = TextEditingController();
+  final numberVehicleController = TextEditingController();
+  final taxCodeController = TextEditingController();
+  final addressController = TextEditingController();
+  //
   final passwordNewController = TextEditingController();
   final passwordNewConfirmController = TextEditingController();
   final passwordOldController = TextEditingController();

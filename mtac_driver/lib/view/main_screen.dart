@@ -13,8 +13,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-  bool _isHelpLoaded = false;
-  bool _isAccountLoaded = false;
 
   final PageController _pageController = PageController();
 
@@ -26,7 +24,7 @@ class _MainScreenState extends State<MainScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _pageController.animateToPage(
         index,
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 100),
         curve: Curves.easeInOut,
       );
     });
@@ -42,10 +40,6 @@ class _MainScreenState extends State<MainScreen> {
         onPageChanged: (index) {
           setState(() {
             _selectedIndex;
-            // if (index == 1) 
-            _isHelpLoaded;
-            // if (index == 2)
-             _isAccountLoaded;
           });
         },
         children: [

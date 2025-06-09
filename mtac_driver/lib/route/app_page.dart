@@ -18,11 +18,10 @@ import 'package:mtac_driver/view/user/privacy_policy_screen.dart';
 import 'package:mtac_driver/view/user/login_screen.dart';
 import 'package:mtac_driver/view/user/profile_screen.dart';
 import 'package:mtac_driver/view/user/setting/setting_location_screen.dart';
-import 'package:mtac_driver/view/user/setting/setting_manager_driver_lisense.dart';
 import 'package:mtac_driver/view/user/setting/setting_notification_screen.dart';
 import 'package:mtac_driver/view/user/setting/setting_manager_password_screen.dart';
 import 'package:mtac_driver/view/user/setting/setting_screen.dart';
-import 'package:mtac_driver/view/user/setting/setting_update_driver_license.dart';
+import 'package:mtac_driver/common/update_id_document.dart';
 
 class AppPages {
   static final routes = [
@@ -80,14 +79,8 @@ class AppPages {
       middlewares: [NetworkCheckMiddlewareController()],
     ),
     GetPage(
-      name: AppRoutes.settingDriverLicense,
-      page: () => SettingManagerDriverLisense(),
-      binding: PageBinding(),
-      middlewares: [NetworkCheckMiddlewareController()],
-    ),
-    GetPage(
-      name: AppRoutes.settingUpdateDriverLicense,
-      page: () => const SettingUpdateDriverLicense(),
+      name: AppRoutes.updateIdDocument,
+      page: () => const UpdateIdDocument(),
       binding: PageBinding(),
       middlewares: [NetworkCheckMiddlewareController()],
     ),

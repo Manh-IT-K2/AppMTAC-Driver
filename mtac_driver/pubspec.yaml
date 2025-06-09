@@ -56,11 +56,9 @@ dependencies:
   flutter_image_compress: ^2.4.0 # image compress
   fl_chart: ^0.63.0 # create chart
   camera: ^0.10.6 # camera preview
-  google_mlkit_object_detection: ^0.15.0 # object detection
-  google_mlkit_text_recognition: ^0.15.0
-  path_provider: ^2.1.2 # access device storage paths
-  permission_handler: ^11.3.0 # handle runtime permissions
-  path: ^1.9.0 # path manipulation utilities
+  #google_mlkit_object_detection: ^0.15.0 # object detection
+  google_mlkit_text_recognition: ^0.15.0 # text recognition
+
 
 
 dev_dependencies:

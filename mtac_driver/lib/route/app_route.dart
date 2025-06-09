@@ -13,7 +13,7 @@ class AppRoutes {
   static const setting = "/setting";
   static const settingLocation = "/settingLocation";
   static const settingNotify = "/settingNotify";
-  static const settingUpdateDriverLicense = "/settingUpdateDriverLicense";
+  static const updateIdDocument = "/updateIdDocument";
   static const settingDriverLicense = "/settingDriverLicense";
   static const contactUs = "/contactUs";
   static const privacyPolicy = "/privacyPolicy";
