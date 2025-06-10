@@ -6,7 +6,7 @@ import 'package:mtac_driver/model/user_model.dart';
 import 'package:mtac_driver/shared/token_shared.dart';
 import 'package:mtac_driver/shared/user/user_shared.dart';
 
-class LoginService {
+class LoginRepository {
   // initial url
   final String baseUrl = ApiConfig.baseUrl;
 

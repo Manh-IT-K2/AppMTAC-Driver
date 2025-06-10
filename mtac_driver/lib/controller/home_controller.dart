@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:mtac_driver/model/user_model.dart';
-import 'package:mtac_driver/service/wheather/wheather_service.dart';
+import 'package:mtac_driver/repository/wheather/wheather_repository.dart';
 import 'package:mtac_driver/shared/user/user_shared.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 
 class Homecontroller extends GetxController {
-  // Service
-  final _weatherService = WeatherService();
+  // repository
+  final _weatherRepository = WheatherRepository();
 
   // Controller
   final ScrollController scrollStatisticalController = ScrollController();
@@ -51,7 +51,7 @@ class Homecontroller extends GetxController {
       final lat = position.latitude;
       final lon = position.longitude;
 
-      final data = await _weatherService.fetchWeather('$lat,$lon');
+      final data = await _weatherRepository.fetchWeather('$lat,$lon');
       weatherData.value = data;
     } catch (e) {
       errorMessage.value = 'Lỗi: $e';

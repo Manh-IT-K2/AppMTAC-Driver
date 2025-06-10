@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mtac_driver/common/notify/show_notify_snackbar.dart';
 import 'package:mtac_driver/route/app_route.dart';
-import 'package:mtac_driver/service/user/login_service.dart';
+import 'package:mtac_driver/repository/user/login_repository.dart';
 
 class LoginController extends GetxController {
+  // repository
+  final _loginRepository = LoginRepository();
+
   // inital variable
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
@@ -74,7 +77,7 @@ class LoginController extends GetxController {
   Future<void> login() async {
     isLoading.value = true;
 
-    final success = await LoginService().login(
+    final success = await _loginRepository.login(
       username: usernameController.text,
       password: passwordController.text,
     );
@@ -90,7 +93,7 @@ class LoginController extends GetxController {
 
   // Call logout from loginService
   Future<void> logOut() async {
-    final success = await LoginService().logout();
+    final success = await _loginRepository.logout();
     if (success) {
       showSuccess("Đăng xuất thành công!.");
       Get.offAllNamed(AppRoutes.login);
@@ -101,7 +104,7 @@ class LoginController extends GetxController {
 
   // Call checkLoginStatus from loginService
   Future<void> checkLoginStatus() async {
-    final success = await LoginService().checkLoginStatus();
+    final success = await _loginRepository.checkLoginStatus();
     if (success) {
       Get.offAllNamed('/main');
     } else {

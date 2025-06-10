@@ -9,10 +9,13 @@ import 'package:mtac_driver/controller/home_controller.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
 import 'package:mtac_driver/model/user_model.dart';
 import 'package:mtac_driver/route/app_route.dart';
-import 'package:mtac_driver/service/user/user_service.dart';
+import 'package:mtac_driver/repository/user/user_repository.dart';
 import 'package:mtac_driver/shared/token_shared.dart';
 
 class ProfileController extends GetxController {
+
+  // repository
+  final _userRepository =  UserRepository();
   //
   final Rxn<UserModel> infoUser = Rxn<UserModel>();
   final Rx<File?> imagePath = Rx<File?>(null);
@@ -77,7 +80,7 @@ class ProfileController extends GetxController {
   // Call function get user from service
   Future<void> getInforUser() async {
     try {
-      final user = await UserService().getUser();
+      final user = await _userRepository.getUser();
       infoUser.value = user;
       if (kDebugMode) {
         print(user);
@@ -98,7 +101,7 @@ class ProfileController extends GetxController {
   // Call function update pass word from service
   Future<void> updatePassword(Map<String, dynamic> updateUser) async {
     try {
-      await UserService().updateUser(updateUser);
+      await _userRepository.updateUser(updateUser);
       showSuccess('Đổi mật khẩu thành công.');
       Get.offAllNamed(AppRoutes.main);
     } catch (e) {
@@ -116,7 +119,7 @@ class ProfileController extends GetxController {
   // Call function update user from service
   Future<void> updateUser(Map<String, dynamic> updateUser) async {
     try {
-      await UserService().updateUser(updateUser);
+      await _userRepository.updateUser(updateUser);
       _homeController.loadUserModel();
       _homeController.loadUsername();
       showSuccess('Thông tin của bạn đã được cập nhật.');

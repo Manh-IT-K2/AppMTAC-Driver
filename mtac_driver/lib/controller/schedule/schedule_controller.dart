@@ -5,14 +5,14 @@ import 'package:mtac_driver/shared/token_shared.dart';
 import 'package:flutter/material.dart';
 import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/model/schedule_model.dart';
-import 'package:mtac_driver/service/schedule/schedule_service.dart';
+import 'package:mtac_driver/repository/schedule/schedule_repository.dart';
 import 'package:mtac_driver/shared/schedule/schedule_shared.dart';
 
 enum CollectionStatus { idle, started, ended }
 
 class ScheduleController extends GetxController {
-  // Services
-  final ScheduleService _scheduleService = ScheduleService();
+  // repository
+  final _scheduleRepository = ScheduleRepository();
 
   // Controllers
   final PageController pageController = PageController();
@@ -91,7 +91,7 @@ class ScheduleController extends GetxController {
   Future<void> _getListScheduleToday() async {
     try {
       debugPrint(">>> GỌI getListScheduleToday từ Controller");
-      final schedule = await _scheduleService.getListScheduleToday();
+      final schedule = await _scheduleRepository.getListScheduleToday();
       schedulesByWasteType.value = schedule;
       debugPrint(
           "Các loại chất thải hôm nay: ${schedulesByWasteType.keys.toList()}");
@@ -104,7 +104,7 @@ class ScheduleController extends GetxController {
     try {
       isLoadingScheduleHistory.value = true;
       await Future.delayed(const Duration(milliseconds: 1000));
-      final schedule = await _scheduleService.getListScheduleHistory(filterDate: filterDate);
+      final schedule = await _scheduleRepository.getListScheduleHistory(filterDate: filterDate);
       historySchedules.assignAll(schedule);
       isLoadingScheduleHistory.value = false;
     } catch (e) {
@@ -119,7 +119,7 @@ class ScheduleController extends GetxController {
         debugPrint('🟡 scheduleId: $key, status: ${value.value}'));
 
     try {
-      final success = await _scheduleService.startCollectionTrip(scheduleId);
+      final success = await _scheduleRepository.startCollectionTrip(scheduleId);
       if (success) {
         collectionStatus[scheduleId] ??= CollectionStatus.idle.obs;
         collectionStatus[scheduleId]!.value = CollectionStatus.started;
@@ -144,7 +144,7 @@ class ScheduleController extends GetxController {
     }
 
     try {
-      final success = await _scheduleService.endCollectionTrip(
+      final success = await _scheduleRepository.endCollectionTrip(
         id: scheduleId,
         goods: selectedGoods,
         images: selectedImages,

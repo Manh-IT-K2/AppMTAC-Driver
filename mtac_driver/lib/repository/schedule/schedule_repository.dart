@@ -9,7 +9,7 @@ import 'package:mtac_driver/model/schedule_model.dart';
 import 'package:mtac_driver/shared/schedule/schedule_shared.dart';
 import 'package:mtac_driver/shared/token_shared.dart';
 
-class ScheduleService {
+class ScheduleRepository {
   // initial url
   final String baseUrl = ApiConfig.baseUrl;
   //

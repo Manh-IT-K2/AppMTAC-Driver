@@ -6,7 +6,7 @@ import 'package:mtac_driver/model/user_model.dart';
 import 'package:mtac_driver/shared/token_shared.dart';
 import 'package:mtac_driver/shared/user/user_shared.dart';
 
-class UserService {
+class UserRepository {
   // initial url
   final String baseUrl = ApiConfig.baseUrl;
 
@@ -70,9 +70,9 @@ class UserService {
     }
   }
 
-  // Call api update user
+  // Call api update password
   Future<UserModel> updatePassword(Map<String, dynamic> updateData) async {
-    final url = Uri.parse('$baseUrl/api/user/account');
+    final url = Uri.parse('$baseUrl/api/driver/password/update');
     final token = await getToken();
 
     try {
@@ -91,10 +91,6 @@ class UserService {
         if (kDebugMode) {
           print(data);
         }
-        await removeUsername();
-        await removeUserModel();
-        await setUsername(data['data']['user']['name']);
-        await setUserModel(UserModel.fromJson(data['data']));
         return UserModel.fromJson(data['data']);
       } else {
         throw Exception('Failed to update user: ${response.statusCode}');
