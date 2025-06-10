@@ -4,7 +4,6 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/common/appbar/app_bar_common.dart';
 import 'package:mtac_driver/common/button/button_long.dart';
 import 'package:mtac_driver/controller/user/profile_controller.dart';
-import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:mtac_driver/common/input/input_form.dart';
 import 'package:sizer/sizer.dart';
@@ -12,7 +11,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingManagerPasswordScreen extends StatelessWidget {
   SettingManagerPasswordScreen({super.key});
+  // initial ProfileController
   final _profileController = Get.find<ProfileController>();
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -23,7 +24,7 @@ class SettingManagerPasswordScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Form(
-            key: _profileController.formKeyChangePass,
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -66,11 +67,24 @@ class SettingManagerPasswordScreen extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Text(
-                    l10n.txtForgotPassL,
-                    style: PrimaryFont.bodyTextMedium()
-                        .copyWith(color: kPrimaryColor),
-                  ),
+                  child: GestureDetector(
+                      onTap: () {
+                        _profileController.toggleIsFogotPassVisibility();
+                      },
+                      child: Icon(
+                        HugeIcons.strokeRoundedAlertCircle,
+                        size: 4.w,
+                        color: Colors.red,
+                      )),
+                ),
+                Obx(
+                  () => _profileController.isForgotPass.value
+                      ? Text(
+                          "Nếu quên mật khẩu, bạn hãy liên hệ với nhà thầu để được cấp lại mật khẩu nha!",
+                          style: PrimaryFont.bodyTextMedium()
+                              .copyWith(color: Colors.red),
+                        )
+                      : const SizedBox(),
                 ),
                 SizedBox(
                   height: 3.w,
@@ -145,53 +159,29 @@ class SettingManagerPasswordScreen extends StatelessWidget {
                 ButtonLong(
                   title: l10n.txtChangePasswordMP,
                   onPressed: () async {
-                    final authFingerprint =
-                        await _profileController.authenticateFingerprint(
-                            reason: 'Xác thực để cập nhật mật khẩu');
-                    if (authFingerprint) {
-                      _profileController.updatePassword(
-                        {
-                          "password": _profileController
-                              .passwordNewController.text
-                              .trim()
-                        },
-                      );
+                    if (!_formKey.currentState!.validate()) {
+                      return;
                     } else {
-                      Get.snackbar("Thất bại", "Xác thực thất bại hoặc bị hủy",
-                          backgroundColor: Colors.red.withOpacity(0.8),
-                          colorText: Colors.white);
+                      final authFingerprint =
+                          await _profileController.authenticateFingerprint(
+                              reason: 'Xác thực để cập nhật mật khẩu');
+                      if (authFingerprint) {
+                        _profileController.updatePassword(
+                          {
+                            "password": _profileController
+                                .passwordNewController.text
+                                .trim()
+                          },
+                        );
+                      } else {
+                        Get.snackbar(
+                            "Thất bại", "Xác thực thất bại hoặc bị hủy",
+                            backgroundColor: Colors.red.withOpacity(0.8),
+                            colorText: Colors.white);
+                      }
                     }
                   },
                 ),
-                // SizedBox(
-                //   width: 100.w,
-                //   child: ElevatedButton(
-                //     onPressed: () {
-                //       _profileController.updatePassword(
-                //         {
-                //           "password": _profileController
-                //               .passwordNewController.text
-                //               .trim()
-                //         },
-                //       );
-                //     },
-                //     style: ElevatedButton.styleFrom(
-                //       backgroundColor: kPrimaryColor,
-                //       shape: RoundedRectangleBorder(
-                //         borderRadius: BorderRadius.circular(50.w),
-                //       ),
-                //       elevation: 4,
-                //       shadowColor: Colors.black.withOpacity(0.3),
-                //     ),
-                //     child: Text(
-                //       l10n.txtChangePasswordMP,
-                //       style: PrimaryFont.bodyTextMedium().copyWith(
-                //         color: Colors.white,
-                //         fontWeight: FontWeight.bold,
-                //       ),
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           ),

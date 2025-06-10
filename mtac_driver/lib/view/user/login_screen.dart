@@ -127,14 +127,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           Align(
                             alignment: Alignment.centerRight,
                             child: GestureDetector(
-                              onTap: () {},
-                              child: Text(
-                                l10n.txtForgotPassL,
-                                style: PrimaryFont.bodyTextMedium()
-                                    .copyWith(color: kPrimaryColor),
-                              ),
-                            ),
+                                onTap: () {
+                                  controller.toggleIsFogotPassVisibility();
+                                },
+                                child: Icon(
+                                  HugeIcons.strokeRoundedAlertCircle,
+                                  size: 4.w,
+                                  color: Colors.red,
+                                )),
                           ),
+                          controller.isFogotPass.value ? Text(
+                            "Nếu quên mật khẩu, bạn hãy liên hệ với nhà thầu để được cấp lại mật khẩu nha!",
+                            style: PrimaryFont.bodyTextMedium()
+                                .copyWith(color: Colors.red),
+                          ) : const SizedBox(),
                           SizedBox(height: 5.w),
                           ButtonLong(
                             title: l10n.txtSignInL,

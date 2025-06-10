@@ -10,6 +10,7 @@ class LoginController extends GetxController {
   final passwordController = TextEditingController();
   final isLoading = false.obs;
   final obscurePassword = true.obs;
+  final isFogotPass = false.obs;
 
   // initial varialbe search help & FQAs
   List<String> helpTitles = ['Tất cả', 'Tổng quan', 'Dịch vụ', 'Tài khoản'];
@@ -23,6 +24,11 @@ class LoginController extends GetxController {
   final arrowDownTwitter = false.obs;
   final arrowDownFacebook = false.obs;
   final arrowDownInstagram = false.obs;
+
+  // toggle is forgot pass visibility
+  void toggleIsFogotPassVisibility() {
+    isFogotPass.value = !isFogotPass.value;
+  }
 
   // arrow down service visibility
   void toggleArrowDownServiceVisibility() {

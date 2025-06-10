@@ -14,8 +14,6 @@ import 'package:mtac_driver/shared/token_shared.dart';
 
 class ProfileController extends GetxController {
   //
-  final formKeyChangePass = GlobalKey<FormState>();
-  //
   final Rxn<UserModel> infoUser = Rxn<UserModel>();
   final Rx<File?> imagePath = Rx<File?>(null);
   final loginController = Get.find<LoginController>();
@@ -38,6 +36,7 @@ class ProfileController extends GetxController {
   final obscurePasswordNewConfirm = true.obs;
   final imgPath = "".obs;
   final RxBool isLicenseInFrame = false.obs;
+  final isForgotPass = false.obs;
 
   // init
   @override
@@ -53,6 +52,11 @@ class ProfileController extends GetxController {
     passwordNewConfirmController.dispose();
     passwordOldController.dispose();
     super.onClose();
+  }
+
+  // toggle is forgot pass visibity
+  void toggleIsFogotPassVisibility(){
+    isForgotPass.value = !isForgotPass.value;
   }
 
   // password visibility
@@ -94,8 +98,6 @@ class ProfileController extends GetxController {
   // Call function update pass word from service
   Future<void> updatePassword(Map<String, dynamic> updateUser) async {
     try {
-      if (!formKeyChangePass.currentState!.validate()) return;
-
       await UserService().updateUser(updateUser);
       showSuccess('Đổi mật khẩu thành công.');
       Get.offAllNamed(AppRoutes.main);
