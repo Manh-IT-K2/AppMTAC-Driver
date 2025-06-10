@@ -66,12 +66,23 @@
 		<string>tel</string>
   		<string>sms</string>
 	</array>
-<!--  -->
+	<!-- Permission allow security -->	
 	<key>NSAppTransportSecurity</key>
 	<dict>
-    	<key>NSAllowsArbitraryLoads</key>
-    	<true/>
+  		<key>NSExceptionDomains</key>
+  		<dict>
+    		<key>http://partner.moitruongachau.vn</key>
+    		<dict>
+      			<key>NSExceptionAllowsInsecureHTTPLoads</key>
+      			<true/>
+      			<key>NSIncludesSubdomains</key>
+      			<true/>
+    		</dict>
+  		</dict>
 	</dict>
 
+	<!-- Permission faceID -->
+	<key>NSFaceIDUsageDescription</key>
+	<string>This app uses Face ID to authenticate you.</string>
 </dict>
 </plist>

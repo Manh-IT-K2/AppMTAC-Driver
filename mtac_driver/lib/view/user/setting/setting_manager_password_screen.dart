@@ -144,13 +144,23 @@ class SettingManagerPasswordScreen extends StatelessWidget {
                 ),
                 ButtonLong(
                   title: l10n.txtChangePasswordMP,
-                  onPressed: () {
-                    _profileController.updatePassword(
-                      {
-                        "password":
-                            _profileController.passwordNewController.text.trim()
-                      },
-                    );
+                  onPressed: () async {
+                    final authFingerprint =
+                        await _profileController.authenticateFingerprint(
+                            reason: 'Xác thực để cập nhật mật khẩu');
+                    if (authFingerprint) {
+                      _profileController.updatePassword(
+                        {
+                          "password": _profileController
+                              .passwordNewController.text
+                              .trim()
+                        },
+                      );
+                    } else {
+                      Get.snackbar("Thất bại", "Xác thực thất bại hoặc bị hủy",
+                          backgroundColor: Colors.red.withOpacity(0.8),
+                          colorText: Colors.white);
+                    }
                   },
                 ),
                 // SizedBox(

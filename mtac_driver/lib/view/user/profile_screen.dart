@@ -47,8 +47,11 @@ class ProfileScreen extends StatelessWidget {
               height: 20.h,
             );
           } else {
-            imageWidget = Image.file(File(_profileController.imgPath.value),
-                height: 20.h, fit: BoxFit.cover,);
+            imageWidget = Image.file(
+              File(_profileController.imgPath.value),
+              height: 20.h,
+              fit: BoxFit.cover,
+            );
           }
 
           if (_profileController.nameController.text.isEmpty) {
@@ -219,12 +222,22 @@ class ProfileScreen extends StatelessWidget {
                             readOnly: true,
                             suffixIcon: GestureDetector(
                                 onTap: () async {
-                                  final result = await Get.toNamed(
-                                      AppRoutes.updateIdDocument,
-                                      arguments: "cccd");
-                                  if (result != null && result is String) {
-                                    _profileController
-                                        .nummberIDController.text = result;
+                                  final authFingerprint =
+                                      await _profileController
+                                          .authenticateFingerprint(
+                                              reason:
+                                                  'Xác thực để cập nhật CCCD');
+                                  if (authFingerprint) {
+                                    final result = await Get.toNamed(
+                                        AppRoutes.updateIdDocument,
+                                        arguments: "cccd");
+                                    if (result != null && result is String) {
+                                      _profileController
+                                          .nummberIDController.text = result;
+                                    }
+                                  } else {
+                                    Get.snackbar("Thất bại",
+                                        "Xác thực thất bại hoặc bị hủy", backgroundColor: Colors.red.withOpacity(0.8), colorText: Colors.white);
                                   }
                                 },
                                 child: Icon(
@@ -252,13 +265,20 @@ class ProfileScreen extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () async {
-                              final result = await Get.toNamed(
-                                  AppRoutes.updateIdDocument,
-                                  arguments: "gplx");
+                              final authFingerprint = await _profileController
+                                  .authenticateFingerprint(
+                                      reason: 'Xác thực để cập nhật GPLX');
+                              if (authFingerprint) {
+                                final result = await Get.toNamed(
+                                    AppRoutes.updateIdDocument,
+                                    arguments: "gplx");
 
-                              if (result != null && result is String) {
-                                _profileController
-                                    .numberVehicleController.text = result;
+                                if (result != null && result is String) {
+                                  _profileController
+                                      .numberVehicleController.text = result;
+                                }
+                              } else {
+                                Get.snackbar("Thất bại", "Xác thực thất bại hoặc bị hủy", backgroundColor: Colors.red.withOpacity(0.8), colorText: Colors.white);
                               }
                             },
                             child: Container(

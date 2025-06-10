@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:mtac_driver/common/notify/show_notify_snackbar.dart';
 import 'package:mtac_driver/controller/home_controller.dart';
 import 'package:mtac_driver/controller/user/login_controller.dart';
@@ -38,7 +39,6 @@ class ProfileController extends GetxController {
   final imgPath = "".obs;
   final RxBool isLicenseInFrame = false.obs;
 
-
   // init
   @override
   void onInit() {
@@ -46,7 +46,7 @@ class ProfileController extends GetxController {
     getInforUser();
   }
 
-   // dispose
+  // dispose
   @override
   void onClose() {
     passwordNewController.dispose();
@@ -142,6 +142,34 @@ class ProfileController extends GetxController {
       return file;
     } else {
       return null;
+    }
+  }
+
+  // function fingerprint authentication
+  Future<bool> authenticateFingerprint({
+    String reason = 'Vui lòng xác thực bằng vân tay',
+  }) async {
+    final auth = LocalAuthentication();
+    final canCheck = await auth.canCheckBiometrics;
+    final isDeviceSupported = await auth.isDeviceSupported();
+
+    if (!canCheck || !isDeviceSupported) return false;
+
+    try {
+      final authenticated = await auth.authenticate(
+        localizedReason: reason,
+        options: const AuthenticationOptions(
+          biometricOnly: true,
+          stickyAuth: true,
+        ),
+      );
+
+      return authenticated;
+    } catch (e) {
+      if (kDebugMode) {
+        print("Lỗi xác thực: $e");
+      }
+      return false;
     }
   }
 }
