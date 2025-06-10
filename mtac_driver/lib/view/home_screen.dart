@@ -96,7 +96,7 @@ class HomeScreen extends StatelessWidget {
                     width: 3.w,
                   ),
                   const CollectionNoteDot(
-                      color: Colors.red, label: "Chuyến bị huỷ"),
+                      color: kPrimaryColor, label: "Chuyến đã sắp"),
                 ],
               ),
               SizedBox(
@@ -134,8 +134,8 @@ class HomeScreen extends StatelessWidget {
                 height: 3.w,
               ),
               const _itemHightScheduleCollection(
-                colorStatus: Colors.red,
-                icon: HugeIcons.strokeRoundedCancel02,
+                colorStatus: kPrimaryColor,
+                icon: HugeIcons.strokeRoundedAppointment01,
               ),
               SizedBox(
                 height: 3.w,

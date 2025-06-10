@@ -12,6 +12,7 @@ import 'package:mtac_driver/view/schedule/map_driver_screen.dart';
 import 'package:mtac_driver/view/schedule/schedule_colection_driver_screen.dart';
 import 'package:mtac_driver/view/schedule/schedule_history_screen.dart';
 import 'package:mtac_driver/view/splash_screen.dart';
+import 'package:mtac_driver/view/start_chat_screen.dart';
 import 'package:mtac_driver/view/user/contact_us_screen.dart';
 import 'package:mtac_driver/view/user/feedback_screen.dart';
 import 'package:mtac_driver/view/user/privacy_policy_screen.dart';
@@ -45,6 +46,12 @@ class AppPages {
     GetPage(
       name: AppRoutes.login,
       page: () => const LoginScreen(),
+      binding: PageBinding(),
+      middlewares: [NetworkCheckMiddlewareController()],
+    ),
+    GetPage(
+      name: AppRoutes.startChatBot,
+      page: () => const StartChatScreen(),
       binding: PageBinding(),
       middlewares: [NetworkCheckMiddlewareController()],
     ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:mtac_driver/controller/user/help_faqs_controller.dart';
+import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
@@ -27,31 +28,44 @@ class HelpScreen extends StatelessWidget {
               SizedBox(
                 height: 5.h,
               ),
-              TextField(
-                controller: _helpFAQController.searchHelpFqas,
-                cursorColor: kPrimaryColor.withOpacity(0.6),
-                decoration: InputDecoration(
-                  hintText: l10n.txtSearch,
-                  hintStyle: PrimaryFont.bodyTextMedium(),
-                  prefixIcon: Icon(
-                    HugeIcons.strokeRoundedSearch01,
-                    size: 5.w,
-                    color: Colors.black,
+              Row(
+                children: [
+                  SizedBox(
+                    width: 70.w,
+                    height: 10.w,
+                    child: TextField(
+                      controller: _helpFAQController.searchHelpFqas,
+                      cursorColor: kPrimaryColor.withOpacity(0.6),
+                      decoration: InputDecoration(
+                        hintText: l10n.txtSearch,
+                        hintStyle: PrimaryFont.bodyTextMedium(),
+                        prefixIcon: Icon(
+                          HugeIcons.strokeRoundedSearch01,
+                          size: 5.w,
+                          color: Colors.black,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                              color: Colors.grey.withOpacity(0.5), width: 0.1),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(color: kPrimaryColor),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                    ),
                   ),
-                  contentPadding:
-                      const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(
-                        color: Colors.grey.withOpacity(0.5), width: 0.1),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: kPrimaryColor),
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                ),
+                  const  Spacer(),
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed(AppRoutes.startChatBot);
+                    },
+                    child: Icon(HugeIcons.strokeRoundedBot, size: 10.w, color: kPrimaryColor,),
+                  )
+                ],
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,

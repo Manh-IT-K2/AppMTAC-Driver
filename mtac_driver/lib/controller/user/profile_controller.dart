@@ -83,7 +83,7 @@ class ProfileController extends GetxController {
         Get.snackbar(
             'Lỗi', 'Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.',
             snackPosition: SnackPosition.TOP, colorText: Colors.red);
-        Get.toNamed(AppRoutes.splash);
+        Get.offNamed(AppRoutes.login);
       }
       if (kDebugMode) {
         print("Error fetching user: $e");

@@ -50,22 +50,6 @@ class SettingScreen extends StatelessWidget {
               },
             ),
              _itemSettingAccount(
-              title: "Quản lý GPLX",
-              arrowRight: true,
-              color: Colors.black,
-              icon: HugeIcons.strokeRoundedIdentityCard,
-              ontap: () {
-                Get.toNamed(AppRoutes.settingDriverLicense);
-              },
-            ),
-             _itemSettingAccount(
-              title: "Quản lý  CCCD",
-              arrowRight: true,
-              color: Colors.black,
-              icon: HugeIcons.strokeRoundedUserAccount,
-              ontap: () {},
-            ),
-             _itemSettingAccount(
               title: "Quản lý  hợp đồng",
               arrowRight: true,
               color: Colors.black,
