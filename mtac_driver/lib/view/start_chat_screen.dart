@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:mtac_driver/route/app_route.dart';
 import 'package:mtac_driver/theme/color.dart';
 import 'package:mtac_driver/utils/style_text_util.dart';
 import 'package:sizer/sizer.dart';
@@ -11,12 +13,23 @@ class StartChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.only(top: 10.h),
+        padding: EdgeInsets.only(top: 5.h),
         child: SizedBox(
           width: 100.w,
           height: 100.h,
           child: Column(
             children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: () => Get.back(),
+                  child: Text(
+                    "Back",
+                    style:
+                        PrimaryFont.bodyTextMedium().copyWith(color: Colors.black),
+                  ),
+                ),
+              ),
               Container(
                 width: 30.w,
                 height: 10.w,
@@ -53,18 +66,22 @@ class StartChatScreen extends StatelessWidget {
                       style: PrimaryFont.headerTextBold()
                           .copyWith(color: Colors.black),
                     ),
-                    Container(
-                      width: 50.w,
-                      height: 12.w,
-                      margin: EdgeInsets.symmetric(vertical: 5.w),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
+                    GestureDetector(
+                      onTap: () => Get.toNamed(AppRoutes.chatbot),
+                      child: Container(
+                        width: 50.w,
+                        height: 12.w,
+                        margin: EdgeInsets.symmetric(vertical: 5.w),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
                           color: kPrimaryColor,
-                          borderRadius: BorderRadius.circular(3.w)),
-                      child: Text(
-                        "Start ChatBot",
-                        style: PrimaryFont.titleTextMedium()
-                            .copyWith(color: Colors.white),
+                          borderRadius: BorderRadius.circular(3.w),
+                        ),
+                        child: Text(
+                          "Start ChatBot",
+                          style: PrimaryFont.titleTextMedium()
+                              .copyWith(color: Colors.white),
+                        ),
                       ),
                     ),
                     Row(

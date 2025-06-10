@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:mtac_driver/binding/page_binding.dart';
 import 'package:mtac_driver/controller/connection/network_check_middleware_controller.dart';
 import 'package:mtac_driver/route/app_route.dart';
+import 'package:mtac_driver/view/chatbot_screen.dart';
 import 'package:mtac_driver/view/main_screen.dart';
 import 'package:mtac_driver/view/connection/connection_middleware_screen.dart';
 import 'package:mtac_driver/view/notification_screen.dart';
@@ -46,6 +47,12 @@ class AppPages {
     GetPage(
       name: AppRoutes.login,
       page: () => const LoginScreen(),
+      binding: PageBinding(),
+      middlewares: [NetworkCheckMiddlewareController()],
+    ),
+    GetPage(
+      name: AppRoutes.chatbot,
+      page: () => const ChatbotScreen(),
       binding: PageBinding(),
       middlewares: [NetworkCheckMiddlewareController()],
     ),
