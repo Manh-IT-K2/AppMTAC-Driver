@@ -77,7 +77,7 @@ class ProfileController extends GetxController {
     obscurePasswordNewConfirm.value = !obscurePasswordNewConfirm.value;
   }
 
-  // Call function get user from service
+  // Call function get user from repository
   Future<void> getInforUser() async {
     try {
       final user = await _userRepository.getUser();
@@ -98,7 +98,7 @@ class ProfileController extends GetxController {
     }
   }
 
-  // Call function update pass word from service
+  // Call function update password from repository
   Future<void> updatePassword(Map<String, dynamic> updateUser) async {
     try {
       await _userRepository.updateUser(updateUser);
@@ -116,7 +116,7 @@ class ProfileController extends GetxController {
     }
   }
 
-  // Call function update user from service
+  // Call function update user from repository
   Future<void> updateUser(Map<String, dynamic> updateUser) async {
     try {
       await _userRepository.updateUser(updateUser);
@@ -135,6 +135,24 @@ class ProfileController extends GetxController {
     }
   }
 
+  // Call function update avatar from repository
+  Future<void> updateAvatar(File avatar) async {
+    try {
+      await _userRepository.updateAvatar(avatar);
+      _homeController.loadUserModel();
+      showSuccess('Avatar của bạn đã được cập nhật.');
+    } catch (e) {
+      if (e.toString().contains('401')) {
+        showError('Token hết hạn hoặc không hợp lệ. Vui lòng đăng nhập lại.');
+        Get.toNamed(AppRoutes.splash);
+        removeToken();
+      }
+      if (kDebugMode) {
+        print("Error update avatar: $e");
+      }
+    }
+  }
+
   // function chose image
   Future<File?> pickImageFromGallery() async {
     final ImagePicker picker = ImagePicker();
@@ -144,6 +162,7 @@ class ProfileController extends GetxController {
     if (pickedFile != null) {
       final file = File(pickedFile.path);
       imagePath.value = file;
+      updateAvatar(file);
       return file;
     } else {
       return null;

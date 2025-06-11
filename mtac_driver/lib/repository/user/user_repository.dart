@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:mtac_driver/configs/api_config.dart';
@@ -9,7 +10,6 @@ import 'package:mtac_driver/shared/user/user_shared.dart';
 class UserRepository {
   // initial url
   final String baseUrl = ApiConfig.baseUrl;
-
 
   // Call api get user
   Future<UserModel> getUser() async {
@@ -26,7 +26,7 @@ class UserRepository {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        
+
         return UserModel.fromJson(data);
       } else {
         throw Exception('Failed to load user: ${response.statusCode}');
@@ -97,6 +97,36 @@ class UserRepository {
       }
     } catch (e) {
       throw Exception('Error updating user: $e');
+    }
+  }
+
+  // Call api update avatar
+  Future<void> updateAvatar(File avatar) async {
+    final url = Uri.parse('$baseUrl/api/driver/avatar');
+    final token = await getToken();
+
+    try {
+      final request = http.MultipartRequest("POST", url)
+        ..headers['Authorization'] = 'Bearer $token'
+        ..headers['Accept'] = 'application/json'
+        ..files.add(await http.MultipartFile.fromPath(
+          'avatar',
+          avatar.path,
+        ));
+
+      final response = await request.send();
+      final responseBody = await response.stream.bytesToString();
+      if (response.statusCode == 200) {
+        final data = json.decode(responseBody);
+        if (kDebugMode) {
+          print('Upload thành công: $data');
+        }
+      } else {
+        throw Exception(
+            'Upload thất bại: ${response.statusCode} - $responseBody');
+      }
+    } catch (e) {
+      throw Exception('Lỗi khi upload ảnh đại diện: $e');
     }
   }
 }
